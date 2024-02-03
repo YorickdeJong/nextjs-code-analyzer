@@ -4,22 +4,16 @@
   "description": "nextjs_code_analyzer",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "install": "npm install && cmake-js install --directory='cpp'",
-    "build": "cmake-js build -d 'cpp' && npx tsc",
-    "debug-build": "cmake-js build -g -d 'cpp' --debug && npx tsc"
+    "test": "node implementations/typescript/src/parse implementations/typescript/tests/test.js",
+    "install-packages": "npm install && cd implementations/typescript && npm install && cd ../.. && cmake-js install -d 'implementations/cpp'",
+    "build": "cd implementations/typescript && npx tsc && cd ../.. && cmake-js build -d 'implementations/cpp'",
+    "debug-build": "cd implementations/typescript && npx tsc && cd ../.. && cmake-js build -d 'implementations/cpp' --debug"
   },
   "author": "Yorick de Jong",
   "license": "ISC",
   "dependencies": {
-    "@babel/core": "^7.23.9",
-    "@babel/parser": "^7.23.9",
-    "node-addon-api": "^7.1.0",
-    "sharp": "^0.33.2"
   },
   "devDependencies": {
-    "@types/node": "^20.11.16",
-    "cmake-js": "^7.3.0",
-    "typescript": "^5.3.3"
+    "cmake-js": "^7.3.0"
   }
 }

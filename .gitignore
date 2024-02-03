@@ -4,7 +4,7 @@
 .DS_Store
 
 # C++ and CMake
-cpp/build/
+implementations/cpp/build/
 cpp/Release/
 cpp/CMakeFiles/
 cpp/CMakeCache.txt

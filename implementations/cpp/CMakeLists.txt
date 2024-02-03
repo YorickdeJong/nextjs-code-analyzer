@@ -13,20 +13,27 @@ file(GLOB_RECURSE SOURCE_FILES "${PROJECT_SOURCE_DIR}/src/**/*.cpp" "${PROJECT_S
 add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES} ${CMAKE_JS_SRC})
 set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "" SUFFIX ".node")
 
+
 # Use `execute_process` to get the path to the Node.js N-API includes
 execute_process(COMMAND node -p "require('node-addon-api').include"
-                WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+                WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/../typescript
                 OUTPUT_VARIABLE NODE_ADDON_API_DIR)
+
+# /Users/yorickdejong/nextjs_code_analyzer/implementations/typescript/node_modules/node-addon-api/napi-inl.h
+
+if(NOT NODE_ADDON_API_DIR)
+    message(FATAL_ERROR "NODE_ADDON_API_DIR is not set")
+endif()
 
 # Very important to remove trailing newline character from the output
 # Otherwise napi.h cannot be found
 string(REPLACE "\n" "" NODE_ADDON_API_DIR ${NODE_ADDON_API_DIR})
 string(REPLACE "\"" "" NODE_ADDON_API_DIR ${NODE_ADDON_API_DIR})
 
-
 target_include_directories(${PROJECT_NAME} PRIVATE 
     ${NODE_ADDON_API_DIR}
 )
+
 
 # INCLUDING SUBDIRECTORIES
 if (CMAKE_JS_VERSION)
@@ -39,7 +46,6 @@ endif()
 
 #LINKING LIBRARIES
 target_link_libraries(${PROJECT_NAME} ${CMAKE_JS_LIB} json_reader analysis)
-
 
 if(MSVC AND CMAKE_JS_NODELIB_DEF AND CMAKE_JS_NODELIB_TARGET)
   # Generate node.lib

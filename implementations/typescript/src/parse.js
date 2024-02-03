@@ -25,7 +25,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const babelParser = __importStar(require("@babel/parser"));
 const fs = __importStar(require("fs"));
-const addon = require('./cpp/build/Release/NextJS_Analyser.node');
+const path = require('path');
+const addonPath = path.join(process.cwd(), 'implementations', 'cpp', 'build', 'Release', 'NextJS_Analyser.node');
+const addon = require(addonPath);
 const filePath = process.argv[2] || '';
 // Ensure the user provided a file path
 if (!filePath) {

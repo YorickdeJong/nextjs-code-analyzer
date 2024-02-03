@@ -1,3 +1,6 @@
 [submodule "cpp/external/json"]
 	path = cpp/external/json
 	url = https://github.com/nlohmann/json.git
+[submodule "implementations/cpp/external/json"]
+	path = implementations/cpp/external/json
+	url = https://github.com/nlohmann/json.git

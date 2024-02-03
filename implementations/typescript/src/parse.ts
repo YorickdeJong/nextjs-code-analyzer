@@ -1,7 +1,8 @@
 import * as babelParser from '@babel/parser';
 import * as fs from 'fs';
-
-const addon = require('./cpp/build/Release/NextJS_Analyser.node');
+const path = require('path');
+const addonPath = path.join(process.cwd(), 'implementations', 'cpp', 'build', 'Release', 'NextJS_Analyser.node');
+const addon = require(addonPath);
 
   
 const filePath = process.argv[2] || '';
