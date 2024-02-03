@@ -19,8 +19,7 @@ To set up the project, follow these steps:
 1. **Clone the Repository:**
 
 ```bash
-   git clone https://your-repository-url-here.git
-   cd nextjs_code_analyzer
+   git clone --recurse-submodules https://github.com/YorickdeJong/nextjs-code-analyzer.git 
 ```
 
 Install JavaScript Dependencies and build cmake:

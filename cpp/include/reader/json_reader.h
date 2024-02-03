@@ -2,12 +2,14 @@
 
 #include <iostream>
 #include <napi.h>
+#include <nlohmann/json.hpp>
 
-class JSON_READER{
+
+class JsonReader{
 
     private: 
         std::string json;
     public:
-        Napi::String AnalyzeAST(const Napi::CallbackInfo& info);
-
+        Napi::Value NlohmannJsonToNapiValue(nlohmann::json &j, Napi::Env env);
+        nlohmann::json ConvertStringToJson(const Napi::CallbackInfo& info);
 };

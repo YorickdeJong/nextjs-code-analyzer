@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "install": "npm install && cmake-js install --directory='cpp'",
-    "build": "cmake-js build -d 'cpp' && npx tsc"
+    "build": "cmake-js build -d 'cpp' && npx tsc",
+    "debug-build": "cmake-js build -g -d 'cpp' --debug && npx tsc"
   },
   "author": "Yorick de Jong",
   "license": "ISC",

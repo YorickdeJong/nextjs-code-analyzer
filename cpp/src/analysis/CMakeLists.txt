@@ -6,4 +6,7 @@ add_library(analysis
     analyzer.cpp
 )
 
-target_include_directories(analysis PUBLIC ${MY_ANALYSIS_DIR})
+target_include_directories(analysis PUBLIC 
+    ${MY_ANALYSIS_DIR}
+    ${CMAKE_SOURCE_DIR}/external/json/single_include
+)

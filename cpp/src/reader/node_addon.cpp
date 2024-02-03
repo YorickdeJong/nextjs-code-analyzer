@@ -1,7 +1,10 @@
 #include "reader/json_reader.h"
+#include "analysis/analysis.h"
 
+Napi::Value Analyzer(const Napi::CallbackInfo& info) {
+  class JsonReader reader;
+  class Analyzer analyzer;
 
-Napi::String JsonReader(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   
   // Check the number of arguments passed.
@@ -18,22 +21,30 @@ Napi::String JsonReader(const Napi::CallbackInfo& info) {
     return Napi::String::New(env, "");
   }
 
-  std::string json = info[0].As<Napi::String>().Utf8Value();
-  
-  // Your C++ code to deserialize and analyze the JSON would go here
-  std::cout << "Received JSON: " << json << std::endl;
+  //Convert the string to a JSON object
+  nlohmann::json jsonObject = reader.ConvertStringToJson(info);
 
-  // For demonstration purposes, let's just return the same JSON string
-  return Napi::String::New(env, json);
+  // Analyze code and add comments to sections
+  nlohmann::json analyzedJson = analyzer.Analyze(jsonObject);
+
+
+  // Convert the JSON object to a NAPI value.
+  Napi::Value returnValue = reader.NlohmannJsonToNapiValue(jsonObject, env);
+
+
+
+  // Return value
+  return Napi::Value(env, returnValue);
 }
 
 Napi::Object Init(Napi::Env env, Napi::Object exports)
 {
     exports.Set(
-        Napi::String::New(env, "JsonReader"),
-        Napi::Function::New(env, JsonReader)
+        Napi::String::New(env, "Analyzer"),
+        Napi::Function::New(env, Analyzer)
     );
-
+  
+    std::cout << "JSON Object: " << std::endl;
     return exports;
 }
 
