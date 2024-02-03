@@ -62,7 +62,6 @@ try {
             }
         }
     });
-    console.log('lines', lines);
     // Write the modified lines back to a file (or to a new file)
     fs.writeFileSync(filePath, lines.join('\n'));
 }

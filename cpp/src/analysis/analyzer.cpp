@@ -3,10 +3,8 @@
 
 nlohmann::json Analyzer::Analyze(nlohmann::json &j) {
     nlohmann::json result;
-
     std::vector<TokenInfo> tokenInfos;
     std::cout << "Analyzing JSON object" << j["loc"]["end"]["line"] << std::endl;
-    
     
     
     bool useClient = false;
@@ -19,31 +17,18 @@ nlohmann::json Analyzer::Analyze(nlohmann::json &j) {
             continue;
         }
 
-        
         const std::string &value = token["value"];
 
         if (value == "use client"){
-            TokenInfo info;
-            info.value = token["value"].get<std::string>();
-            info.line = token["loc"]["start"]["line"];
-            info.start = token["loc"]["start"]["index"];
-            info.end = token["loc"]["end"]["index"];
-            tokenInfos.emplace_back(info);
             
+            AddTokenInfo(token, tokenInfos);
             useClient = true;
             continue;
         }
 
         if (useClient) {
             if (value.find("use") != std::string::npos) {
-                TokenInfo info;
-                
-                info.value = token["value"].get<std::string>();
-                info.line = token["loc"]["start"]["line"];
-                info.start = token["loc"]["start"]["index"];
-                info.end = token["loc"]["end"]["index"];
-                tokenInfos.emplace_back(info);
-
+                AddTokenInfo(token, tokenInfos);
                 hook = true;
             }
         }
@@ -52,48 +37,8 @@ nlohmann::json Analyzer::Analyze(nlohmann::json &j) {
     std::unordered_set<std::string> tokensToComment;
 
     if (useClient && hook && length) {
-        for (const auto& tokenInfo : tokenInfos) {
-            tokensToComment.insert(tokenInfo.value);
-        }
-
-        for (const auto& comment : tokensToComment) {
-            std::cout << "Token to comment: " << comment << std::endl;
-        }
-
-        for (auto& jToken : j["tokens"]) {
-            //  check if jToken contains "value" and it is a string
-            if (jToken.contains("value") && jToken["value"].is_string()) {
-                const std::string& value = jToken["value"];
-                
-                // Comapre
-                if (tokensToComment.find(value) != tokensToComment.end() && value == "use client") {
-                    // The value exists in our set, so we add the comment.
-                    nlohmann::json comment;
-                    comment["value"] = "Large file detected with 'use client', Consider refactoring 'use client' into smaller files for better SEO score";
-                    comment["line"] = jToken["loc"]["start"]["line"];
-                    comment["start"] = jToken["loc"]["start"]["index"];
-                    comment["end"] = jToken["loc"]["end"]["index"];
-                    // Assuming you want to add the comment as a string, not as an array of objects
-                    jToken["comment"] = comment;
-                }
-
-                if (tokensToComment.find(value) != tokensToComment.end() && 
-                    value.find("use") != std::string::npos && value != "use client"
-                ) {
-                    // The value exists in our set, so we add the comment.
-                    nlohmann::json comment;
-                    comment["value"] = "Consider refactoring " + value + " into a smaller file fo better SEO score";
-                    comment["line"] = jToken["loc"]["start"]["line"];
-                    comment["start"] = jToken["loc"]["start"]["index"];
-                    comment["end"] = jToken["loc"]["end"]["index"];
-                    // Assuming you want to add the comment as a string, not as an array of objects
-                    jToken["comment"] = comment;
-                }
-            }
-
-        }
-        std::cout << "Hook detected with 'use client'" << std::endl;
-
+        PopulateTokensToComment(tokenInfos, tokensToComment);
+        AddCommentTokens(j, tokensToComment);
     }
     else if (useClient && !hook) {
         std::cout << "No hook detected, consider removing use client" << std::endl;
@@ -105,5 +50,53 @@ nlohmann::json Analyzer::Analyze(nlohmann::json &j) {
         std::cout << "No use client detected" << std::endl;
     }
     return result;
+}
 
+
+void Analyzer::AddTokenInfo(const nlohmann::json &token, std::vector<TokenInfo> &tokenInfos) {
+    TokenInfo info;
+    info.value = token["value"].get<std::string>();
+    info.line = token["loc"]["start"]["line"];
+    info.start = token["loc"]["start"]["index"];
+    info.end = token["loc"]["end"]["index"];
+    tokenInfos.emplace_back(info);
+}
+
+
+
+void Analyzer::AddComment(nlohmann::json &jToken, const std::string &commentText) {
+    nlohmann::json comment;
+    comment["value"] = commentText;
+    comment["line"] = jToken["loc"]["start"]["line"];
+    comment["start"] = jToken["loc"]["start"]["index"];
+    comment["end"] = jToken["loc"]["end"]["index"];
+    jToken["comment"] = comment;
+}
+
+
+void Analyzer::PopulateTokensToComment(const std::vector<TokenInfo> &tokenInfos, std::unordered_set<std::string> &tokensToComment) {
+    for (const auto& tokenInfo : tokenInfos) {
+        tokensToComment.insert(tokenInfo.value);
+    }
+}
+
+void Analyzer::AddCommentTokens(nlohmann::json &j, const std::unordered_set<std::string> &tokensToComment) {
+    for (auto& jToken : j["tokens"]) {
+        if (jToken.contains("value") && jToken["value"].is_string()) {
+            const std::string& value = jToken["value"];
+
+            // Add instructions for incorrect use of 'use client'
+            if (tokensToComment.find(value) != tokensToComment.end() && 
+                value == "use client"
+            ) {
+                AddComment(jToken, "Large file detected with 'use client', Consider refactoring 'use client' into smaller files for better SEO score");
+            }
+            // Add instructions for incorrect use of 'use' hook instances 
+            else if (tokensToComment.find(value) != tokensToComment.end() && 
+                value.find("use") != std::string::npos && value != "use client"
+            ) {
+                AddComment(jToken, "Consider refactoring " + value + " into a smaller file for better SEO score");
+            }
+        }
+    }
 }
