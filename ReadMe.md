@@ -30,7 +30,28 @@ npm install
 
 or if you're using Yarn:
 
-
 ```bash
 yarn install
+```
+
+## Building repo
+
+To build to C++ and typescript files, run:
+
+```bash
+    npm run build
+```
+
+To build in debug mode, run:
+
+```bash
+    npm run debug-build
+```
+
+## Parsing
+
+Run the following command to parse data:
+
+```bash
+    node parse <path_to_file_name>
 ```
