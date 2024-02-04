@@ -55,3 +55,9 @@ Run the following command to parse data:
 ```bash
     node parse <path_to_file_name>
 ```
+
+### Debugging NEXTJS CODE ANALYZER EXTENSION
+1. Open a new VS Code instance with the workspace directory set to nextjs-code-analyzer
+2. Press F5 with the src/extension.ts opened
+3. In the new window press CTRL+SHIFT+P and enter NEXTJS, select the extension that pops up
+4. Select a file to debug

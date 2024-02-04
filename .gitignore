@@ -142,3 +142,7 @@ dist
 
 # vercel
 .vercel
+
+#ouput
+implementations/typescript/src/out/
+implementations/typescript/extensions/nextjs-code-analyzer/out/

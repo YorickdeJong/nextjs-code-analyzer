@@ -24,7 +24,6 @@ try {
     plugins: [
       "jsx",
       "typescript", // if you're parsing TypeScript
-      // other plugins as needed
     ],
     errorRecovery: true,
     attachComment: true,
@@ -33,21 +32,23 @@ try {
   );
   const astJson = JSON.stringify(ast, null, 2);
 
+  console.log('ast', astJson)
   // Get analysis results
   const analysisResults = addon.Analyzer(astJson);
 
   analysisResults.tokens.forEach((token: any) => {
     if (token.comment) {
-
-      // Insert the comment into the source code
-      // Assuming the 'line' in the comment is 1-based
-      const lineIndex = token.loc.start.line -1;
-      if (lineIndex >= 0 && lineIndex < lines.length) {
-        lines[lineIndex] += ` // ${token.comment.value}`;
-      }
+      console.log("token", token.comment)
+      // // Insert the comment into the source code
+      // // Assuming the 'line' in the comment is 1-based
+      // const lineIndex = token.loc.start.line -1;
+      // if (lineIndex >= 0 && lineIndex < lines.length) {
+      //   lines[lineIndex] += ` // ${token.comment.value}`;
+      // }
     }
   });
 
+  
   // Write the modified lines back to a file (or to a new file)
   fs.writeFileSync(filePath, lines.join('\n'));
 } catch (error) {

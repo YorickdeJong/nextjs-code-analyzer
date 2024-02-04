@@ -1,4 +1,5 @@
 #include "analysis/analysis.h"
+#include <regex>
 
 
 nlohmann::json Analyzer::Analyze(nlohmann::json &j) {
@@ -92,11 +93,12 @@ void Analyzer::AddCommentTokens(nlohmann::json &j, const std::unordered_set<std:
                 AddComment(jToken, "Large file detected with 'use client', Consider refactoring 'use client' into smaller files for better SEO score");
             }
             // Add instructions for incorrect use of 'use' hook instances 
-            else if (tokensToComment.find(value) != tokensToComment.end() && 
-                value.find("use") != std::string::npos && value != "use client"
-            ) {
-                AddComment(jToken, "Consider refactoring " + value + " into a smaller file for better SEO score");
-            }
+            else if (tokensToComment.find(value) != tokensToComment.end()) {
+                std::regex re("use[A-Z]\\w*");
+                if (value.find(std::regex_search(value, re) && value != "use client")) {
+                    AddComment(jToken, "Consider refactoring " + value + " into a smaller file for better SEO score");
+                }
+            }  
         }
     }
 }
