@@ -1,6 +1,6 @@
 set(READER_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/include")
 
-add_library(json_reader SHARED node_addon.cpp json_reader.cpp)
+add_library(json_reader SHARED json_reader.cpp)
 
 
 # Specify include directories for the reader target

@@ -1,11 +1,11 @@
 #include "reader/json_reader.h"
 #include "analysis/analysis.h"
+#include "reporter/reporter.h"
 
-Napi::Value Analyzer(const Napi::CallbackInfo& info) {
-  class JsonReader reader;
-  class Analyzer analyzer;
-
+Napi::Value CreateReport(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
+  class JsonReader reader(info, env);
+  class Analyzer analyzer;
   
   // Check the number of arguments passed.
   if (info.Length() < 1) {
@@ -21,27 +21,26 @@ Napi::Value Analyzer(const Napi::CallbackInfo& info) {
     return Napi::String::New(env, "");
   }
 
-  //Convert the string to a JSON object
-  nlohmann::json jsonObject = reader.ConvertStringToJson(info);
 
   // Analyze code and add comments to sections
-  nlohmann::json analyzedJson = analyzer.Analyze(jsonObject);
+  AnalysisResult analysisResult = analyzer.Analyze(reader.getJson());
 
+  // Add the report to the json object
+  Reporter reporter(analyzer.GetAnalysisResult(), analyzer.GetTokenInfos());
+  reporter.AddCommentsToJsonObject(reader.getJson());
 
   // Convert the JSON object to a NAPI value.
-  Napi::Value returnValue = reader.NlohmannJsonToNapiValue(jsonObject, env);
-
-
+  reader.NlohmannJsonToNapiValue();
 
   // Return value
-  return Napi::Value(env, returnValue);
+  return Napi::Value(env, reader.getReturnData());
 }
 
 Napi::Object Init(Napi::Env env, Napi::Object exports)
 {
     exports.Set(
-        Napi::String::New(env, "Analyzer"),
-        Napi::Function::New(env, Analyzer)
+        Napi::String::New(env, "CreateReport"),
+        Napi::Function::New(env, CreateReport)
     );
   
     std::cout << "JSON Object: " << std::endl;

@@ -1,42 +1,59 @@
 #include "reader/json_reader.h"
 
 
-Napi::Value JsonReader::NlohmannJsonToNapiValue(nlohmann::json &j, Napi::Env env) {
+JsonReader::JsonReader(const Napi::CallbackInfo &_info, Napi::Env &_env) 
+: env{_env} {
+  std::string jsonString = _info[0].As<Napi::String>().Utf8Value();
+  ConvertStringToJson(jsonString);
+}
 
+JsonReader::JsonReader(const nlohmann::json& _json, Napi::Env &_env)
+: json(_json), env(_env) {
+    // The JSON object is passed by reference, so no std::move is used here.
+}
 
-  if (j.is_null()) {
-    return env.Null();
+void JsonReader::NlohmannJsonToNapiValue() {
+
+  if (json.is_null()) {
+    returnData = env.Null();
   } 
-  else if (j.is_boolean()) {
-    return Napi::Boolean::New(env, j.get<bool>());
+  else if (json.is_boolean()) {
+    returnData = Napi::Boolean::New(env, json.get<bool>());
   } 
-  else if (j.is_number()) {
-    return Napi::Number::New(env, j.get<double>());
+  else if (json.is_number()) {
+    returnData = Napi::Number::New(env, json.get<double>());
   } 
-  else if (j.is_string()) {
-    return Napi::String::New(env, j.get<std::string>());
+  else if (json.is_string()) {
+    returnData = Napi::String::New(env, json.get<std::string>());
   } 
-  else if (j.is_object()) {
+  else if (json.is_object()) {
     Napi::Object obj = Napi::Object::New(env);
-    for (auto& el : j.items()) {
-      obj.Set(el.key(), NlohmannJsonToNapiValue(el.value(), env));
+    for (auto& el : json.items()) {
+      // Convert each element in the object
+      nlohmann::json subJson = el.value();
+      JsonReader subReader(subJson, env); // Create a sub-reader for the nested JSON
+      subReader.NlohmannJsonToNapiValue(); // Convert the nested JSON
+      obj.Set(el.key(), subReader.returnData); // Set the converted value in the object
     }
-    return obj;
+    returnData = obj;
   } 
-  else if (j.is_array()) {
+  else if (json.is_array()) {
     Napi::Array array = Napi::Array::New(env);
-    for (size_t i = 0; i < j.size(); i++) {
-      array[i] = NlohmannJsonToNapiValue(j[i], env);
+    for (size_t i = 0; i < json.size(); i++) {
+      // Convert each element in the array
+      nlohmann::json subJson = json[i];
+      JsonReader subReader(subJson, env); // Create a sub-reader for the nested JSON
+      subReader.NlohmannJsonToNapiValue(); // Convert the nested JSON
+      array[i] = subReader.returnData; // Set the converted value in the array
     }
-    return array;
+    returnData = array;
   }
-  return env.Undefined(); // Fallback for other types
+  else {
+    returnData = env.Undefined(); // Fallback for other types
+  }
 }
 
 
-nlohmann::json JsonReader::ConvertStringToJson(const Napi::CallbackInfo& info) {
-  // Extract the JSON string from the JavaScript arguments.
-  std::string jsonString = info[0].As<Napi::String>().Utf8Value();
-  nlohmann::json jsonObject = nlohmann::json::parse(jsonString);
-  return jsonObject;
+void JsonReader::ConvertStringToJson(const std::string& jsonString) {
+  json = nlohmann::json::parse(jsonString);
 }

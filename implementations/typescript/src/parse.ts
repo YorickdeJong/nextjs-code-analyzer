@@ -32,10 +32,10 @@ try {
   );
   const astJson = JSON.stringify(ast, null, 2);
 
-  console.log('ast', astJson)
   // Get analysis results
-  const analysisResults = addon.Analyzer(astJson);
+  const analysisResults = addon.CreateReport(astJson);
 
+  console.log(analysisResults);
   analysisResults.tokens.forEach((token: any) => {
     if (token.comment) {
       console.log("token", token.comment)
