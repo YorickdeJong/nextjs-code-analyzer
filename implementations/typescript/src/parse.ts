@@ -36,6 +36,7 @@ try {
   const analysisResults = addon.CreateReport(astJson);
 
   console.log(analysisResults);
+  
   analysisResults.tokens.forEach((token: any) => {
     if (token.comment) {
       console.log("token", token.comment)

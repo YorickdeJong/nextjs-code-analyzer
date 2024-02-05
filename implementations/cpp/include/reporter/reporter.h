@@ -13,7 +13,7 @@
 // Based on the findings in the analyzer and optimzer classes
 class Reporter {
     public:
-        Reporter(const AnalysisResult &_analysisResult, const std::vector<TokenInfo> &_tokenInfo);
+        Reporter(const AnalysisReport &_analysisResult, const std::vector<TokenInfo> &_tokenInfo);
         void AddCommentsToJsonObject(nlohmann::json &j);
 
     private: 
@@ -22,6 +22,6 @@ class Reporter {
         void CreateComment(nlohmann::json &jToken, const std::string &commentText);
         
         
-        AnalysisResult analysisResult; 
-        std::vector<TokenInfo> tokenInfos;
+        AnalysisReport m_analysisResult; 
+        std::vector<TokenInfo> m_tokenInfos;
 } ;

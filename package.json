@@ -7,7 +7,7 @@
     "test": "node implementations/typescript/src/out/parse.js implementations/typescript/src/tests/test.js",
     "install-packages": "npm install && cd implementations/typescript && npm install && cd ../.. && cmake-js install -d 'implementations/cpp'",
     "build": "cd implementations/typescript/src && npx tsc && cd ../.. && cmake-js build -d 'cpp'",
-    "debug-build": "cd implementations/typescript && npx tsc && cd .. && cmake-js build -d 'cpp' --debug"
+    "debug-build": "cd implementations/typescript/src && npx tsc && cd ../.. && cmake-js build -g -d 'cpp' --debug"
   },
   "author": "Yorick de Jong",
   "license": "ISC",

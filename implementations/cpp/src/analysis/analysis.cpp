@@ -1,14 +1,14 @@
 #include "analysis/analysis.h"
 
 
-AnalysisResult Analyzer::Analyze(nlohmann::json &j) {
+void Analyzer::Analyze(nlohmann::json &j) {
 
     std::cout << "Analyzing JSON object" << j["loc"]["end"]["line"] << std::endl;
     
     
-    analysisResult.useClientDetected = false;
-    analysisResult.hookDetected = false;
-    analysisResult.largeFileDetected = j["loc"]["end"]["line"] > 99;
+    m_analysisResult.useClientDetected = false;
+    m_analysisResult.hookDetected = false;
+    m_analysisResult.largeFileDetected = j["loc"]["end"]["line"] > 99;
 
     for (auto& token : j["tokens"]) {
         
@@ -20,19 +20,17 @@ AnalysisResult Analyzer::Analyze(nlohmann::json &j) {
 
         if (value == "use client"){
             
-            AddTokenInfo(token, tokenInfos);
-            analysisResult.useClientDetected = true;
+            AddTokenInfo(token, m_tokenInfos);
+            m_analysisResult.useClientDetected = true;
             continue;
         }
 
-        if ( analysisResult.useClientDetected ) {
-            if (value.find("use") != std::string::npos) {
-                AddTokenInfo(token, tokenInfos);
-                analysisResult.hookDetected = true;
-            }
+        if (value.find("use") != std::string::npos) {
+            AddTokenInfo(token, m_tokenInfos);
+            m_analysisResult.hookDetected = true;
         }
+
     }
-    return analysisResult;
 }
 
 

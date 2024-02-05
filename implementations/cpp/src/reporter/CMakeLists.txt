@@ -1,6 +1,6 @@
 
 
-set(MY_ANALYSIS_DIR "${PROJECT_SOURCE_DIR}/include")
+set(INCLUDE_DIR "${PROJECT_SOURCE_DIR}/include")
 
 add_library(reporter
     reporter.cpp
@@ -8,6 +8,6 @@ add_library(reporter
 
 
 target_include_directories(reporter PUBLIC 
-    ${MY_ANALYSIS_DIR}
+    ${INCLUDE_DIR}
     ${CMAKE_SOURCE_DIR}/external/json/single_include
 )

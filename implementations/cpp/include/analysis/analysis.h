@@ -16,15 +16,15 @@ class Analyzer {
 
 
     public:
-        Analyzer(): analysisResult(), tokenInfos() {};
-        AnalysisResult Analyze(nlohmann::json &j); 
+        Analyzer(): m_analysisResult(), m_tokenInfos() {};
+        void Analyze(nlohmann::json &j); 
         void AddTokenInfo(const nlohmann::json &token, std::vector<TokenInfo> &tokenInfos);
-        const AnalysisResult& GetAnalysisResult() const { return analysisResult; };
-        const std::vector<TokenInfo>& GetTokenInfos() const { return tokenInfos; };
+        const AnalysisReport& GetAnalysisResult() const { return m_analysisResult; };
+        const std::vector<TokenInfo>& GetTokenInfos() const { return m_tokenInfos; };
 
     private:    
-        AnalysisResult analysisResult; 
-        std::vector<TokenInfo> tokenInfos;
+        AnalysisReport m_analysisResult; 
+        std::vector<TokenInfo> m_tokenInfos;
 
 
 };

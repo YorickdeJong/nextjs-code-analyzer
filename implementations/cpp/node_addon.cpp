@@ -23,14 +23,14 @@ Napi::Value CreateReport(const Napi::CallbackInfo& info) {
 
 
   // Analyze code and add comments to sections
-  AnalysisResult analysisResult = analyzer.Analyze(reader.getJson());
+  analyzer.Analyze(reader.getJson());
 
   // Add the report to the json object
   Reporter reporter(analyzer.GetAnalysisResult(), analyzer.GetTokenInfos());
   reporter.AddCommentsToJsonObject(reader.getJson());
 
   // Convert the JSON object to a NAPI value.
-  reader.NlohmannJsonToNapiValue();
+  reader.JsonToNapiValue();
 
   // Return value
   return Napi::Value(env, reader.getReturnData());

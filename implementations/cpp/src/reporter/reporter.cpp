@@ -2,9 +2,9 @@
 #include "reporter/reporter.h"
 
 
-Reporter::Reporter(const AnalysisResult &_analysisResult, 
+Reporter::Reporter(const AnalysisReport &_analysisResult, 
 const std::vector<TokenInfo> &_tokenInfo) 
-: analysisResult{_analysisResult}, tokenInfos{_tokenInfo}
+: m_analysisResult{_analysisResult}, m_tokenInfos{_tokenInfo}
 {
 }
 
@@ -12,14 +12,14 @@ const std::vector<TokenInfo> &_tokenInfo)
 void Reporter::AddCommentsToJsonObject(nlohmann::json &j){
     std::unordered_set<std::string> tokensToComment;
 
-    if (analysisResult.useClientDetected && analysisResult.hookDetected && analysisResult.largeFileDetected) {
-        PopulateTokensToComment(tokenInfos, tokensToComment);
+    if (m_analysisResult.useClientDetected && m_analysisResult.hookDetected && m_analysisResult.largeFileDetected) {
+        PopulateTokensToComment(m_tokenInfos, tokensToComment);
         AddCommentTokens(j, tokensToComment);
     }
-    else if (analysisResult.useClientDetected  && ! analysisResult.hookDetected) {
+    else if (m_analysisResult.useClientDetected  && ! m_analysisResult.hookDetected) {
         std::cout << "No hook detected, consider removing use client" << std::endl;
     }
-    else if (!analysisResult.useClientDetected &&  analysisResult.hookDetected) {
+    else if (!m_analysisResult.useClientDetected &&  m_analysisResult.hookDetected) {
         std::cout << "No use client detected, but detected hooks, consider adding useClient" << std::endl;
     }
     else {
@@ -29,10 +29,10 @@ void Reporter::AddCommentsToJsonObject(nlohmann::json &j){
 
 
 
-void Reporter::PopulateTokensToComment(const std::vector<TokenInfo> &tokenInfos, 
+void Reporter::PopulateTokensToComment(const std::vector<TokenInfo> &m_tokenInfos, 
     std::unordered_set<std::string> &tokensToComment) {
     
-    for (const auto& tokenInfo : tokenInfos) {
+    for (const auto& tokenInfo : m_tokenInfos) {
         tokensToComment.insert(tokenInfo.value);
     }
 }

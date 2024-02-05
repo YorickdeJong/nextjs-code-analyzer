@@ -39,13 +39,16 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${NODE_ADDON_API_DIR}
 )
 
-
+# Enable testing
+enable_testing()
 
 # INCLUDING SUBDIRECTORIES
 if (CMAKE_JS_VERSION)
     add_subdirectory(src/reader)
     add_subdirectory(src/analysis)
     add_subdirectory(src/reporter)
+    add_subdirectory(tests)
+    add_subdirectory(external/googletest)
 else()
     message(FATAL_ERROR "CMAKE_JS_VERSION is not defined")
 endif()

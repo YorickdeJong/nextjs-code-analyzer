@@ -11,13 +11,13 @@ class JsonReader {
     public:
         JsonReader(const Napi::CallbackInfo &_info, Napi::Env &_env);
         JsonReader(const nlohmann::json& _json, Napi::Env &_env);
-        void NlohmannJsonToNapiValue();
-        nlohmann::json &getJson() { return json; };
-        Napi::Value getReturnData() { return returnData; };
+        void JsonToNapiValue();
+        nlohmann::json &getJson() { return m_json; };
+        Napi::Value getReturnData() { return m_returnData; };
 
     private: 
         void ConvertStringToJson(const std::string& jsonString);
-        nlohmann::json json;
-        Napi::Env env;
-        Napi::Value returnData;
+        nlohmann::json m_json;
+        Napi::Env m_env;
+        Napi::Value m_returnData;
 };

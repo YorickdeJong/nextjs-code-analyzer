@@ -5,7 +5,7 @@
 #include <optional>
 
 // Use optional for fields that may or may not have a value
-struct AnalysisResult {
+struct AnalysisReport {
     bool useClientDetected;
     bool hookDetected;
     bool largeFileDetected;
