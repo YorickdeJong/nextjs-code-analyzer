@@ -46,11 +46,9 @@ function analyzeCode(code: string): vscode.Diagnostic[] {
         sourceType: "module",
         plugins: [
           "jsx",
-          "typescript", // if you're parsing TypeScript
-          // other plugins as needed
+          "typescript", 
         ],
         errorRecovery: true,
-        // attachComment: true,
         ranges: true,
         tokens: true
     });
@@ -73,7 +71,6 @@ function analyzeCode(code: string): vscode.Diagnostic[] {
       if (token.comment) {
 		    console.log(token.comment.value);
 
-        // Assuming token.loc.start.line is 1-based
         const startLine = token.loc.start.line - 1;
         const startChar = token.loc.start.column;
         const endLine = token.loc.end.line - 1;
@@ -87,7 +84,7 @@ function analyzeCode(code: string): vscode.Diagnostic[] {
         return new vscode.Diagnostic(
           range,
           token.comment.value,
-          vscode.DiagnosticSeverity.Warning // or appropriate severity
+          vscode.DiagnosticSeverity.Warning 
         );
       }
     }).filter((diagnostic: vscode.Diagnostic | undefined) => diagnostic !== undefined);

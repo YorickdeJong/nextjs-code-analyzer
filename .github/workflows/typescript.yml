@@ -3,39 +3,40 @@ name: Set Up Typescript
 on: [push, pull_request]
 
 jobs:
-  build-extension:
-    runs-on: ubuntu-latest
-    steps:
-
-    - uses: actions/checkout@v2
-    
-    - name: Setup Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '14'
-    
-    - name: Install dependencies for extension
-      run: npm install
-      working-directory: implementations/typescript/extensions/nextjs-code-analyzer
-    
-    - name: Build and Test Extension
-      run: npx tsc
-      working-directory: implementations/typescript/extensions/nextjs-code-analyzer
-
-  build-typescript:
+  build-and-test:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     
+    # Set up Node.js using the version specified in .nvmrc or just specify the version
     - name: Setup Node.js
       uses: actions/setup-node@v2
       with:
         node-version: '14'
-    
-    - name: Install dependencies for other TypeScript code
+
+    # Install dependencies for the whole TypeScript project
+    - name: Install dependencies
       run: npm install
-      working-directory: implementations/typescript/other_directory
-    
-    - name: Build and Test other TypeScript code
-      run: npx tsc
-      working-directory: implementations/typescript/other_directory
+      working-directory: ./implementations/typescript
+
+    # Build the main TypeScript project
+    - name: Build TypeScript project
+      run: npx tsc -p ./src
+      working-directory: ./implementations/typescript
+
+    # # Optionally run tests for the main TypeScript project
+    # - name: Test TypeScript project
+    #   run: npm test
+    #   working-directory: ./implementations/typescript
+
+    # Build the VS Code extension
+    - name: Build VS Code Extension
+      run: |
+        npm install
+        npm run compile
+      working-directory: ./implementations/typescript/extensions/nextjs-code-analyzer
+
+    # # Optionally run tests for the VS Code extension
+    # - name: Test VS Code Extension
+    #   run: npm test
+    #   working-directory: ./implementations/typescript/extensions/nextjs-code-analyzer

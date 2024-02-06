@@ -4,7 +4,6 @@
 #include <vector>
 #include <optional>
 
-// Use optional for fields that may or may not have a value
 struct AnalysisReport {
     bool useClientDetected = false;
     bool hookDetected = false;
