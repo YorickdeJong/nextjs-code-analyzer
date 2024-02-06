@@ -32,8 +32,8 @@ export function activate(context: vscode.ExtensionContext) {
 		// The code you place here will be executed every time your command is executed
 		const activeEditor = vscode.window.activeTextEditor;
 		if (activeEditor) {
-		const diagnostics = analyzeCode(activeEditor.document.getText());
-		updateDiagnostics(activeEditor.document, diagnostics);
+      const diagnostics = analyzeCode(activeEditor.document.getText());
+      updateDiagnostics(activeEditor.document, diagnostics);
 		}
 		console.log('NextJS code analyzer is active!')
 	});
@@ -50,16 +50,15 @@ function analyzeCode(code: string): vscode.Diagnostic[] {
           // other plugins as needed
         ],
         errorRecovery: true,
-        attachComment: true,
+        // attachComment: true,
         ranges: true,
         tokens: true
     });
     
-    console.log(ast);
+  
     // Clear existing comments in the AST before analysis
     ast.tokens && ast.tokens.forEach((token: any) => {
         if (token.comment) {
-            console.log('check')
             delete token.comment;
         }
     });
@@ -95,8 +94,9 @@ function analyzeCode(code: string): vscode.Diagnostic[] {
 }
 
 
+const diagnosticCollection = vscode.languages.createDiagnosticCollection('codeAnalyzer');
+
 function updateDiagnostics(document: vscode.TextDocument, diagnostics: vscode.Diagnostic[]) {
-    const diagnosticCollection = vscode.languages.createDiagnosticCollection('codeAnalyzer');
     diagnosticCollection.set(document.uri, diagnostics);
 }
 
