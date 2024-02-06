@@ -20,11 +20,11 @@ class CommentStrategyInterface{
                 
                 if (analysisReport.useClientDetected && analysisReport.largeFileDetected 
                     && specificCondition) {
-                        returnText += text1;
+                        returnText += text1 + " \n";
                 }
                 if (!analysisReport.useClientDetected 
                     && specificCondition) {
-                        returnText += text2;
+                        returnText += text2  + " \n";
                 }
                 
 

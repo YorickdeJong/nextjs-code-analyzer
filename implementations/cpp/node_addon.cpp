@@ -26,7 +26,7 @@ Napi::Value CreateReport(const Napi::CallbackInfo& info) {
 
 
   // Analyze code and add comments to sections
-  analyzer.Analyze(reader.getJson());
+  analyzer.AnalyzeJson(reader.getJson());
 
   // Add the report to the json object
   Reporter reporter(analyzer.GetAnalysisResult(), analyzer.GetTokenInfos());

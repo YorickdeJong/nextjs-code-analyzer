@@ -7,8 +7,8 @@
 #include <iostream>
 #include "models/token_info.h"
 #include "models/analysis_report.h"
-#include "reporter/patterns/comment_strategy_chain_builder.h"
-#include "reporter/patterns/comment_strategy_interface.h"
+#include "reporter/chain/comment_strategy_chain_builder.h"
+#include "reporter/strategy/comment_strategy_interface.h"
 
 // Reporter class is responsible for adding optimization comments and suggestions
 // Based on the findings in the analyzer and optimzer classes

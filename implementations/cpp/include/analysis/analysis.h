@@ -6,6 +6,8 @@
 #include <unordered_set>
 #include "models/analysis_report.h"
 #include "models/token_info.h"
+#include <regex>
+#include "utils/client_side_constants.h"
 
 // Analyzer is responsible for analyzing JSON data and setting a set of values
 // based on the report findings. These values indicate what optimizations should
@@ -17,14 +19,19 @@ class Analyzer {
 
     public:
         Analyzer(): m_analysisResult(), m_tokenInfos() {};
-        void Analyze(nlohmann::json &j); 
-        void AddTokenInfo(const nlohmann::json &token, std::vector<TokenInfo> &tokenInfos);
+        void AnalyzeJson(nlohmann::json &j); 
+        void AddTokenInfo( const nlohmann::json &token, std::vector<TokenInfo> &tokenInfos,
+            const std::string &value, const std::string& compareValue, bool &analysisResultValues );
+
+        void AddTokenInfoHooks( const nlohmann::json &token, std::vector<TokenInfo> &tokenInfos,
+           const std::string &value, bool &analysisResultValue );
+
         const AnalysisReport& GetAnalysisResult() const { return m_analysisResult; };
         const std::vector<TokenInfo>& GetTokenInfos() const { return m_tokenInfos; };
 
     private:    
         void InitAnalyseResult(nlohmann::json &j);
-        
+
         AnalysisReport m_analysisResult; 
         std::vector<TokenInfo> m_tokenInfos;
 

@@ -36,15 +36,9 @@ TEST(ReporterTest, AddCommentTokens) {
     };
 
 
-    analyzer.Analyze(inputJson);
-    std::cout << "useclient " << analyzer.GetAnalysisResult().useClientDetected << std::endl;
-    std::cout << "hook " << analyzer.GetAnalysisResult().hookDetected << std::endl;
-    std::cout << "analyzer " << analyzer.GetTokenInfos()[0].value << std::endl;
-
+    analyzer.AnalyzeJson(inputJson);
     Reporter reporter(analyzer.GetAnalysisResult(), analyzer.GetTokenInfos()); 
     reporter.AddCommentsToJsonObject(inputJson);
-
-    std::cout << inputJson.dump(4) << std::endl;
 
     EXPECT_EQ(inputJson.size(), inputJson.size());
 

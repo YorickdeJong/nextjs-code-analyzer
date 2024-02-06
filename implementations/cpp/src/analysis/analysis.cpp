@@ -4,7 +4,7 @@
 
 
 
-void Analyzer::Analyze(nlohmann::json &j) {
+void Analyzer::AnalyzeJson(nlohmann::json &j) {
 
     std::cout << "Analyzing JSON object" << j["loc"]["end"]["line"] << std::endl;
     
@@ -14,37 +14,62 @@ void Analyzer::Analyze(nlohmann::json &j) {
 
     for (auto& token : j["tokens"]) {
         
-
-
         if (!token.contains("value") || !token["value"].is_string()) {
             continue;
         }
 
         const std::string &value = token["value"];
 
-        if (value == "use client"){
-            
-            AddTokenInfo(token, m_tokenInfos);
-            m_analysisResult.useClientDetected = true;
-            continue;
-        }
-
-        if (value.find("use") != std::string::npos) {
-            AddTokenInfo(token, m_tokenInfos);
-            m_analysisResult.hookDetected = true;
-        }
+        AddTokenInfo(token, m_tokenInfos, value, CLIENT::USE_CLIENT, m_analysisResult.useClientDetected);
+        AddTokenInfo(token, m_tokenInfos, value, CLIENT::WINDOW, m_analysisResult.windowDetected);
+        AddTokenInfo(token, m_tokenInfos, value, CLIENT::DOCUMENT, m_analysisResult.documentDetected);
+        AddTokenInfo(token, m_tokenInfos, value, CLIENT::BUTTON, m_analysisResult.buttontDetected);
+        AddTokenInfo(token, m_tokenInfos, value, CLIENT::ONCLICK, m_analysisResult.onClickDetected);
+        AddTokenInfo(token, m_tokenInfos, value, CLIENT::EVENT, m_analysisResult.eventDetected);
+        AddTokenInfo(token, m_tokenInfos, value, CLIENT::ROUTER, m_analysisResult.routerDetected);
+        AddTokenInfo(token, m_tokenInfos, value, CLIENT::LOCAL, m_analysisResult.localDetected);
+        AddTokenInfo(token, m_tokenInfos, value, CLIENT::DYNAMIC, m_analysisResult.dynamicDetected);
+        AddTokenInfoHooks(token, m_tokenInfos, value, m_analysisResult.hookDetected);
 
     }
 }
 
 
-void Analyzer::AddTokenInfo(const nlohmann::json &token, std::vector<TokenInfo> &tokenInfos) {
-    TokenInfo info;
-    info.value = token["value"].get<std::string>();
-    info.line = token["loc"]["start"]["line"];
-    info.start = token["loc"]["start"]["index"];
-    info.end = token["loc"]["end"]["index"];
-    tokenInfos.emplace_back(info);
+
+
+void Analyzer::AddTokenInfo(const nlohmann::json &token, std::vector<TokenInfo> &tokenInfos,
+    const std::string &value, const std::string& compareValue, bool &analysisResultValue
+) {
+    if (value == compareValue){
+        analysisResultValue = true;
+
+        TokenInfo info;
+        info.value = token["value"].get<std::string>();
+        info.line = token["loc"]["start"]["line"];
+        info.start = token["loc"]["start"]["index"];
+        info.end = token["loc"]["end"]["index"];
+        tokenInfos.emplace_back(info);
+    }
+}
+
+void Analyzer::AddTokenInfoHooks(const nlohmann::json &token, std::vector<TokenInfo> &tokenInfos,
+    const std::string &value, bool &analysisResultValue
+) {
+    std::regex re("use[A-Z]\\w*");
+    std::smatch match;
+        
+    if (std::regex_search(value, match, re) && 
+                     value != "use client") {
+
+        analysisResultValue = true;
+
+        TokenInfo info;
+        info.value = token["value"].get<std::string>();
+        info.line = token["loc"]["start"]["line"];
+        info.start = token["loc"]["start"]["index"];
+        info.end = token["loc"]["end"]["index"];
+        tokenInfos.emplace_back(info);
+    }
 }
 
 

@@ -42,6 +42,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 # Enable testing
 enable_testing()
 
+
+
 # INCLUDING SUBDIRECTORIES
 if (CMAKE_JS_VERSION)
     add_subdirectory(src/reader)
@@ -63,6 +65,13 @@ if(MSVC AND CMAKE_JS_NODELIB_DEF AND CMAKE_JS_NODELIB_TARGET)
 endif()
 
 
+add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} --verbose)
 
 
-
+# # Post-build command to run tests
+# add_custom_command(
+#     TARGET ${PROJECT_NAME} POST_BUILD
+#     COMMAND ${CMAKE_CTEST_COMMAND} --verbose
+#     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+#     COMMENT "Running tests"
+# )

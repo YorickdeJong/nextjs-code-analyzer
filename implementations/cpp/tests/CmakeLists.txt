@@ -20,11 +20,25 @@ target_include_directories(reporter PUBLIC
 # Add test executable
 add_executable(analysis_test analysis_test.cpp)
 add_executable(reporter_test reporter_test.cpp)
+add_executable(useclient_strategy_test useclient_strategy_test.cpp)
+add_executable(hook_strategy_test hook_strategy_test.cpp)
+add_executable(hook_chain_builder_test hook_chain_builder_test.cpp)
+add_executable(useclient_chain_builder useclient_chain_builder.cpp)
+
 
 # Link against Google Test and any other libraries
 target_link_libraries(analysis_test gtest gtest_main analysis)
 target_link_libraries(reporter_test gtest gtest_main reporter analysis)
+target_link_libraries(useclient_strategy_test gtest gtest_main reporter analysis)
+target_link_libraries(hook_strategy_test gtest gtest_main reporter analysis)
+target_link_libraries(hook_chain_builder_test gtest gtest_main reporter analysis)
+target_link_libraries(useclient_chain_builder gtest gtest_main reporter analysis)
 
 # Add the test to CTest's test suite
-add_test(NAME json_reader_test COMMAND json_reader_test)
+add_test(NAME analysis_test COMMAND analysis_test)
+add_test(NAME reporter_test COMMAND reporter_test)
+add_test(NAME useclient_strategy_test COMMAND useclient_strategy_test)
+add_test(NAME hook_strategy_test COMMAND hook_strategy_test)
+add_test(NAME hook_chain_builder_test COMMAND hook_chain_builder_test)
+add_test(NAME useclient_chain_builder COMMAND useclient_chain_builder)
 

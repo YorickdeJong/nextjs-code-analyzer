@@ -3,25 +3,28 @@
 #include "models/token_info.h"
 #include "models/analysis_report.h"
 #include <nlohmann/json.hpp>
+#include "utils/client_side_constants.h"
 
 
 
-
-TEST(AnalysisTest, AddTokenInfo) {
+TEST(AnalysisTest, addTokenInfoUseClient) {
     Analyzer analyze;
     std::vector<TokenInfo> tokenInfo;
     nlohmann::json token = {
-            {"value", "testValue"},
+            {"value", CLIENT::USE_CLIENT},
             {"loc", {
                 {"start", {{"line", 1}, {"index", 0}}},
                 {"end", {{"index", 10}}}
             }}
         };
 
-    analyze.AddTokenInfo(token, tokenInfo);
+    const std::string &value = token["value"]; 
+
+    bool mock_useClientDetected = false;
+    analyze.AddTokenInfo(token, tokenInfo, value, CLIENT::USE_CLIENT, mock_useClientDetected );
 
     EXPECT_EQ(tokenInfo.size(), 1u);
-    EXPECT_EQ(tokenInfo[0].value, "testValue");
+    EXPECT_EQ(tokenInfo[0].value, CLIENT::USE_CLIENT);
     EXPECT_EQ(tokenInfo[0].line, 1);
     EXPECT_EQ(tokenInfo[0].start, 0);
     EXPECT_EQ(tokenInfo[0].end, 10);
@@ -45,7 +48,7 @@ TEST(AnalysisTest, useClientAndHooks) {
                 {"loc", {{"start", {{"line", 1}, {"index", 11}}}, {"end", {{"line", 1}, {"index", 23}}}}},
                 {"start", 11},
                 {"type", "Keyword"},
-                {"value", "use client"}
+                {"value", CLIENT::USE_CLIENT}
             },
             {
                 {"end", 23},
@@ -57,7 +60,7 @@ TEST(AnalysisTest, useClientAndHooks) {
         }}
     };
 
-    analyzer.Analyze(inputJson);
+    analyzer.AnalyzeJson(inputJson);
 
 
     EXPECT_EQ(analyzer.GetAnalysisResult().useClientDetected, true);
@@ -86,7 +89,7 @@ TEST(AnalysisTest, Hooks) {
         }}
     };
 
-    analyzer.Analyze(inputJson);
+    analyzer.AnalyzeJson(inputJson);
 
 
     EXPECT_EQ(analyzer.GetAnalysisResult().hookDetected, true);
@@ -108,13 +111,14 @@ TEST(AnalysisTest, useClient) {
                 {"loc", {{"start", {{"line", 1}, {"index", 11}}}, {"end", {{"line", 1}, {"index", 23}}}}},
                 {"start", 11},
                 {"type", "Keyword"},
-                {"value", "use client"}
+                {"value", CLIENT::USE_CLIENT}
             },
             // Add other tokens as needed
         }}
     };
 
-    analyzer.Analyze(inputJson);
+    analyzer.AnalyzeJson(inputJson);
 
     EXPECT_EQ(analyzer.GetAnalysisResult().useClientDetected, true);
 }
+

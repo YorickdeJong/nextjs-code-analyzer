@@ -1,9 +1,10 @@
 #pragma once
 
 #include <memory>
-#include "reporter/patterns/use_client_strategy.h"
-#include "reporter/patterns/comment_strategy_interface.h"
-#include "reporter/patterns/use_client_strategy.h"
+#include "reporter/strategy/comment_strategy_interface.h"
+#include "reporter/strategy/hook_strategy.h"
+#include "reporter/strategy/useclient_strategy.h"
+#include "reporter/strategy/other_strategies.h"
 
 class CommentStrategyChain {
 
@@ -31,9 +32,11 @@ class CommentStrategyChain {
                     break; // Break the chain if a strategy indicates to stop further processing
                 }
             }
-            std::cout << "sub " << comments << std::endl;
             return comments;
         }
+
+        const std::vector<std::unique_ptr<CommentStrategyInterface>>& GetStrategies() const { return m_Strategies; };
+
     private:
         std::vector<std::unique_ptr<CommentStrategyInterface>> m_Strategies;
 
