@@ -8,20 +8,77 @@
 #include "reporter/chain/comment_strategy_chain_builder.h"
 
 
-
-
-
-TEST(CommentStrategyChainBuilderHook, ExecuteChain_WithStandardInput_ReturnsEmptyComments) {
-    CommentStrategyChain commentStrategy;
-    commentStrategy.ChainBuilder();
-
+class UseEffectStrategyTest : public ::testing::Test {
+protected:
     AnalysisReport analysisReport;
-    const std::string javascript_token = "useEffect";
-
+    UseClientStrategy useClientStrategy;
+    ChainBuilder chainBuilder;
+    const std::string javascriptTokenValue = "useEffect";
     std::string comments;
-    auto &strategies = commentStrategy.GetStrategies();
+
+    void SetUp() override {
+    }
+
+    std::string GetExpectedText1() {
+        return "Consider refactoring " + javascriptTokenValue + " Large file detected";
+    }
+
+    std::string GetExpectedText2() {
+        return "No use client detected, consider refactoring " + 
+               javascriptTokenValue + " or add 'use client' to make this file client side";
+    }
+
+    std::string GetExpectedTextUseEffect() {
+        return "If you are using an async await fetch in your useEffect, "
+               "consider making this component server side and make this component async. Example: "
+               "async function Component() {"
+               "    const var = await fetchFunction();"
+               "    return ("
+               "        <div></div>"
+               "    );"
+               "}  \n";
+    }
+};
+
+class UseStateStrategyTest : public ::testing::Test {
+protected:
+    AnalysisReport analysisReport;
+    UseClientStrategy useClientStrategy;
+    ChainBuilder chainBuilder;
+    const std::string javascriptTokenValue = "useState";
+    std::string comments;
+    
+    void SetUp() override {
+    }
+
+    std::string GetExpectedText1() {
+        return "Consider refactoring " + javascriptTokenValue + " Large file detected";
+    }
+
+    std::string GetExpectedText2() {
+        return "No use client detected, consider refactoring " + 
+               javascriptTokenValue + " or add 'use client' to make this file client side";
+    }
+
+    std::string GetExpectedTextUseEffect() {
+        return "If you are using an async await fetch in your useEffect, "
+               "consider making this component server side and make this component async. Example: "
+               "async function Component() {"
+               "    const var = await fetchFunction();"
+               "    return ("
+               "        <div></div>"
+               "    );"
+               "}  \n";
+    }
+};
+
+
+
+TEST_F(UseEffectStrategyTest, ExecuteChain_WithStandardInput_ReturnsEmptyComments) {
+
+    auto &strategies = chainBuilder.GetStrategies();
     for (const auto &strategy : strategies) {
-        if (!strategy->ExecuteStrategy(analysisReport, comments, javascript_token)) {
+        if (!strategy->ExecuteStrategy(analysisReport, comments, javascriptTokenValue)) {
             break; // Break the chain if a strategy indicates to stop further processing
         }
     }
@@ -31,19 +88,19 @@ TEST(CommentStrategyChainBuilderHook, ExecuteChain_WithStandardInput_ReturnsEmpt
 }
 
 
-TEST(CommentStrategyChainBuilderHook, ExecuteChain_WithUseClientAndLargeFileFlags) {
-    CommentStrategyChain commentStrategy;
-    commentStrategy.ChainBuilder();
-
-    AnalysisReport analysisReport;
+TEST_F(UseEffectStrategyTest, ExecuteChain_WithUseClientAndLargeFileFlags) {
     analysisReport.useClientDetected = true;
     analysisReport.largeFileDetected = true;
-    const std::string javascriptToken = "useEffect";
+    analysisReport.hookDetected = false;
+    
+    std::string expectedText1 = GetExpectedText1();
+    std::string expectedText2 = GetExpectedText2();
+    std::string expectedTextUseEffect = GetExpectedTextUseEffect();
 
-    std::string comments;
-    auto &strategies = commentStrategy.GetStrategies();
+
+    auto &strategies = chainBuilder.GetStrategies();
     for (const auto &strategy : strategies) {
-        if (!strategy->ExecuteStrategy(analysisReport, comments, javascriptToken)) {
+        if (!strategy->ExecuteStrategy(analysisReport, comments, javascriptTokenValue)) {
             break; // Break the chain if a strategy indicates to stop further processing
         }
     }
@@ -52,108 +109,63 @@ TEST(CommentStrategyChainBuilderHook, ExecuteChain_WithUseClientAndLargeFileFlag
 
 }
 
-TEST(CommentStrategyChainBuilderHook, ExecuteChain_WithUseClientLargeFileAndUseEffectFlags) {
-    CommentStrategyChain commentStrategy;
-    commentStrategy.ChainBuilder();
+TEST_F(UseEffectStrategyTest, ExecuteChain_WithUseClientLargeFileAndUseEffectFlags) {
 
-    AnalysisReport analysisReport;
     analysisReport.useClientDetected = true;
     analysisReport.largeFileDetected = true;
     analysisReport.hookDetected = true;
-    const std::string javascriptToken = "useEffect";
+
+    std::string expectedText1 = GetExpectedText1();
+    std::string expectedText2 = GetExpectedText2();
+    std::string expectedTextUseEffect = GetExpectedTextUseEffect();
 
 
-    const std::string text1 = "Consider refactoring " + javascriptToken + " Large file detected";
-    const std::string text2 = "No use client detected, consider refactoring " + 
-        javascriptToken + " or add 'use client' to make this file client side";
-    const std::string textUseEffect = "If you are using an async await fetch in your useEffect, "
-            "consider making this component server side and make this component async. Example: "
-            "async function Component() {"
-            "    const var = await fetchFunction();"
-            "    return ("
-            "        <div></div>"
-            "    );"
-            "}  \n";
-
-
-    std::string comments;
-    auto &strategies = commentStrategy.GetStrategies();
+    auto &strategies = chainBuilder.GetStrategies();
     for (const auto &strategy : strategies) {
-        if (!strategy->ExecuteStrategy(analysisReport, comments, javascriptToken)) {
+        if (!strategy->ExecuteStrategy(analysisReport, comments, javascriptTokenValue)) {
             break; // Break the chain if a strategy indicates to stop further processing
         }
     }
-
-    EXPECT_EQ(comments, text1 + " \n" + textUseEffect);
+    EXPECT_EQ(comments, expectedText1 + " \n" + expectedTextUseEffect);
 
 }
 
 
-TEST(CommentStrategyChainBuilderHook, ExecuteChain_WithoutUseClientLargeFileAndUseEffectFlags) {
-    CommentStrategyChain commentStrategy;
-    commentStrategy.ChainBuilder();
-
-    AnalysisReport analysisReport;
+TEST_F(UseEffectStrategyTest, ExecuteChain_WithoutUseClientLargeFileAndUseEffectFlags) {
     analysisReport.useClientDetected = false;
     analysisReport.largeFileDetected = true;
     analysisReport.hookDetected = true;
-    const std::string javascriptToken = "useEffect";
+
+    std::string expectedText1 = GetExpectedText1();
+    std::string expectedText2 = GetExpectedText2();
+    std::string expectedTextUseEffect = GetExpectedTextUseEffect();
 
 
-    const std::string text1 = "Consider refactoring " + javascriptToken + " Large file detected";
-    const std::string text2 = "No use client detected, consider refactoring " + 
-        javascriptToken + " or add 'use client' to make this file client side";
-
-    const std::string textUseEffect = "If you are using an async await fetch in your useEffect, "
-            "consider making this component server side and make this component async. Example: "
-            "async function Component() {"
-            "    const var = await fetchFunction();"
-            "    return ("
-            "        <div></div>"
-            "    );"
-            "}  \n";
-
-
-    std::string comments;
-    auto &strategies = commentStrategy.GetStrategies();
+    auto &strategies = chainBuilder.GetStrategies();
     for (const auto &strategy : strategies) {
-        if (!strategy->ExecuteStrategy(analysisReport, comments, javascriptToken)) {
+        if (!strategy->ExecuteStrategy(analysisReport, comments, javascriptTokenValue)) {
             break; // Break the chain if a strategy indicates to stop further processing
         }
     }
 
-    EXPECT_EQ(comments, text2 + " \n" + textUseEffect);
+    EXPECT_EQ(comments, expectedText2 + " \n" + expectedTextUseEffect);
 
 }
 
-TEST(CommentStrategyChainBuilderHook, ExecuteChain_WithoutUseClientLargeFileAndWithoutUseEffectFlags) {
-    CommentStrategyChain commentStrategy;
-    commentStrategy.ChainBuilder();
+TEST_F(UseEffectStrategyTest, ExecuteChain_WithoutUseClientLargeFileAndWithoutUseEffectFlags) {
 
-    AnalysisReport analysisReport;
     analysisReport.useClientDetected = false;
     analysisReport.largeFileDetected = true;
     analysisReport.hookDetected = false;
-    const std::string javascriptToken = "useEffect";
+
+    std::string expectedText1 = GetExpectedText1();
+    std::string expectedText2 = GetExpectedText2();
+    std::string expectedTextUseEffect = GetExpectedTextUseEffect();
 
 
-    const std::string text1 = "Consider refactoring " + javascriptToken + " Large file detected";
-    const std::string text2 = "No use client detected, consider refactoring " + 
-        javascriptToken + " or add 'use client' to make this file client side";
-    const std::string textUseEffect = "If you are using an async await fetch in your useEffect, "
-            "consider making this component server side and make this component async. Example: "
-            "async function Component() {"
-            "    const var = await fetchFunction();"
-            "    return ("
-            "        <div></div>"
-            "    );"
-            "}  \n";
-
-
-    std::string comments;
-    auto &strategies = commentStrategy.GetStrategies();
+    auto &strategies = chainBuilder.GetStrategies();
     for (const auto &strategy : strategies) {
-        if (!strategy->ExecuteStrategy(analysisReport, comments, javascriptToken)) {
+        if (!strategy->ExecuteStrategy(analysisReport, comments, javascriptTokenValue)) {
             break; // Break the chain if a strategy indicates to stop further processing
         }
     }
@@ -163,110 +175,66 @@ TEST(CommentStrategyChainBuilderHook, ExecuteChain_WithoutUseClientLargeFileAndW
 }
 
 
-TEST(CommentStrategyChainBuilderHook, ExecuteChain_WithUseClientLargeFileAndHookFlags) {
-    CommentStrategyChain commentStrategy;
-    commentStrategy.ChainBuilder();
-
-    AnalysisReport analysisReport;
+TEST_F(UseStateStrategyTest, ExecuteChain_WithUseClientLargeFileAndHookFlags) {
     analysisReport.useClientDetected = true;
     analysisReport.largeFileDetected = true;
     analysisReport.hookDetected = true;
-    const std::string javascriptToken = "useState";
+
+    std::string expectedText1 = GetExpectedText1();
+    std::string expectedText2 = GetExpectedText2();
+    std::string expectedTextUseEffect = GetExpectedTextUseEffect();
 
 
-    const std::string text1 = "Consider refactoring " + javascriptToken + " Large file detected";
-    const std::string text2 = "No use client detected, consider refactoring " + 
-        javascriptToken + " or add 'use client' to make this file client side";
-    const std::string textUseEffect = "If you are using an async await fetch in your useEffect, "
-            "consider making this component server side and make this component async. Example: "
-            "async function Component() {"
-            "    const var = await fetchFunction();"
-            "    return ("
-            "        <div></div>"
-            "    );"
-            "}  \n";
-
-
-    std::string comments;
-    auto &strategies = commentStrategy.GetStrategies();
+    auto &strategies = chainBuilder.GetStrategies();
     for (const auto &strategy : strategies) {
-        if (!strategy->ExecuteStrategy(analysisReport, comments, javascriptToken)) {
+        if (!strategy->ExecuteStrategy(analysisReport, comments, javascriptTokenValue)) {
             break; // Break the chain if a strategy indicates to stop further processing
         }
     }
 
-    EXPECT_EQ(comments, text1 + " \n");
+    EXPECT_EQ(comments, expectedText1 + " \n");
 }
 
 
-TEST(CommentStrategyChainBuilderHook, ExecuteChain_WithoutUseClientLargeFileAndHookFlags) {
-    CommentStrategyChain commentStrategy;
-    commentStrategy.ChainBuilder();
-
-    AnalysisReport analysisReport;
+TEST_F(UseStateStrategyTest, ExecuteChain_WithoutUseClientLargeFileAndHookFlags) {
     analysisReport.useClientDetected = false;
     analysisReport.largeFileDetected = true;
     analysisReport.hookDetected = true;
-    const std::string javascriptToken = "useState";
 
 
-    const std::string text1 = "Consider refactoring " + javascriptToken + " Large file detected";
-    const std::string text2 = "No use client detected, consider refactoring " + 
-        javascriptToken + " or add 'use client' to make this file client side";
-    const std::string textUseEffect = "If you are using an async await fetch in your useEffect, "
-            "consider making this component server side and make this component async. Example: "
-            "async function Component() {"
-            "    const var = await fetchFunction();"
-            "    return ("
-            "        <div></div>"
-            "    );"
-            "}  \n";
+    std::string expectedText1 = GetExpectedText1();
+    std::string expectedText2 = GetExpectedText2();
+    std::string expectedTextUseEffect = GetExpectedTextUseEffect();
 
 
-    std::string comments;
-    auto &strategies = commentStrategy.GetStrategies();
+    auto &strategies = chainBuilder.GetStrategies();
     for (const auto &strategy : strategies) {
-        if (!strategy->ExecuteStrategy(analysisReport, comments, javascriptToken)) {
+        if (!strategy->ExecuteStrategy(analysisReport, comments, javascriptTokenValue)) {
             break; // Break the chain if a strategy indicates to stop further processing
         }
     }
 
-    EXPECT_EQ(comments, text2 + " \n");
+    EXPECT_EQ(comments, expectedText2 + " \n");
 }
 
 
-TEST(CommentStrategyChainBuilderHook, ExecuteChain_WithoutUseClientLargeFileAndWithoutHookFlags) {
-    CommentStrategyChain commentStrategy;
-    commentStrategy.ChainBuilder();
-
-    AnalysisReport analysisReport;
+TEST_F(UseStateStrategyTest, ExecuteChain_WithoutUseClientLargeFileAndWithoutHookFlags) {
     analysisReport.useClientDetected = false;
     analysisReport.largeFileDetected = true;
     analysisReport.hookDetected = false;
-    const std::string javascriptToken = "useState";
 
 
-    const std::string text1 = "Consider refactoring " + javascriptToken + " Large file detected";
-    const std::string text2 = "No use client detected, consider refactoring " + 
-        javascriptToken + " or add 'use client' to make this file client side";
-    const std::string textUseEffect = "If you are using an async await fetch in your useEffect, "
-            "consider making this component server side and make this component async. Example: "
-            "async function Component() {"
-            "    const var = await fetchFunction();"
-            "    return ("
-            "        <div></div>"
-            "    );"
-            "}  \n";
+    std::string expectedText1 = GetExpectedText1();
+    std::string expectedText2 = GetExpectedText2();
+    std::string expectedTextUseEffect = GetExpectedTextUseEffect();
 
 
-    std::string comments;
-    auto &strategies = commentStrategy.GetStrategies();
+    auto &strategies = chainBuilder.GetStrategies();
     for (const auto &strategy : strategies) {
-        if (!strategy->ExecuteStrategy(analysisReport, comments, javascriptToken)) {
+        if (!strategy->ExecuteStrategy(analysisReport, comments, javascriptTokenValue)) {
             break; // Break the chain if a strategy indicates to stop further processing
         }
     }
 
     EXPECT_EQ(comments, "");
 }
-

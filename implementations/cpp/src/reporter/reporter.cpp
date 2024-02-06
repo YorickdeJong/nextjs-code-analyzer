@@ -11,9 +11,10 @@ const std::vector<TokenInfo> &tokenInfo)
 
 void Reporter::AddCommentsToJsonObject(nlohmann::json &j){
     std::unordered_set<std::string> tokensToComment;
-    
+    ChainBuilder chainBuilder; 
     CommentStrategyChain commentStrategyChain;
-    commentStrategyChain.ChainBuilder();
+
+
     PopulateTokensToComment(m_tokenInfos, tokensToComment);
 
     for (auto& jToken : j["tokens"]) {
@@ -26,7 +27,9 @@ void Reporter::AddCommentsToJsonObject(nlohmann::json &j){
             continue; // Skip to the next iteration if value is not in tokensToComment
         }
 
-        std::string comments = commentStrategyChain.ExecuteChain(m_analysisReport, javascriptTokenValue);
+        std::string comments = commentStrategyChain.ExecuteChain( chainBuilder, m_analysisReport, 
+            javascriptTokenValue);
+        
         std::cout << "main" << comments << std::endl;
         CreateComment(jToken, comments);
     }

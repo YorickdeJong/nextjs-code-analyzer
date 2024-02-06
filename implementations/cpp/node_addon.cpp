@@ -7,9 +7,7 @@ Napi::Value CreateReport(const Napi::CallbackInfo& info) {
   std::cout << info.Env() << std::endl;
 
   Napi::Env env = info.Env();
-  class JsonReader reader(info, env);
-  class Analyzer analyzer;
-  
+
   // Check the number of arguments passed.
   if (info.Length() < 1) {
     Napi::TypeError::New(env, "Wrong number of arguments").ThrowAsJavaScriptException();
@@ -23,6 +21,10 @@ Napi::Value CreateReport(const Napi::CallbackInfo& info) {
     Napi::TypeError::New(env, "Wrong number of arguments").ThrowAsJavaScriptException();
     return Napi::String::New(env, "");
   }
+
+  class JsonReader reader(info, env);
+  class Analyzer analyzer;
+
 
 
   // Analyze code and add comments to sections

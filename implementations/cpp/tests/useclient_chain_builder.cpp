@@ -9,137 +9,139 @@
 
 
 
-
-
-TEST(CommentStrategyChainBuilderUseClient, ExecuteChain_WithStandardInput_ReturnsEmptyComments) {
+class UseClientStrategyTest : public ::testing::Test {
+protected:
     CommentStrategyChain commentStrategy;
-    commentStrategy.ChainBuilder();
-
+    ChainBuilder chainBuilder;
     AnalysisReport analysisReport;
-    const std::string javascript_token = "use client";
-
+    const std::string javascriptToken = "use client";
     std::string comments;
-    auto &strategies = commentStrategy.GetStrategies();
+
+    void SetUp() override {
+
+    }
+
+    std::string LargeFileDetected() {
+        return "Large file detected! Consider refactoring 'use client' into a smaller file";
+    }
+
+    std::string EmptyText() {
+        return "";
+    }
+
+    std::string GetManyWords() {
+        return "Client side file detected with many words. Consider refactoring for better SEO score \n";
+    }
+
+    std::string RemoveClient() {
+        return "Consider removing use client from this file as no client side components have been detected \n";
+    }
+
+
+};
+
+
+
+
+TEST_F(UseClientStrategyTest, ExecuteChain_WithStandardInput_ReturnsEmptyComments) {
+
+    auto &strategies = chainBuilder.GetStrategies();
     for (const auto &strategy : strategies) {
-        if (!strategy->ExecuteStrategy(analysisReport, comments, javascript_token)) {
+        if (!strategy->ExecuteStrategy(analysisReport, comments, javascriptToken)) {
             break; // Break the chain if a strategy indicates to stop further processing
         }
     }
 
     EXPECT_EQ(comments, "");
-
 }
 
 
-TEST(CommentStrategyChainBuilderUseClient, ExecuteChain_LargeFileWithUseClient) {
-    CommentStrategyChain commentStrategy;
-    commentStrategy.ChainBuilder();
-
-    AnalysisReport analysisReport;
+TEST_F(UseClientStrategyTest, ExecuteChain_LargeFileWithUseClient) {
+    
     analysisReport.useClientDetected = true;
     analysisReport.largeFileDetected = true;
     analysisReport.hookDetected = false;
     analysisReport.manyWordsInFile = false;
-    const std::string javascript_token = "use client";
+    
 
+    const std::string largeFileDetected = LargeFileDetected();
+    const std::string emptyText = EmptyText();
+    const std::string getManyWords = GetManyWords();
+    const std::string removeClient = RemoveClient();
 
-    const std::string text1 = "Large file detected! Consider refactoring 'use client' into a smaller file";
-    const std::string text2 = "";
-    const std::string manywords = "Client side file detected with many words. Consider refactoring for better SEO score \n";
-    const std::string removeUseClient = "Consider removing use client from this file as no client side components have been detected \n";
-
-    std::string comments;
-    auto &strategies = commentStrategy.GetStrategies();
+    auto &strategies = chainBuilder.GetStrategies();
     for (const auto &strategy : strategies) {
-        if (!strategy->ExecuteStrategy(analysisReport, comments, javascript_token)) {
+        if (!strategy->ExecuteStrategy(analysisReport, comments, javascriptToken)) {
             break; // Break the chain if a strategy indicates to stop further processing
         }
     }
 
-    EXPECT_EQ(comments, text1 + " \n" + removeUseClient);
+    EXPECT_EQ(comments, largeFileDetected + " \n" + removeClient);
 
 }
 
-TEST(CommentStrategyChainBuilderUseClient, ExecuteChain_LargeFileWithUseClientAndMayWords) {
-    CommentStrategyChain commentStrategy;
-    commentStrategy.ChainBuilder();
+TEST_F(UseClientStrategyTest, ExecuteChain_LargeFileWithUseClientAndMayWords) {
 
-    AnalysisReport analysisReport;
     analysisReport.useClientDetected = true;
     analysisReport.largeFileDetected = true;
     analysisReport.hookDetected = false;
     analysisReport.manyWordsInFile = true;
-    const std::string javascript_token = "use client";
 
+    const std::string largeFileDetected = LargeFileDetected();
+    const std::string emptyText = EmptyText();
+    const std::string getManyWords = GetManyWords();
+    const std::string removeClient = RemoveClient();
 
-    const std::string text1 = "Large file detected! Consider refactoring 'use client' into a smaller file";
-    const std::string text2 = "";
-    const std::string manywords = "Client side file detected with many words. Consider refactoring for better SEO score \n";
-    const std::string removeUseClient = "Consider removing use client from this file as no client side components have been detected \n";
-
-    std::string comments;
-    auto &strategies = commentStrategy.GetStrategies();
+    auto &strategies = chainBuilder.GetStrategies();
     for (const auto &strategy : strategies) {
-        if (!strategy->ExecuteStrategy(analysisReport, comments, javascript_token)) {
+        if (!strategy->ExecuteStrategy(analysisReport, comments, javascriptToken)) {
             break; // Break the chain if a strategy indicates to stop further processing
         }
     }
 
-    EXPECT_EQ(comments, text1 + " \n" + manywords + removeUseClient);
+
+    EXPECT_EQ(comments, largeFileDetected + " \n" + getManyWords + removeClient);
 
 }
 
 
-TEST(CommentStrategyChainBuilderUseClient, ExecuteChain_LargeFileWithUseClientAndMayWordsAndHook) {
-    CommentStrategyChain commentStrategy;
-    commentStrategy.ChainBuilder();
+TEST_F(UseClientStrategyTest, ExecuteChain_LargeFileWithUseClientAndMayWordsAndHook) {
 
-    AnalysisReport analysisReport;
     analysisReport.useClientDetected = true;
     analysisReport.largeFileDetected = true;
     analysisReport.hookDetected = true;
     analysisReport.manyWordsInFile = true;
-    const std::string javascript_token = "use client";
 
+    const std::string largeFileDetected = LargeFileDetected();
+    const std::string emptyText = EmptyText();
+    const std::string getManyWords = GetManyWords();
+    const std::string removeClient = RemoveClient();
 
-    const std::string text1 = "Large file detected! Consider refactoring 'use client' into a smaller file";
-    const std::string text2 = "";
-    const std::string manywords = "Client side file detected with many words. Consider refactoring for better SEO score \n";
-    const std::string removeUseClient = "Consider removing use client from this file as no client side components have been detected \n";
-
-    std::string comments;
-    auto &strategies = commentStrategy.GetStrategies();
+    auto &strategies = chainBuilder.GetStrategies();
     for (const auto &strategy : strategies) {
-        if (!strategy->ExecuteStrategy(analysisReport, comments, javascript_token)) {
+        if (!strategy->ExecuteStrategy(analysisReport, comments, javascriptToken)) {
             break; // Break the chain if a strategy indicates to stop further processing
         }
     }
-
-    EXPECT_EQ(comments, text1 + " \n" + manywords);
+    EXPECT_EQ(comments, largeFileDetected + " \n" + getManyWords);
 }
 
 
-TEST(CommentStrategyChainBuilderUseClient, ExecuteChain_LargeFileMayWordsAndHook) {
-    CommentStrategyChain commentStrategy;
-    commentStrategy.ChainBuilder();
+TEST_F(UseClientStrategyTest, ExecuteChain_LargeFileMayWordsAndHook) {
 
-    AnalysisReport analysisReport;
     analysisReport.useClientDetected = false;
     analysisReport.largeFileDetected = true;
     analysisReport.hookDetected = true;
     analysisReport.manyWordsInFile = true;
-    const std::string javascript_token = "use client";
 
+    const std::string largeFileDetected = LargeFileDetected();
+    const std::string emptyText = EmptyText();
+    const std::string getManyWords = GetManyWords();
+    const std::string removeClient = RemoveClient();
 
-    const std::string text1 = "Large file detected! Consider refactoring 'use client' into a smaller file";
-    const std::string text2 = "";
-    const std::string manywords = "Client side file detected with many words. Consider refactoring for better SEO score \n";
-    const std::string removeUseClient = "Consider removing use client from this file as no client side components have been detected \n";
-
-    std::string comments;
-    auto &strategies = commentStrategy.GetStrategies();
+    auto &strategies = chainBuilder.GetStrategies();
     for (const auto &strategy : strategies) {
-        if (!strategy->ExecuteStrategy(analysisReport, comments, javascript_token)) {
+        if (!strategy->ExecuteStrategy(analysisReport, comments, javascriptToken)) {
             break; // Break the chain if a strategy indicates to stop further processing
         }
     }
@@ -149,56 +151,44 @@ TEST(CommentStrategyChainBuilderUseClient, ExecuteChain_LargeFileMayWordsAndHook
 }
 
 
-TEST(CommentStrategyChainBuilderUseClient, ExecuteChain_LargeFileUseClientHook) {
-    CommentStrategyChain commentStrategy;
-    commentStrategy.ChainBuilder();
+TEST_F(UseClientStrategyTest, ExecuteChain_LargeFileUseClientHook) {
 
-    AnalysisReport analysisReport;
     analysisReport.useClientDetected = true;
     analysisReport.largeFileDetected = true;
     analysisReport.hookDetected = true;
     analysisReport.manyWordsInFile = false;
-    const std::string javascript_token = "use client";
 
+    const std::string largeFileDetected = LargeFileDetected();
+    const std::string emptyText = EmptyText();
+    const std::string getManyWords = GetManyWords();
+    const std::string removeClient = RemoveClient();
 
-    const std::string text1 = "Large file detected! Consider refactoring 'use client' into a smaller file";
-    const std::string text2 = "";
-    const std::string manywords = "Client side file detected with many words. Consider refactoring for better SEO score \n";
-    const std::string removeUseClient = "Consider removing use client from this file as no client side components have been detected \n";
-
-    std::string comments;
-    auto &strategies = commentStrategy.GetStrategies();
+    auto &strategies = chainBuilder.GetStrategies();
     for (const auto &strategy : strategies) {
-        if (!strategy->ExecuteStrategy(analysisReport, comments, javascript_token)) {
+        if (!strategy->ExecuteStrategy(analysisReport, comments, javascriptToken)) {
             break; // Break the chain if a strategy indicates to stop further processing
         }
     }
 
-    EXPECT_EQ(comments, text1 + " \n");
+    EXPECT_EQ(comments, largeFileDetected + " \n");
 
 }
 
-TEST(CommentStrategyChainBuilderUseClient, ExecuteChain_UseClientHook) {
-    CommentStrategyChain commentStrategy;
-    commentStrategy.ChainBuilder();
+TEST_F(UseClientStrategyTest, ExecuteChain_UseClientHook) {
 
-    AnalysisReport analysisReport;
     analysisReport.useClientDetected = true;
     analysisReport.largeFileDetected = false;
     analysisReport.hookDetected = true;
     analysisReport.manyWordsInFile = false;
-    const std::string javascript_token = "use client";
 
+    const std::string largeFileDetected = LargeFileDetected();
+    const std::string emptyText = EmptyText();
+    const std::string getManyWords = GetManyWords();
+    const std::string removeClient = RemoveClient();
 
-    const std::string text1 = "Large file detected! Consider refactoring 'use client' into a smaller file";
-    const std::string text2 = "";
-    const std::string manywords = "Client side file detected with many words. Consider refactoring for better SEO score \n";
-    const std::string removeUseClient = "Consider removing use client from this file as no client side components have been detected \n";
-
-    std::string comments;
-    auto &strategies = commentStrategy.GetStrategies();
+    auto &strategies = chainBuilder.GetStrategies();
     for (const auto &strategy : strategies) {
-        if (!strategy->ExecuteStrategy(analysisReport, comments, javascript_token)) {
+        if (!strategy->ExecuteStrategy(analysisReport, comments, javascriptToken)) {
             break; // Break the chain if a strategy indicates to stop further processing
         }
     }
@@ -207,31 +197,24 @@ TEST(CommentStrategyChainBuilderUseClient, ExecuteChain_UseClientHook) {
 
 }
 
-TEST(CommentStrategyChainBuilderUseClient, ExecuteChain_UseClient) {
-    CommentStrategyChain commentStrategy;
-    commentStrategy.ChainBuilder();
-
-    AnalysisReport analysisReport;
+TEST_F(UseClientStrategyTest, ExecuteChain_UseClient) {
     analysisReport.useClientDetected = true;
     analysisReport.largeFileDetected = false;
     analysisReport.hookDetected = false;
     analysisReport.manyWordsInFile = false;
-    const std::string javascript_token = "use client";
 
+    const std::string largeFileDetected = LargeFileDetected();
+    const std::string emptyText = EmptyText();
+    const std::string getManyWords = GetManyWords();
+    const std::string removeClient = RemoveClient();
 
-    const std::string text1 = "Large file detected! Consider refactoring 'use client' into a smaller file";
-    const std::string text2 = "";
-    const std::string manywords = "Client side file detected with many words. Consider refactoring for better SEO score \n";
-    const std::string removeUseClient = "Consider removing use client from this file as no client side components have been detected \n";
-
-    std::string comments;
-    auto &strategies = commentStrategy.GetStrategies();
+    auto &strategies = chainBuilder.GetStrategies();
     for (const auto &strategy : strategies) {
-        if (!strategy->ExecuteStrategy(analysisReport, comments, javascript_token)) {
+        if (!strategy->ExecuteStrategy(analysisReport, comments, javascriptToken)) {
             break; // Break the chain if a strategy indicates to stop further processing
         }
     }
 
-    EXPECT_EQ(comments, removeUseClient);
+    EXPECT_EQ(comments, removeClient);
 
 }

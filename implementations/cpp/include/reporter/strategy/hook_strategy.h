@@ -42,7 +42,6 @@ class HookStrategy : public CommentStrategyInterface {
                         return false;
                 }
 
-                // Continue to next strategy
                 return false;
         }
 

@@ -7,86 +7,108 @@
 #include "reporter/strategy/comment_strategy_interface.h"
 
 
-
-
-
-TEST(UseClientStrategyTest, largefileWithManyWordsAndUseClient) {
-
+class UseClientStrategyTest : public ::testing::Test {
+protected:
     AnalysisReport analysisReport; 
     UseClientStrategy useClientStrategy; 
+    const std::string javascriptToken = "use client";
+    std::string comments;
+
+    void SetUp() override {
+
+    }
+
+    std::string LargeFileDetected() {
+        return "Large file detected! Consider refactoring 'use client' into a smaller file";
+    }
+
+    std::string EmptyText() {
+        return "";
+    }
+
+    std::string GetManyWords() {
+        return "Client side file detected with many words. Consider refactoring for better SEO score \n";
+    }
+
+    std::string RemoveClient() {
+        return "Consider removing use client from this file as no client side components have been detected \n";
+    }
+
+
+};
+
+
+TEST_F(UseClientStrategyTest, largefileWithManyWordsAndUseClient) {
+
+
     analysisReport.useClientDetected = true;
     analysisReport.largeFileDetected = true;
     analysisReport.manyWordsInFile = true;
 
-    const std::string text1 = "Large file detected! Consider refactoring 'use client' into a smaller file";
-    const std::string text2 = "";
+    const std::string largeFileDetected = LargeFileDetected();
+    const std::string emptyText = EmptyText();
+    const std::string getManyWords = GetManyWords();
+    const std::string removeClient = RemoveClient();
+
     bool isUseClientPresent = analysisReport.useClientDetected;
 
-    std::string returnText = useClientStrategy.ReturnMessage(text1, text2, isUseClientPresent, analysisReport);
+    std::string returnText = useClientStrategy.ReturnMessage(largeFileDetected, emptyText, isUseClientPresent, analysisReport);
     
-    EXPECT_EQ(returnText, text1 + " \n");
+    EXPECT_EQ(returnText, largeFileDetected + " \n");
 
-    
-    const std::string manyWordsString = "Client side file detected with many words. Consider refactoring for better SEO score \n";
     if (analysisReport.manyWordsInFile && analysisReport.useClientDetected ) {
-            returnText += manyWordsString;
+            returnText += getManyWords;
     }
 
-    EXPECT_EQ(returnText, text1 + " \n" + manyWordsString);
+    EXPECT_EQ(returnText, largeFileDetected + " \n" + getManyWords);
 
-
-    const std::string removeClientSide =  "Consider removing use client from this file as no client side components have been detected \n";
     if (analysisReport.useClientDetected && !analysisReport.largeFileDetected 
             && useClientStrategy.AllvaluesFalse(analysisReport)) { 
-            returnText += removeClientSide;
+            returnText += removeClient;
 
     }
 
-    EXPECT_EQ(returnText, text1 + " \n" + manyWordsString);
+    EXPECT_EQ(returnText, largeFileDetected + " \n" + getManyWords);
 
 }
 
 
-TEST(UseClientStrategyTest, manyWordsAndUseClient) {
+TEST_F(UseClientStrategyTest, manyWordsAndUseClient) {
 
-    AnalysisReport analysisReport; 
-    UseClientStrategy useClientStrategy; 
     analysisReport.useClientDetected = true;
     analysisReport.largeFileDetected = false;
     analysisReport.manyWordsInFile = true;
 
-    const std::string text1 = "Large file detected! Consider refactoring 'use client' into a smaller file";
-    const std::string text2 = "";
+    const std::string largeFileDetected = LargeFileDetected();
+    const std::string emptyText = EmptyText();
+    const std::string getManyWords = GetManyWords();
+    const std::string removeClient = RemoveClient();
+
     bool isUseClientPresent = analysisReport.useClientDetected;
 
-    std::string returnText = useClientStrategy.ReturnMessage(text1, text2, isUseClientPresent, analysisReport);
+    std::string returnText = useClientStrategy.ReturnMessage(largeFileDetected, emptyText, isUseClientPresent, analysisReport);
     
     EXPECT_EQ(returnText, "");
 
-    
-    const std::string manyWordsString = "Client side file detected with many words. Consider refactoring for better SEO score \n";
     if (analysisReport.manyWordsInFile && analysisReport.useClientDetected ) {
-            returnText += manyWordsString;
+            returnText += getManyWords;
     }
 
-    EXPECT_EQ(returnText, manyWordsString);
+    EXPECT_EQ(returnText, getManyWords);
 
-
-    const std::string removeClientSide =  "Consider removing use client from this file as no client side components have been detected \n";
-    std::cout << "TRUES" << useClientStrategy.AllvaluesFalse(analysisReport) << std::endl;
     if (analysisReport.useClientDetected && !analysisReport.largeFileDetected 
             && useClientStrategy.AllvaluesFalse(analysisReport)) { 
-            returnText += removeClientSide;
+            returnText += removeClient;
 
     }
 
 
-    EXPECT_EQ(returnText, manyWordsString + removeClientSide);
+    EXPECT_EQ(returnText, getManyWords + removeClient);
 
 }
 
 
-TEST(UseClientStrategyTest, returnEmpty) {
+TEST_F(UseClientStrategyTest, returnEmpty) {
 
     AnalysisReport analysisReport; 
     UseClientStrategy useClientStrategy; 
@@ -94,27 +116,26 @@ TEST(UseClientStrategyTest, returnEmpty) {
     analysisReport.largeFileDetected = false;
     analysisReport.manyWordsInFile = true;
 
-    const std::string text1 = "Large file detected! Consider refactoring 'use client' into a smaller file";
-    const std::string text2 = "";
+    const std::string largeFileDetected = LargeFileDetected();
+    const std::string emptyText = EmptyText();
+    const std::string getManyWords = GetManyWords();
+    const std::string removeClient = RemoveClient();
+
     bool isUseClientPresent = analysisReport.useClientDetected;
 
-    std::string returnText = useClientStrategy.ReturnMessage(text1, text2, isUseClientPresent, analysisReport);
+    std::string returnText = useClientStrategy.ReturnMessage(largeFileDetected, emptyText, isUseClientPresent, analysisReport);
     
     EXPECT_EQ(returnText, "");
 
-    
-    const std::string manyWordsString = "Client side file detected with many words. Consider refactoring for better SEO score \n";
     if (analysisReport.manyWordsInFile && analysisReport.useClientDetected ) {
-            returnText += manyWordsString;
+            returnText += getManyWords;
     }
 
     EXPECT_EQ(returnText, "");
 
-
-    const std::string removeClientSide =  "Consider removing use client from this file as no client side components have been detected \n";
     if (analysisReport.useClientDetected && !analysisReport.largeFileDetected 
             && useClientStrategy.AllvaluesFalse(analysisReport)) { 
-            returnText += removeClientSide;
+            returnText += removeClient;
 
     }
 
@@ -124,77 +145,73 @@ TEST(UseClientStrategyTest, returnEmpty) {
 }
 
 
-TEST(UseClientStrategyTest, removeClientSide) {
-
-    AnalysisReport analysisReport; 
-    UseClientStrategy useClientStrategy; 
+TEST_F(UseClientStrategyTest, removeClient) {
+ 
     analysisReport.useClientDetected = true;
     analysisReport.largeFileDetected = false;
     analysisReport.manyWordsInFile = false;
 
-    const std::string text1 = "Large file detected! Consider refactoring 'use client' into a smaller file";
-    const std::string text2 = "";
+    const std::string largeFileDetected = LargeFileDetected();
+    const std::string emptyText = EmptyText();
+    const std::string getManyWords = GetManyWords();
+    const std::string removeClient = RemoveClient();
+
     bool isUseClientPresent = analysisReport.useClientDetected;
 
-    std::string returnText = useClientStrategy.ReturnMessage(text1, text2, isUseClientPresent, analysisReport);
+    std::string returnText = useClientStrategy.ReturnMessage(largeFileDetected, emptyText, isUseClientPresent, analysisReport);
     
     EXPECT_EQ(returnText, "");
 
-    
-    const std::string manyWordsString = "Client side file detected with many words. Consider refactoring for better SEO score \n";
     if (analysisReport.manyWordsInFile && analysisReport.useClientDetected ) {
-            returnText += manyWordsString;
+            returnText += getManyWords;
     }
 
     EXPECT_EQ(returnText, "");
 
 
-    const std::string removeClientSide =  "Consider removing use client from this file as no client side components have been detected \n";
     if (analysisReport.useClientDetected && !analysisReport.largeFileDetected 
             && useClientStrategy.AllvaluesFalse(analysisReport)) { 
-            returnText += removeClientSide;
+            returnText += removeClient;
 
     }
 
 
-    EXPECT_EQ(returnText, removeClientSide);
+    EXPECT_EQ(returnText, removeClient);
 
 }
 
 
-TEST(UseClientStrategyTest, largeFile) {
+TEST_F(UseClientStrategyTest, largeFile) {
 
-    AnalysisReport analysisReport; 
-    UseClientStrategy useClientStrategy; 
     analysisReport.useClientDetected = true;
     analysisReport.largeFileDetected = true;
     analysisReport.manyWordsInFile = false;
 
-    const std::string text1 = "Large file detected! Consider refactoring 'use client' into a smaller file";
-    const std::string text2 = "";
+    const std::string largeFileDetected = LargeFileDetected();
+    const std::string emptyText = EmptyText();
+    const std::string getManyWords = GetManyWords();
+    const std::string removeClient = RemoveClient();
+
     bool isUseClientPresent = analysisReport.useClientDetected;
 
-    std::string returnText = useClientStrategy.ReturnMessage(text1, text2, isUseClientPresent, analysisReport);
+    std::string returnText = useClientStrategy.ReturnMessage(largeFileDetected, emptyText, isUseClientPresent, analysisReport);
     
-    EXPECT_EQ(returnText, text1 + " \n");
+    EXPECT_EQ(returnText, largeFileDetected + " \n");
 
     
-    const std::string manyWordsString = "Client side file detected with many words. Consider refactoring for better SEO score \n";
     if (analysisReport.manyWordsInFile && analysisReport.useClientDetected ) {
-            returnText += manyWordsString;
+            returnText += getManyWords;
     }
 
-    EXPECT_EQ(returnText, text1 + " \n");
+    EXPECT_EQ(returnText, largeFileDetected + " \n");
 
-
-    const std::string removeClientSide =  "Consider removing use client from this file as no client side components have been detected \n";
     if (analysisReport.useClientDetected && !analysisReport.largeFileDetected 
             && useClientStrategy.AllvaluesFalse(analysisReport)) { 
-            returnText += removeClientSide;
+            returnText += removeClient;
 
     }
 
 
-    EXPECT_EQ(returnText, text1 + " \n");
+    EXPECT_EQ(returnText, largeFileDetected + " \n");
 
 }

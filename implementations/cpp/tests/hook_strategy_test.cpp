@@ -10,113 +10,138 @@
 
 
 
-
-
-TEST(UseEffectStrategyTest, useEffectWithUseClientAndLargeFile) {
-
+class UseEffectStrategyTest : public ::testing::Test {
+protected:
     AnalysisReport analysisReport; 
-    UseClientStrategy useClientStrategy; 
+    UseClientStrategy useClientStrategy;
+    
+    const std::string javascriptTokenValue = "useEffect";
+    std::string comments;
+    std::string textUseEffect;
+
+    void SetUp() override {
+    }
+
+    std::string GetExpectedText1() {
+        return "Consider refactoring " + javascriptTokenValue + " Large file detected";
+    }
+
+    std::string GetExpectedText2() {
+        return "No use client detected, consider refactoring " + 
+               javascriptTokenValue + " or add 'use client' to make this file client side";
+    }
+
+    std::string GetExpectedTextUseEffect() {
+        return "If you are using an async await fetch in your useEffect, "
+               "consider making this component server side and make this component async. Example: "
+               "async function Component() {"
+               "    const var = await fetchFunction();"
+               "    return ("
+               "        <div></div>"
+               "    );"
+               "}  \n";
+    }
+};
+
+class UseStateStrategyTest : public ::testing::Test {
+protected:
+    AnalysisReport analysisReport; 
+    UseClientStrategy useClientStrategy;
+    
+    const std::string javascriptTokenValue = "useState";
+    std::string comments;
+    std::string textUseEffect;
+
+
+    void SetUp() override {
+    }
+
+    std::string GetExpectedText1() {
+        return "Consider refactoring " + javascriptTokenValue + " Large file detected";
+    }
+
+    std::string GetExpectedText2() {
+        return "No use client detected, consider refactoring " + 
+               javascriptTokenValue + " or add 'use client' to make this file client side";
+    }
+
+    std::string GetExpectedTextUseEffect() {
+        return "If you are using an async await fetch in your useEffect, "
+               "consider making this component server side and make this component async. Example: "
+               "async function Component() {"
+               "    const var = await fetchFunction();"
+               "    return ("
+               "        <div></div>"
+               "    );"
+               "}  \n";
+    }
+};
+
+
+
+TEST_F(UseEffectStrategyTest, useEffectWithUseClientAndLargeFile) {
+
     analysisReport.useClientDetected = true;
     analysisReport.largeFileDetected = true;
     analysisReport.hookDetected = true;
 
-    const std::string javascriptTokenValue = "useEffect"; 
-
-    const std::string text1 = "Consider refactoring " + javascriptTokenValue + " Large file detected";
-    const std::string text2 = "No use client detected, consider refactoring " + 
-        javascriptTokenValue + " or add 'use client' to make this file client side";
-
     bool isUseClientPresent = analysisReport.hookDetected;
+    const std::string getExpectedText1 = GetExpectedText1();
+    const std::string getExpectedText2 = GetExpectedText2();
 
-    std::string returnText = useClientStrategy.ReturnMessage(text1, text2, isUseClientPresent, analysisReport);
+    std::string returnText = useClientStrategy.ReturnMessage(getExpectedText1, getExpectedText2, isUseClientPresent, analysisReport);
     
-    EXPECT_EQ(returnText, text1 + " \n");
+    EXPECT_EQ(returnText, getExpectedText1 + " \n");
 
-    std::string textUseEffect = ""; 
     if (javascriptTokenValue == "useEffect" && analysisReport.hookDetected) {
-        textUseEffect = "If you are using an async await fetch in your useEffect, "
-            "consider making this component server side and make this component async. Example: "
-            "async function Component() {"
-            "    const var = await fetchFunction();"
-            "    return ("
-            "        <div></div>"
-            "    );"
-            "}  \n";
+        textUseEffect = GetExpectedTextUseEffect();
         returnText += textUseEffect;
     }
 
-    EXPECT_EQ(returnText, text1 + " \n" + textUseEffect);
+    EXPECT_EQ(returnText, getExpectedText1 + " \n" + textUseEffect);
 
 }
 
-TEST(UseEffectStrategyTest, useEffectWithoutUseClientAndLargeFile) {
+TEST_F(UseEffectStrategyTest, useEffectWithoutUseClientAndLargeFile) {
 
-    AnalysisReport analysisReport; 
-    UseClientStrategy useClientStrategy; 
     analysisReport.useClientDetected = false;
     analysisReport.largeFileDetected = true;
     analysisReport.hookDetected = true;
 
-    const std::string javascriptTokenValue = "useEffect"; 
-
-    const std::string text1 = "Consider refactoring " + javascriptTokenValue + " Large file detected";
-    const std::string text2 = "No use client detected, consider refactoring " + 
-        javascriptTokenValue + " or add 'use client' to make this file client side";
-
     bool isUseClientPresent = analysisReport.hookDetected;
+    const std::string getExpectedText1 = GetExpectedText1();
+    const std::string getExpectedText2 = GetExpectedText2();
 
-    std::string returnText = useClientStrategy.ReturnMessage(text1, text2, isUseClientPresent, analysisReport);
+    std::string returnText = useClientStrategy.ReturnMessage(getExpectedText1, getExpectedText2, isUseClientPresent, analysisReport);
     
-    EXPECT_EQ(returnText, text2 + " \n");
+    EXPECT_EQ(returnText, getExpectedText2 + " \n");
 
-    std::string textUseEffect = ""; 
     if (javascriptTokenValue == "useEffect" && analysisReport.hookDetected) {
-        textUseEffect = "If you are using an async await fetch in your useEffect, "
-            "consider making this component server side and make this component async. Example: "
-            "async function Component() {"
-            "    const var = await fetchFunction();"
-            "    return ("
-            "        <div></div>"
-            "    );"
-            "}  \n";
+        textUseEffect = GetExpectedTextUseEffect();
         returnText += textUseEffect;
     }
 
-    EXPECT_EQ(returnText, text2 + " \n" + textUseEffect);
+    EXPECT_EQ(returnText, getExpectedText2 + " \n" + textUseEffect);
 
 }
 
 
-TEST(UseEffectStrategyTest, NoUseEffectAndUseClient) {
+TEST_F(UseEffectStrategyTest, NoUseEffectAndUseClient) {
 
-    AnalysisReport analysisReport; 
-    UseClientStrategy useClientStrategy; 
     analysisReport.useClientDetected = false;
     analysisReport.largeFileDetected = true;
     analysisReport.hookDetected = false;
 
-    const std::string javascriptTokenValue = "useEffect"; 
-
-    const std::string text1 = "Consider refactoring " + javascriptTokenValue + " Large file detected";
-    const std::string text2 = "No use client detected, consider refactoring " + 
-        javascriptTokenValue + " or add 'use client' to make this file client side";
-
     bool isUseClientPresent = analysisReport.hookDetected;
+    const std::string getExpectedText1 = GetExpectedText1();
+    const std::string getExpectedText2 = GetExpectedText2();
 
-    std::string returnText = useClientStrategy.ReturnMessage(text1, text2, isUseClientPresent, analysisReport);
+    std::string returnText = useClientStrategy.ReturnMessage(getExpectedText1, getExpectedText2, isUseClientPresent, analysisReport);
     
     EXPECT_EQ(returnText, "");
 
-    std::string textUseEffect = ""; 
-    if (javascriptTokenValue == "useEffect" && analysisReport.hookDetected ) {
-        textUseEffect = "If you are using an async await fetch in your useEffect, "
-            "consider making this component server side and make this component async. Example: "
-            "async function Component() {"
-            "    const var = await fetchFunction();"
-            "    return ("
-            "        <div></div>"
-            "    );"
-            "}  \n";
+    if (javascriptTokenValue == "useEffect" && analysisReport.hookDetected) {
+        textUseEffect = GetExpectedTextUseEffect();
         returnText += textUseEffect;
     }
 
@@ -127,151 +152,98 @@ TEST(UseEffectStrategyTest, NoUseEffectAndUseClient) {
 
 
 
-TEST(UseEffectStrategyTest, useEffectDetectedWithUseClientAndLargeFile) {
+TEST_F(UseEffectStrategyTest, useEffectDetectedWithUseClientAndLargeFile) {
 
-    AnalysisReport analysisReport; 
-    UseClientStrategy useClientStrategy; 
     analysisReport.useClientDetected = true;
     analysisReport.largeFileDetected = true;
     analysisReport.hookDetected = true;
-
-    const std::string javascriptTokenValue = "useEffect"; 
-
-    const std::string text1 = "Consider refactoring " + javascriptTokenValue + " Large file detected";
-    const std::string text2 = "No use client detected, consider refactoring " + 
-        javascriptTokenValue + " or add 'use client' to make this file client side";
-
-    bool isUseClientPresent = analysisReport.hookDetected;
-
-    std::string returnText = useClientStrategy.ReturnMessage(text1, text2, isUseClientPresent, analysisReport);
     
-    EXPECT_EQ(returnText, text1 + " \n");
+    bool isUseClientPresent = analysisReport.hookDetected;
+    const std::string getExpectedText1 = GetExpectedText1();
+    const std::string getExpectedText2 = GetExpectedText2();
 
-    std::string textUseEffect = ""; 
+    std::string returnText = useClientStrategy.ReturnMessage(getExpectedText1, getExpectedText2, isUseClientPresent, analysisReport);
+    
+    EXPECT_EQ(returnText, getExpectedText1 + " \n");
+
     if (javascriptTokenValue == "useEffect" && analysisReport.hookDetected) {
-        textUseEffect = "If you are using an async await fetch in your useEffect, "
-            "consider making this component server side and make this component async. Example: "
-            "async function Component() {"
-            "    const var = await fetchFunction();"
-            "    return ("
-            "        <div></div>"
-            "    );"
-            "}  \n";
+        textUseEffect = GetExpectedTextUseEffect();
         returnText += textUseEffect;
     }
 
-    EXPECT_EQ(returnText, text1 + " \n" + textUseEffect);
+    EXPECT_EQ(returnText, getExpectedText1 + " \n" + textUseEffect);
 
 }
 
 
 
-TEST(HookStrategyTest, HookWithUseClientAndLargeFile) {
+TEST_F(UseStateStrategyTest, HookWithUseClientAndLargeFile) {
 
-    AnalysisReport analysisReport; 
-    UseClientStrategy useClientStrategy; 
     analysisReport.useClientDetected = true;
     analysisReport.largeFileDetected = true;
     analysisReport.hookDetected = true;
 
-    const std::string javascriptTokenValue = "useState"; 
-
-    const std::string text1 = "Consider refactoring " + javascriptTokenValue + " Large file detected";
-    const std::string text2 = "No use client detected, consider refactoring " + 
-        javascriptTokenValue + " or add 'use client' to make this file client side";
-
     bool isUseClientPresent = analysisReport.hookDetected;
+    const std::string getExpectedText1 = GetExpectedText1();
+    const std::string getExpectedText2 = GetExpectedText2();
 
-    std::string returnText = useClientStrategy.ReturnMessage(text1, text2, isUseClientPresent, analysisReport);
+    std::string returnText = useClientStrategy.ReturnMessage(getExpectedText1, getExpectedText2, isUseClientPresent, analysisReport);
     
-    EXPECT_EQ(returnText, text1 + " \n");
+    EXPECT_EQ(returnText, getExpectedText1 + " \n");
 
-    std::string textUseEffect = ""; 
+
     if (javascriptTokenValue == "useEffect" && analysisReport.hookDetected) {
-        textUseEffect = "If you are using an async await fetch in your useEffect, "
-            "consider making this component server side and make this component async. Example: "
-            "async function Component() {"
-            "    const var = await fetchFunction();"
-            "    return ("
-            "        <div></div>"
-            "    );"
-            "}  \n";
+        textUseEffect = GetExpectedTextUseEffect();
         returnText += textUseEffect;
     }
 
-    EXPECT_EQ(returnText, text1 + " \n");
+    EXPECT_EQ(returnText, getExpectedText1 + " \n");
 
 }
 
 
-TEST(HookStrategyTest, HookWithNoUseClientAndLargeFile) {
+TEST_F(UseStateStrategyTest, HookWithNoUseClientAndLargeFile) {
 
-    AnalysisReport analysisReport; 
-    UseClientStrategy useClientStrategy; 
     analysisReport.useClientDetected = false;
     analysisReport.largeFileDetected = true;
     analysisReport.hookDetected = true;
 
-    const std::string javascriptTokenValue = "useState"; 
-
-    const std::string text1 = "Consider refactoring " + javascriptTokenValue + " Large file detected";
-    const std::string text2 = "No use client detected, consider refactoring " + 
-        javascriptTokenValue + " or add 'use client' to make this file client side";
-
     bool isUseClientPresent = analysisReport.hookDetected;
+    const std::string getExpectedText1 = GetExpectedText1();
+    const std::string getExpectedText2 = GetExpectedText2();
 
-    std::string returnText = useClientStrategy.ReturnMessage(text1, text2, isUseClientPresent, analysisReport);
+    std::string returnText = useClientStrategy.ReturnMessage(getExpectedText1, getExpectedText2, isUseClientPresent, analysisReport);
     
-    EXPECT_EQ(returnText, text2 + " \n");
+    EXPECT_EQ(returnText, getExpectedText2 + " \n");
 
-    std::string textUseEffect = ""; 
+
     if (javascriptTokenValue == "useEffect" && analysisReport.hookDetected) {
-        textUseEffect = "If you are using an async await fetch in your useEffect, "
-            "consider making this component server side and make this component async. Example: "
-            "async function Component() {"
-            "    const var = await fetchFunction();"
-            "    return ("
-            "        <div></div>"
-            "    );"
-            "}  \n";
+        textUseEffect = GetExpectedTextUseEffect();
         returnText += textUseEffect;
     }
 
-    EXPECT_EQ(returnText, text2 + " \n");
+    EXPECT_EQ(returnText, getExpectedText2 + " \n");
 
 }
 
 
-TEST(HookStrategyTest, NoHookWithNoUseClientAndLargeFile) {
-
-    AnalysisReport analysisReport; 
-    UseClientStrategy useClientStrategy; 
+TEST_F(UseStateStrategyTest, NoHookWithNoUseClientAndLargeFile) {
+ 
     analysisReport.useClientDetected = false;
     analysisReport.largeFileDetected = true;
     analysisReport.hookDetected = false;
 
-    const std::string javascriptTokenValue = "useState"; 
-
-    const std::string text1 = "Consider refactoring " + javascriptTokenValue + " Large file detected";
-    const std::string text2 = "No use client detected, consider refactoring " + 
-        javascriptTokenValue + " or add 'use client' to make this file client side";
-
     bool isUseClientPresent = analysisReport.hookDetected;
+    const std::string getExpectedText1 = GetExpectedText1();
+    const std::string getExpectedText2 = GetExpectedText2();
 
-    std::string returnText = useClientStrategy.ReturnMessage(text1, text2, isUseClientPresent, analysisReport);
+    std::string returnText = useClientStrategy.ReturnMessage(getExpectedText1, getExpectedText2, isUseClientPresent, analysisReport);
     
     EXPECT_EQ(returnText, "");
 
-    std::string textUseEffect = ""; 
+
     if (javascriptTokenValue == "useEffect" && analysisReport.hookDetected) {
-        textUseEffect = "If you are using an async await fetch in your useEffect, "
-            "consider making this component server side and make this component async. Example: "
-            "async function Component() {"
-            "    const var = await fetchFunction();"
-            "    return ("
-            "        <div></div>"
-            "    );"
-            "}  \n";
+        textUseEffect = GetExpectedTextUseEffect();
         returnText += textUseEffect;
     }
 
