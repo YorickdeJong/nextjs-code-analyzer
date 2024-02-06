@@ -30,20 +30,7 @@ jobs:
         cd implementations/typescript
         npm install --save node-addon-api
         npm install --save node-api-headers
-        
-    # - name: Create Build Directory
-    #   run: mkdir -p implementations/cpp/build
 
-    # - name: CMake
-    #   run: |
-    #     cd implementations/cpp/build
-    #     cmake ..
-
-    # - name: Build
-    #   run: |
-    #     cd implementations/cpp/build
-    #     make
-  #
     - name: Build
       run: npx cmake-js build -d 'implementations/cpp'
         

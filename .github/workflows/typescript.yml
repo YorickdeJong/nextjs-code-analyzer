@@ -1,0 +1,41 @@
+name: Set Up Typescript
+
+on: [push, pull_request]
+
+jobs:
+  build-extension:
+    runs-on: ubuntu-latest
+    steps:
+
+    - uses: actions/checkout@v2
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+    
+    - name: Install dependencies for extension
+      run: npm install
+      working-directory: implementations/typescript/extensions/nextjs-code-analyzer
+    
+    - name: Build and Test Extension
+      run: npx tsc
+      working-directory: implementations/typescript/extensions/nextjs-code-analyzer
+
+  build-typescript:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+    
+    - name: Install dependencies for other TypeScript code
+      run: npm install
+      working-directory: implementations/typescript/other_directory
+    
+    - name: Build and Test other TypeScript code
+      run: npx tsc
+      working-directory: implementations/typescript/other_directory
