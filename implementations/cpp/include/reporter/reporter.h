@@ -7,13 +7,14 @@
 #include <iostream>
 #include "models/token_info.h"
 #include "models/analysis_report.h"
-
+#include "reporter/patterns/comment_strategy_chain_builder.h"
+#include "reporter/patterns/comment_strategy_interface.h"
 
 // Reporter class is responsible for adding optimization comments and suggestions
 // Based on the findings in the analyzer and optimzer classes
 class Reporter {
     public:
-        Reporter(const AnalysisReport &_analysisResult, const std::vector<TokenInfo> &_tokenInfo);
+        Reporter(const AnalysisReport &analysisReport, const std::vector<TokenInfo> &tokenInfo);
         void AddCommentsToJsonObject(nlohmann::json &j);
 
     private: 
@@ -22,6 +23,6 @@ class Reporter {
         void CreateComment(nlohmann::json &jToken, const std::string &commentText);
         
         
-        AnalysisReport m_analysisResult; 
+        AnalysisReport m_analysisReport; 
         std::vector<TokenInfo> m_tokenInfos;
 } ;

@@ -3,6 +3,9 @@
 #include "reporter/reporter.h"
 
 Napi::Value CreateReport(const Napi::CallbackInfo& info) {
+
+  std::cout << info.Env() << std::endl;
+
   Napi::Env env = info.Env();
   class JsonReader reader(info, env);
   class Analyzer analyzer;

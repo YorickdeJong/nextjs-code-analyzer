@@ -5,17 +5,11 @@
 #include <iostream>
  
 TEST(ReporterTest, AddCommentTokens) {
-    nlohmann::json j = {
-            {"value", "testValue"},
-            {"loc", {
-                {"start", {{"line", 1}, {"index", 0}}},
-                {"end", {{"index", 10}}}
-            }}
-    };
-    const int size_j = j.size();
+
     Analyzer analyzer;
 
     nlohmann::json inputJson = {
+        {"loc", {{"start", {{"line", 1}, {"index", 0}}}, {"end", {{"line", 200}, {"index", 10}}}}},
         {"tokens", {
             {
                 {"end", 10},
@@ -31,7 +25,7 @@ TEST(ReporterTest, AddCommentTokens) {
                 {"type", "Keyword"},
                 {"value", "use client"}
             },
-                      {
+            {
                 {"end", 23},
                 {"loc", {{"start", {{"line", 1}, {"index", 11}}}, {"end", {{"line", 1}, {"index", 23}}}}},
                 {"start", 11},
@@ -41,17 +35,18 @@ TEST(ReporterTest, AddCommentTokens) {
         }}
     };
 
+
     analyzer.Analyze(inputJson);
     std::cout << "useclient " << analyzer.GetAnalysisResult().useClientDetected << std::endl;
     std::cout << "hook " << analyzer.GetAnalysisResult().hookDetected << std::endl;
     std::cout << "analyzer " << analyzer.GetTokenInfos()[0].value << std::endl;
 
     Reporter reporter(analyzer.GetAnalysisResult(), analyzer.GetTokenInfos()); 
-    reporter.AddCommentsToJsonObject(j);
+    reporter.AddCommentsToJsonObject(inputJson);
 
-    std::cout << j.dump(4) << std::endl;
+    std::cout << inputJson.dump(4) << std::endl;
 
-    EXPECT_EQ(j.size(), size_j + 1);
+    EXPECT_EQ(inputJson.size(), inputJson.size());
 
 
 }

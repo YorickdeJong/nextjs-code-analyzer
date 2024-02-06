@@ -54,12 +54,21 @@ function analyzeCode(code: string): vscode.Diagnostic[] {
         ranges: true,
         tokens: true
     });
-    const astJson = JSON.stringify(ast, null, 2);
+    
+    console.log(ast);
+    // Clear existing comments in the AST before analysis
+    ast.tokens && ast.tokens.forEach((token: any) => {
+        if (token.comment) {
+            console.log('check')
+            delete token.comment;
+        }
+    });
   
-	console.log(astJson);
+    const astJson = JSON.stringify(ast, null, 2);
+
     // Get analysis results from your addon
-    const analysisResults = addon.Analyzer(astJson);
-	
+    const analysisResults = addon.CreateReport(astJson);
+
 
     return analysisResults.tokens.map((token: any) => {
       if (token.comment) {

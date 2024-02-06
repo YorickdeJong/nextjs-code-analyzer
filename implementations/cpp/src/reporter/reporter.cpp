@@ -2,29 +2,35 @@
 #include "reporter/reporter.h"
 
 
-Reporter::Reporter(const AnalysisReport &_analysisResult, 
-const std::vector<TokenInfo> &_tokenInfo) 
-: m_analysisResult{_analysisResult}, m_tokenInfos{_tokenInfo}
+Reporter::Reporter(const AnalysisReport &analysisReport, 
+const std::vector<TokenInfo> &tokenInfo) 
+: m_analysisReport{analysisReport}, m_tokenInfos{tokenInfo}
 {
 }
 
 
 void Reporter::AddCommentsToJsonObject(nlohmann::json &j){
     std::unordered_set<std::string> tokensToComment;
+    
+    CommentStrategyChain commentStrategyChain;
+    commentStrategyChain.ChainBuilder();
+    PopulateTokensToComment(m_tokenInfos, tokensToComment);
 
-    if (m_analysisResult.useClientDetected && m_analysisResult.hookDetected && m_analysisResult.largeFileDetected) {
-        PopulateTokensToComment(m_tokenInfos, tokensToComment);
-        AddCommentTokens(j, tokensToComment);
+    for (auto& jToken : j["tokens"]) {
+        if (!jToken.contains("value") || !jToken["value"].is_string()) {
+            continue; // Skip to the next iteration if conditions are not met
+        }
+
+        std::string javascriptTokenValue = jToken["value"];
+        if (tokensToComment.find(javascriptTokenValue) == tokensToComment.end()) {
+            continue; // Skip to the next iteration if value is not in tokensToComment
+        }
+
+        std::string comments = commentStrategyChain.ExecuteChain(m_analysisReport, javascriptTokenValue);
+        std::cout << "main" << comments << std::endl;
+        CreateComment(jToken, comments);
     }
-    else if (m_analysisResult.useClientDetected  && ! m_analysisResult.hookDetected) {
-        std::cout << "No hook detected, consider removing use client" << std::endl;
-    }
-    else if (!m_analysisResult.useClientDetected &&  m_analysisResult.hookDetected) {
-        std::cout << "No use client detected, but detected hooks, consider adding useClient" << std::endl;
-    }
-    else {
-        std::cout << "No use client detected" << std::endl;
-    }
+    
 }
 
 
@@ -36,31 +42,6 @@ void Reporter::PopulateTokensToComment(const std::vector<TokenInfo> &m_tokenInfo
         tokensToComment.insert(tokenInfo.value);
     }
 }
-
-void Reporter::AddCommentTokens(nlohmann::json &j, 
-    const std::unordered_set<std::string> &tokensToComment) {
-    
-    for (auto& jToken : j["tokens"]) {
-        if (jToken.contains("value") && jToken["value"].is_string()) {
-            const std::string& value = jToken["value"];
-
-            // Add instructions for incorrect use of 'use client'
-            if (tokensToComment.find(value) != tokensToComment.end() && 
-                value == "use client"
-            ) {
-                CreateComment(jToken, "Large file detected with 'use client', Consider refactoring 'use client' into smaller files for better SEO score");
-            }
-            // Add instructions for incorrect use of 'use' hook instances 
-            else if (tokensToComment.find(value) != tokensToComment.end()) {
-                std::regex re("use[A-Z]\\w*");
-                if (value.find(std::regex_search(value, re) && value != "use client")) {
-                    CreateComment(jToken, "Consider refactoring " + value + " into a smaller file for better SEO score");
-                }
-            }  
-        }
-    }
-}
-
 
 void Reporter::CreateComment(nlohmann::json &jToken, 
     const std::string &commentText) {

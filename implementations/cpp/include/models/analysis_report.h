@@ -9,14 +9,12 @@ struct AnalysisReport {
     bool useClientDetected;
     bool hookDetected;
     bool largeFileDetected;
-
-    // Add more fields as needed
-    // ...
-
-    // Consider using nested structs or classes for more complex data
-    struct DetailedResult {
-        // Detailed fields
-    };
-
-    std::vector<DetailedResult> detailedResults;
+    bool manyWordsInFile;
+    bool windowDetected;
+    bool documentDetected;
+    bool buttontDetected;
+    bool eventDetected;
+    bool routerDetected;
+    bool localDetected;
+    bool dynamicDetected;
 };

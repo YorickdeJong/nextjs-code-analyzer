@@ -35,11 +35,10 @@ try {
   // Get analysis results
   const analysisResults = addon.CreateReport(astJson);
 
-  console.log(analysisResults);
   
   analysisResults.tokens.forEach((token: any) => {
-    if (token.comment) {
-      console.log("token", token.comment)
+    if (token.comment) { 
+        console.log('token', token);
       // // Insert the comment into the source code
       // // Assuming the 'line' in the comment is 1-based
       // const lineIndex = token.loc.start.line -1;

@@ -23,6 +23,8 @@ class Analyzer {
         const std::vector<TokenInfo>& GetTokenInfos() const { return m_tokenInfos; };
 
     private:    
+        void InitAnalyseResult(nlohmann::json &j);
+        
         AnalysisReport m_analysisResult; 
         std::vector<TokenInfo> m_tokenInfos;
 
