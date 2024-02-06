@@ -7,7 +7,7 @@
 #include "models/analysis_report.h"
 #include "models/token_info.h"
 #include <regex>
-#include "utils/client_side_constants.h"
+#include "utils/constants.h"
 
 // Analyzer is responsible for analyzing JSON data and setting a set of values
 // based on the report findings. These values indicate what optimizations should

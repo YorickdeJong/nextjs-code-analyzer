@@ -37,23 +37,19 @@ string(REPLACE "\"" "" NODE_ADDON_API_DIR ${NODE_ADDON_API_DIR})
 
 target_include_directories(${PROJECT_NAME} PRIVATE 
     ${NODE_ADDON_API_DIR}
+    ${NODE_ADDON_API_DIR}/src
 )
 
 # Enable testing
 enable_testing()
 
 
+add_subdirectory(src/reader)
+add_subdirectory(src/analysis)
+add_subdirectory(src/reporter)
+add_subdirectory(external/googletest)
+add_subdirectory(tests)
 
-# INCLUDING SUBDIRECTORIES
-if (CMAKE_JS_VERSION)
-    add_subdirectory(src/reader)
-    add_subdirectory(src/analysis)
-    add_subdirectory(src/reporter)
-    add_subdirectory(tests)
-    add_subdirectory(external/googletest)
-else()
-    message(FATAL_ERROR "CMAKE_JS_VERSION is not defined")
-endif()
 
 
 #LINKING LIBRARIES
@@ -64,14 +60,3 @@ if(MSVC AND CMAKE_JS_NODELIB_DEF AND CMAKE_JS_NODELIB_TARGET)
   execute_process(COMMAND ${CMAKE_AR} /def:${CMAKE_JS_NODELIB_DEF} /out:${CMAKE_JS_NODELIB_TARGET} ${CMAKE_STATIC_LINKER_FLAGS})
 endif()
 
-
-add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} --verbose)
-
-
-# # Post-build command to run tests
-# add_custom_command(
-#     TARGET ${PROJECT_NAME} POST_BUILD
-#     COMMAND ${CMAKE_CTEST_COMMAND} --verbose
-#     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-#     COMMENT "Running tests"
-# )

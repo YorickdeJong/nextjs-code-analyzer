@@ -42,8 +42,11 @@ protected:
 
 
 
-
 TEST_F(UseClientStrategyTest, ExecuteChain_WithStandardInput_ReturnsEmptyComments) {
+
+    // Test Scenario: Standard input with no specific flags set.
+    // Expected Behavior: No comments should be generated as no conditions to trigger comment generation are met.
+    // Rationale: Validates that the default state of the analysis report does not lead to unnecessary comments.
 
     auto &strategies = chainBuilder.GetStrategies();
     for (const auto &strategy : strategies) {
@@ -58,6 +61,10 @@ TEST_F(UseClientStrategyTest, ExecuteChain_WithStandardInput_ReturnsEmptyComment
 
 TEST_F(UseClientStrategyTest, ExecuteChain_LargeFileWithUseClient) {
     
+    // Test Scenario: Analysis report with useClient and largeFile flags set.
+    // Expected Behavior: Comments should indicate large file detection and suggest refactoring 'use client'.
+    // Rationale: Ensures the strategy correctly processes scenarios with both useClient and largeFile conditions met.
+
     analysisReport.useClientDetected = true;
     analysisReport.largeFileDetected = true;
     analysisReport.hookDetected = false;
@@ -82,6 +89,10 @@ TEST_F(UseClientStrategyTest, ExecuteChain_LargeFileWithUseClient) {
 
 TEST_F(UseClientStrategyTest, ExecuteChain_LargeFileWithUseClientAndMayWords) {
 
+    // Test Scenario: Analysis report with useClient, largeFile flags, and manyWordsInFile set.
+    // Expected Behavior: Comments should include suggestions for both large file and many words detection.
+    // Rationale: Checks the strategy's ability to handle multiple flag conditions and provide combined advice.
+    
     analysisReport.useClientDetected = true;
     analysisReport.largeFileDetected = true;
     analysisReport.hookDetected = false;
@@ -107,6 +118,10 @@ TEST_F(UseClientStrategyTest, ExecuteChain_LargeFileWithUseClientAndMayWords) {
 
 TEST_F(UseClientStrategyTest, ExecuteChain_LargeFileWithUseClientAndMayWordsAndHook) {
 
+    // Test Scenario: All flags set including useClient, largeFile, manyWordsInFile, and hookDetected.
+    // Expected Behavior: Comments should reflect large file and many words detection, ignoring hook detection.
+    // Rationale: Verifies strategy's response to multiple active flags, prioritizing large file and word count advice.
+
     analysisReport.useClientDetected = true;
     analysisReport.largeFileDetected = true;
     analysisReport.hookDetected = true;
@@ -128,6 +143,10 @@ TEST_F(UseClientStrategyTest, ExecuteChain_LargeFileWithUseClientAndMayWordsAndH
 
 
 TEST_F(UseClientStrategyTest, ExecuteChain_LargeFileMayWordsAndHook) {
+
+    // Test Scenario: Analysis report with largeFile, manyWordsInFile, and hookDetected flags set, but no useClient.
+    // Expected Behavior: No comments should be generated as the useClient flag, crucial for this strategy, is not set.
+    // Rationale: Confirms that the strategy does not generate comments when the primary useClient condition is not met.
 
     analysisReport.useClientDetected = false;
     analysisReport.largeFileDetected = true;
@@ -153,6 +172,10 @@ TEST_F(UseClientStrategyTest, ExecuteChain_LargeFileMayWordsAndHook) {
 
 TEST_F(UseClientStrategyTest, ExecuteChain_LargeFileUseClientHook) {
 
+    // Test Scenario: useClient, largeFile, and hookDetected flags set, but not manyWordsInFile.
+    // Expected Behavior: Comments should only reflect the large file detection and not consider the hook.
+    // Rationale: Validates that the strategy provides relevant advice for large files while ignoring irrelevant flags.
+    
     analysisReport.useClientDetected = true;
     analysisReport.largeFileDetected = true;
     analysisReport.hookDetected = true;
@@ -176,6 +199,10 @@ TEST_F(UseClientStrategyTest, ExecuteChain_LargeFileUseClientHook) {
 
 TEST_F(UseClientStrategyTest, ExecuteChain_UseClientHook) {
 
+    // Test Scenario: Analysis report with useClient and hookDetected set, but no largeFile or manyWordsInFile.
+    // Expected Behavior: No comments should be generated as neither large file nor many words conditions are met.
+    // Rationale: Ensures that the strategy remains silent in the absence of specific conditions despite useClient being set.
+
     analysisReport.useClientDetected = true;
     analysisReport.largeFileDetected = false;
     analysisReport.hookDetected = true;
@@ -198,6 +225,11 @@ TEST_F(UseClientStrategyTest, ExecuteChain_UseClientHook) {
 }
 
 TEST_F(UseClientStrategyTest, ExecuteChain_UseClient) {
+
+    // Test Scenario: Only useClient flag is set in the analysis report.
+    // Expected Behavior: Comments should suggest removing 'use client' as no client-side components are detected.
+    // Rationale: Verifies that the strategy provides advice to remove 'use client' when it's unnecessary.
+    
     analysisReport.useClientDetected = true;
     analysisReport.largeFileDetected = false;
     analysisReport.hookDetected = false;

@@ -1,0 +1,55 @@
+name: C++ Build
+
+on:
+  push:
+    paths:
+      - 'implementations/cpp/**'
+    branches:
+      - main
+  pull_request:
+    paths:
+      - 'implementations/cpp/**'
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+      with:
+        submodules: 'recursive'
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential cmake libboost-all-dev libssl-dev
+        npm install --save node-api-headers cmake-js
+        cd implementations/typescript
+        npm install --save node-addon-api
+        npm install --save node-api-headers
+        
+    # - name: Create Build Directory
+    #   run: mkdir -p implementations/cpp/build
+
+    # - name: CMake
+    #   run: |
+    #     cd implementations/cpp/build
+    #     cmake ..
+
+    # - name: Build
+    #   run: |
+    #     cd implementations/cpp/build
+    #     make
+  #
+    - name: Build
+      run: npx cmake-js build -d 'implementations/cpp'
+        
+      
+    - name: Tests
+      run: |
+        cd implementations/cpp/build
+        ctest 
+        

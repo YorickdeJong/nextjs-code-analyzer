@@ -6,6 +6,10 @@
 #include "reporter/strategy/useclient_strategy.h"
 #include "reporter/strategy/comment_strategy_interface.h"
 
+// UseClientStrategyTest is designed to test the behavior of UseClientStrategy::CommentText under various conditions.
+// It checks how the strategy reacts to different states of an AnalysisReport, specifically focusing on
+// scenarios with combinations of 'useClient', 'largeFile', and 'manyWordsInFile' flags.
+// Each test case simulates a different combination of these flags and verifies the expected output from the strategy.
 
 class UseClientStrategyTest : public ::testing::Test {
 protected:
@@ -40,6 +44,9 @@ protected:
 
 TEST_F(UseClientStrategyTest, largefileWithManyWordsAndUseClient) {
 
+    // Test Scenario: Analysis report with useClient, largeFile, and manyWordsInFile flags set.
+    // Expected Behavior: Return text should include advice for large file and many words.
+    // Rationale: Validates that the strategy combines messages for both large file and many words scenarios.
 
     analysisReport.useClientDetected = true;
     analysisReport.largeFileDetected = true;
@@ -74,6 +81,10 @@ TEST_F(UseClientStrategyTest, largefileWithManyWordsAndUseClient) {
 
 
 TEST_F(UseClientStrategyTest, manyWordsAndUseClient) {
+
+    // Test Scenario: Analysis report with useClient and manyWordsInFile flags set, but no largeFile flag.
+    // Expected Behavior: Return text should include advice for many words and a message to consider removing 'use client'.
+    // Rationale: Checks the strategy's handling of a scenario where many words are detected in a client-used file.
 
     analysisReport.useClientDetected = true;
     analysisReport.largeFileDetected = false;
@@ -110,8 +121,10 @@ TEST_F(UseClientStrategyTest, manyWordsAndUseClient) {
 
 TEST_F(UseClientStrategyTest, returnEmpty) {
 
-    AnalysisReport analysisReport; 
-    UseClientStrategy useClientStrategy; 
+    // Test Scenario: Analysis report with manyWordsInFile flag set but without useClient and largeFile.
+    // Expected Behavior: Return text should be empty as the crucial useClient condition is not met.
+    // Rationale: Confirms that the strategy does not generate comments when the primary useClient condition is absent.
+
     analysisReport.useClientDetected = false;
     analysisReport.largeFileDetected = false;
     analysisReport.manyWordsInFile = true;
@@ -147,6 +160,10 @@ TEST_F(UseClientStrategyTest, returnEmpty) {
 
 TEST_F(UseClientStrategyTest, removeClient) {
  
+    // Test Scenario: Analysis report with only the useClient flag set.
+    // Expected Behavior: Return text should suggest removing 'use client' as no other conditions are met.
+    // Rationale: Ensures that the strategy advises removal of 'use client' when it is unnecessary.
+    
     analysisReport.useClientDetected = true;
     analysisReport.largeFileDetected = false;
     analysisReport.manyWordsInFile = false;
@@ -183,6 +200,10 @@ TEST_F(UseClientStrategyTest, removeClient) {
 
 TEST_F(UseClientStrategyTest, largeFile) {
 
+    // Test Scenario: Analysis report with useClient and largeFile flags set, but no manyWordsInFile.
+    // Expected Behavior: Return text should include advice for large file scenario.
+    // Rationale: Verifies the strategy's ability to provide correct advice for large files in the presence of useClient.
+    
     analysisReport.useClientDetected = true;
     analysisReport.largeFileDetected = true;
     analysisReport.manyWordsInFile = false;

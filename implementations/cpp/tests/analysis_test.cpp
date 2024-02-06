@@ -3,7 +3,7 @@
 #include "models/token_info.h"
 #include "models/analysis_report.h"
 #include <nlohmann/json.hpp>
-#include "utils/client_side_constants.h"
+#include "utils/constants.h"
 
 
 
@@ -113,7 +113,6 @@ TEST(AnalysisTest, useClient) {
                 {"type", "Keyword"},
                 {"value", CLIENT::USE_CLIENT}
             },
-            // Add other tokens as needed
         }}
     };
 

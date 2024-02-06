@@ -81,6 +81,10 @@ protected:
 
 TEST_F(UseEffectStrategyTest, useEffectWithUseClientAndLargeFile) {
 
+    // Test Scenario: All flags set to true in an analysis report involving useEffect.
+    // Expected Behavior: The return text should match the expected text for useClient and large file scenarios.
+    // Rationale: Ensures that useClientStrategy correctly processes and returns messages when all relevant flags are active.
+
     analysisReport.useClientDetected = true;
     analysisReport.largeFileDetected = true;
     analysisReport.hookDetected = true;
@@ -103,6 +107,10 @@ TEST_F(UseEffectStrategyTest, useEffectWithUseClientAndLargeFile) {
 }
 
 TEST_F(UseEffectStrategyTest, useEffectWithoutUseClientAndLargeFile) {
+
+    // Test Scenario: Large file and hook detected, but no useClient detected for useEffect.
+    // Expected Behavior: Return text should include advice for large file handling without useClient specific message.
+    // Rationale: Validates that useClientStrategy omits client-specific advice in the absence of the useClient flag.
 
     analysisReport.useClientDetected = false;
     analysisReport.largeFileDetected = true;
@@ -127,6 +135,10 @@ TEST_F(UseEffectStrategyTest, useEffectWithoutUseClientAndLargeFile) {
 
 
 TEST_F(UseEffectStrategyTest, NoUseEffectAndUseClient) {
+
+    // Test Scenario: Hook not detected for useEffect with large file detected and no use client.
+    // Expected Behavior: Return text should be empty as no conditions are met for generating advice.
+    // Rationale: Confirms that the absence of hook detection results in no advice being generated.
 
     analysisReport.useClientDetected = false;
     analysisReport.largeFileDetected = true;
@@ -154,6 +166,10 @@ TEST_F(UseEffectStrategyTest, NoUseEffectAndUseClient) {
 
 TEST_F(UseEffectStrategyTest, useEffectDetectedWithUseClientAndLargeFile) {
 
+    // Test Scenario: useEffect detected with both useClient and large file flags set.
+    // Expected Behavior: Return text should include the appropriate message for useEffect with both flags active.
+    // Rationale: Checks that useClientStrategy correctly combines advice for useEffect when multiple conditions are met.
+
     analysisReport.useClientDetected = true;
     analysisReport.largeFileDetected = true;
     analysisReport.hookDetected = true;
@@ -178,6 +194,10 @@ TEST_F(UseEffectStrategyTest, useEffectDetectedWithUseClientAndLargeFile) {
 
 
 TEST_F(UseStateStrategyTest, HookWithUseClientAndLargeFile) {
+
+    // Test Scenario: useState hook detected with useClient and large file flags set.
+    // Expected Behavior: Return text should include the expected message for a large file with use client.
+    // Rationale: Verifies that useState scenarios correctly handle the combination of useClient and large file flags.
 
     analysisReport.useClientDetected = true;
     analysisReport.largeFileDetected = true;
@@ -204,6 +224,10 @@ TEST_F(UseStateStrategyTest, HookWithUseClientAndLargeFile) {
 
 TEST_F(UseStateStrategyTest, HookWithNoUseClientAndLargeFile) {
 
+    // Test Scenario: useState hook and large file detected, but no useClient present.
+    // Expected Behavior: Return text should only reflect the large file scenario without useClient-specific advice.
+    // Rationale: Ensures that the absence of the useClient flag leads to omission of client-specific advice.
+
     analysisReport.useClientDetected = false;
     analysisReport.largeFileDetected = true;
     analysisReport.hookDetected = true;
@@ -229,6 +253,10 @@ TEST_F(UseStateStrategyTest, HookWithNoUseClientAndLargeFile) {
 
 TEST_F(UseStateStrategyTest, NoHookWithNoUseClientAndLargeFile) {
  
+    // Test Scenario: Large file detected without useState hook and no useClient.
+    // Expected Behavior: Return text should be empty as the primary condition (hook detection) is not met.
+    // Rationale: Confirms that no advice is generated when the hook detection condition is not satisfied.
+
     analysisReport.useClientDetected = false;
     analysisReport.largeFileDetected = true;
     analysisReport.hookDetected = false;

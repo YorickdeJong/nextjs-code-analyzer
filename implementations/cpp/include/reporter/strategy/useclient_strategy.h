@@ -3,7 +3,7 @@
 #include <string> 
 
 
-
+// UseClientStrategy return comments based on findings in the NextJS javascript code
 class UseClientStrategy : public CommentStrategyInterface {
     public:
         std::string CommentText(const AnalysisReport &analysisReport, const std::string &javascriptTokenValue) const override {
