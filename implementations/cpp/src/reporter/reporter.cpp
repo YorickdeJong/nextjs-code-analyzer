@@ -9,7 +9,7 @@ const std::vector<TokenInfo> &tokenInfo)
 }
 
 
-void Reporter::AddCommentsToJsonObject(nlohmann::json &j){
+void Reporter::AddCommentsToJsonObject(JsonManager& jsonManager){
     std::unordered_set<std::string> tokensToComment;
     ChainBuilder chainBuilder; 
     CommentStrategyChain commentStrategyChain;
@@ -17,7 +17,7 @@ void Reporter::AddCommentsToJsonObject(nlohmann::json &j){
 
     PopulateTokensToComment(m_tokenInfos, tokensToComment);
 
-    for (auto& jToken : j["tokens"]) {
+    for (auto& jToken : jsonManager.GetJson()["tokens"]) {
         if (!jToken.contains("value") || !jToken["value"].is_string()) {
             continue; // Skip to the next iteration if conditions are not met
         }
@@ -30,8 +30,7 @@ void Reporter::AddCommentsToJsonObject(nlohmann::json &j){
         std::string comments = commentStrategyChain.ExecuteChain( chainBuilder, m_analysisReport, 
             javascriptTokenValue);
         
-        std::cout << "main" << comments << std::endl;
-        CreateComment(jToken, comments);
+        jsonManager.Modify(comments);
     }
     
 }
@@ -46,13 +45,3 @@ void Reporter::PopulateTokensToComment(const std::vector<TokenInfo> &m_tokenInfo
     }
 }
 
-void Reporter::CreateComment(nlohmann::json &jToken, 
-    const std::string &commentText) {
-    
-    nlohmann::json comment;
-    comment["value"] = commentText;
-    comment["line"] = jToken["loc"]["start"]["line"];
-    comment["start"] = jToken["loc"]["start"]["index"];
-    comment["end"] = jToken["loc"]["end"]["index"];
-    jToken["comment"] = comment;
-}

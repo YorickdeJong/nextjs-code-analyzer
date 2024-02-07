@@ -6,7 +6,6 @@
 #include "utils/constants.h"
 
 
-
 TEST(AnalysisTest, addTokenInfoUseClient) {
     Analyzer analyze;
     std::vector<TokenInfo> tokenInfo;
@@ -35,6 +34,7 @@ TEST(AnalysisTest, addTokenInfoUseClient) {
 TEST(AnalysisTest, useClientAndHooks) {
     Analyzer analyzer;
     nlohmann::json inputJson = {
+        {"loc", {{"start", {{"line", 1}, {"index", 0}}}, {"end", {{"line", 1}, {"index", 10}}}}},
         {"tokens", {
             {
                 {"end", 10},
@@ -70,6 +70,7 @@ TEST(AnalysisTest, useClientAndHooks) {
 TEST(AnalysisTest, Hooks) {
     Analyzer analyzer;
     nlohmann::json inputJson = {
+        {"loc", {{"start", {{"line", 1}, {"index", 0}}}, {"end", {{"line", 1}, {"index", 10}}}}},
         {"tokens", {
             {
                 {"end", 10},
@@ -98,6 +99,7 @@ TEST(AnalysisTest, Hooks) {
 TEST(AnalysisTest, useClient) {
     Analyzer analyzer;
     nlohmann::json inputJson = {
+        {"loc", {{"start", {{"line", 1}, {"index", 0}}}, {"end", {{"line", 1}, {"index", 10}}}}},
         {"tokens", {
             {
                 {"end", 10},

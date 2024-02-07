@@ -4,12 +4,10 @@
 
 
 
-void Analyzer::AnalyzeJson(nlohmann::json &j) {
+void Analyzer::AnalyzeJson(const nlohmann::json &j) {
 
-    std::cout << "Analyzing JSON object" << j["loc"]["end"]["line"] << std::endl;
-    
-    
 
+    
     InitAnalyseResult(j);
 
     for (auto& token : j["tokens"]) {
@@ -73,7 +71,7 @@ void Analyzer::AddTokenInfoHooks(const nlohmann::json &token, std::vector<TokenI
 }
 
 
-void Analyzer::InitAnalyseResult(nlohmann::json &j) {
+void Analyzer::InitAnalyseResult(const nlohmann::json &j) {
     m_analysisResult.useClientDetected = false;
     m_analysisResult.hookDetected = false;
     m_analysisResult.largeFileDetected = j["loc"]["end"]["line"] > 99;

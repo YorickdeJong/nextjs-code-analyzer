@@ -2,7 +2,6 @@
 #include <unordered_set>
 #include <string>
 
-// Define a namespace if appropriate
 namespace CLIENT {
 
     const std::string USE_CLIENT = "use client"; 

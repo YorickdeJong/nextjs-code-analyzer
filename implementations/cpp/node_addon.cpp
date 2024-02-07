@@ -1,4 +1,4 @@
-#include "reader/json_reader.h"
+#include "manager/json_manager.h"
 #include "analysis/analysis.h"
 #include "reporter/reporter.h"
 
@@ -22,23 +22,23 @@ Napi::Value CreateReport(const Napi::CallbackInfo& info) {
     return Napi::String::New(env, "");
   }
 
-  class JsonReader reader(info, env);
+  class JsonManager jsonManager(info, env);
   class Analyzer analyzer;
 
 
 
   // Analyze code and add comments to sections
-  analyzer.AnalyzeJson(reader.getJson());
+  analyzer.AnalyzeJson(jsonManager.GetJson());
 
   // Add the report to the json object
   Reporter reporter(analyzer.GetAnalysisResult(), analyzer.GetTokenInfos());
-  reporter.AddCommentsToJsonObject(reader.getJson());
+  reporter.AddCommentsToJsonObject(jsonManager);
 
   // Convert the JSON object to a NAPI value.
-  reader.JsonToNapiValue();
+  jsonManager.JsonToNapiValue();
 
   // Return value
-  return Napi::Value(env, reader.getReturnData());
+  return Napi::Value(env, jsonManager.GetReturnData());
 }
 
 Napi::Object Init(Napi::Env env, Napi::Object exports)

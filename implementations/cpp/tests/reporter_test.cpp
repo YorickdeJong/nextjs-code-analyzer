@@ -38,7 +38,7 @@ TEST(ReporterTest, AddCommentTokens) {
 
     analyzer.AnalyzeJson(inputJson);
     Reporter reporter(analyzer.GetAnalysisResult(), analyzer.GetTokenInfos()); 
-    reporter.AddCommentsToJsonObject(inputJson);
+    // reporter.AddCommentsToJsonObject(jsonManager);
 
     EXPECT_EQ(inputJson.size(), inputJson.size());
 

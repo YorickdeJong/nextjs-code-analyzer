@@ -1,18 +1,28 @@
-#include "reader/json_reader.h"
+#include "manager/json_manager.h"
 
 
-JsonReader::JsonReader(const Napi::CallbackInfo &_info, Napi::Env &_env) 
+JsonManager::JsonManager(const Napi::CallbackInfo &_info, Napi::Env &_env) 
 : m_env{_env} {
   std::string jsonString = _info[0].As<Napi::String>().Utf8Value();
   ConvertStringToJson(jsonString);
 }
 
-JsonReader::JsonReader(const nlohmann::json& _json, Napi::Env &_env)
+JsonManager::JsonManager(const nlohmann::json &_json, Napi::Env &_env)
 : m_json{_json}, m_env{_env} {
     // The m_json object is passed by reference, so no std::move is used here.
 }
 
-void JsonReader::JsonToNapiValue() {
+void JsonManager::Modify(std::string commentText) {
+    nlohmann::json comment;
+    comment["value"] = commentText;
+    comment["line"] = m_json["loc"]["start"]["line"];
+    comment["start"] = m_json["loc"]["start"]["index"];
+    comment["end"] = m_json["loc"]["end"]["index"];
+    m_json["comment"] = comment;
+}
+
+
+void JsonManager::JsonToNapiValue() {
 
   if (m_json.is_null()) {
     m_returnData = m_env.Null();
@@ -31,7 +41,7 @@ void JsonReader::JsonToNapiValue() {
     for (auto& el : m_json.items()) {
       // Convert each element in the object
       nlohmann::json subJson = el.value();
-      JsonReader subReader(subJson, m_env); // Create a sub-reader for the nested m_json
+      JsonManager subReader(subJson, m_env); // Create a sub-reader for the nested m_json
       subReader.JsonToNapiValue(); // Convert the nested m_json
       obj.Set(el.key(), subReader.m_returnData); // Set the converted value in the object
     }
@@ -42,7 +52,7 @@ void JsonReader::JsonToNapiValue() {
     for (size_t i = 0; i < m_json.size(); i++) {
       // Convert each element in the array
       nlohmann::json subJson = m_json[i];
-      JsonReader subReader(subJson, m_env); // Create a sub-reader for the nested m_json
+      JsonManager subReader(subJson, m_env); // Create a sub-reader for the nested m_json
       subReader.JsonToNapiValue(); // Convert the nested m_json
       array[i] = subReader.m_returnData; // Set the converted value in the array
     }
@@ -54,6 +64,6 @@ void JsonReader::JsonToNapiValue() {
 }
 
 
-void JsonReader::ConvertStringToJson(const std::string& jsonString) {
+void JsonManager::ConvertStringToJson(const std::string &jsonString) {
   m_json = nlohmann::json::parse(jsonString);
 }

@@ -7,6 +7,7 @@
 #include <iostream>
 #include "models/token_info.h"
 #include "models/analysis_report.h"
+#include "manager/json_manager.h"
 #include "reporter/chain/comment_strategy_chain_builder.h"
 #include "reporter/strategy/comment_strategy_interface.h"
 
@@ -15,7 +16,7 @@
 class Reporter {
     public:
         Reporter(const AnalysisReport &analysisReport, const std::vector<TokenInfo> &tokenInfo);
-        void AddCommentsToJsonObject(nlohmann::json &j);
+        void AddCommentsToJsonObject(JsonManager& jsonManager);
 
     private: 
         void PopulateTokensToComment(const std::vector<TokenInfo> &tokenInfos, std::unordered_set<std::string> &tokensToComment);

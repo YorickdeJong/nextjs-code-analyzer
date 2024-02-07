@@ -37,14 +37,13 @@ string(REPLACE "\"" "" NODE_ADDON_API_DIR ${NODE_ADDON_API_DIR})
 
 target_include_directories(${PROJECT_NAME} PRIVATE 
     ${NODE_ADDON_API_DIR}
-    ${NODE_ADDON_API_DIR}/src
 )
 
 # Enable testing
 enable_testing()
 
 
-add_subdirectory(src/reader)
+add_subdirectory(src/manager)
 add_subdirectory(src/analysis)
 add_subdirectory(src/reporter)
 add_subdirectory(external/googletest)
@@ -53,7 +52,7 @@ add_subdirectory(tests)
 
 
 #LINKING LIBRARIES
-target_link_libraries(${PROJECT_NAME} ${CMAKE_JS_LIB} json_reader analysis reporter)
+target_link_libraries(${PROJECT_NAME} ${CMAKE_JS_LIB} json_manager analysis reporter)
 
 if(MSVC AND CMAKE_JS_NODELIB_DEF AND CMAKE_JS_NODELIB_TARGET)
   # Generate node.lib
