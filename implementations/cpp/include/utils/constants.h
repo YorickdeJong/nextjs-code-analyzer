@@ -36,3 +36,8 @@ namespace CLIENT_DESCRIPTIONS {
     const std::string LOCAL_DESC = "local";
     const std::string DYNAMIC_DESC = "dynamic";
 }
+
+namespace FILE_SPECS {
+    const int WORD_COUNT = 30;
+    const int FILE_LENGTH = 99;
+}

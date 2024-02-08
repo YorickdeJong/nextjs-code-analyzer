@@ -12,6 +12,14 @@ JsonManager::JsonManager(const nlohmann::json &_json, Napi::Env &_env)
     // The m_json object is passed by reference, so no std::move is used here.
 }
 
+/**
+  * Adds comment to specific json index based on the NextJs code found in the parsed data
+  * @param index Refers to the specific index to insert the index into the "tokens" sub object
+  *              in the json array
+  * 
+  * @param commentText Specifc comment to insert into the json object
+  */ 
+
 void JsonManager::ModifyJsonObject(size_t index, const std::string& commentText) {
     nlohmann::json comment;
     comment["value"] = commentText;
@@ -21,7 +29,9 @@ void JsonManager::ModifyJsonObject(size_t index, const std::string& commentText)
     m_json["tokens"][index]["comment"] = comment;
 }
 
-
+/**
+  * function to convert Json to Napi values, such that they can be parsed back into the javascript file
+  */ 
 void JsonManager::JsonToNapiValue() {
 
   if (m_json.is_null()) {

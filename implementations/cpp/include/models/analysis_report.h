@@ -4,11 +4,10 @@
 #include <vector>
 #include <optional>
 #include <regex>
-
+#include <map>
 #include "utils/constants.h"
 
 class AnalysisReport {
-    
     
     public: 
         AnalysisReport() {
@@ -16,76 +15,54 @@ class AnalysisReport {
            InitializeReverseLookupTable();
         }
 
-
-
-        void SetDetectionFlag(const std::string& key, bool value) {
-            auto it = m_DetectionFlags.find(key);
-            if (it != m_DetectionFlags.end()) {
-                it->second.first = value;
-            } else {
-                throw std::out_of_range("Error while setting detection flag: Key not found in detection flags");
-            }
-        }
+        /**
+         * Sets a detection flag in the analysis report.
+         * @param key The key representing the specific detection flag.
+         * @param value The boolean value to set for the detection flag.
+         * @throws std::out_of_range if the key is not found in the detection flags.
+         */
+        void SetDetectionFlag(const std::string& key, bool value);
         
-        const std::map<std::string, std::pair<bool, std::string>> &GetDetectionFlags() const {
-            return m_DetectionFlags;
-        }
+        /**
+         * Retrieves the map of all detection flags.
+         * @return A constant reference to the map of detection flags.
+         */
+        const std::map<std::string, std::pair<bool, std::string>> &GetDetectionFlags() const;
 
-        const bool GetDetectionFlag(const std::string& key) const {
-            auto it = m_DetectionFlags.find(key);
-            if (it != m_DetectionFlags.end()) {
-                return it->second.first;
-            } else {
-                throw std::out_of_range("Error while getting detection flag: Key not found in detection flags");
-            }
-        }
+        /**
+         * Gets the value of a specific detection flag.
+         * @param key The key representing the specific detection flag.
+         * @return The boolean value of the detection flag.
+         * @throws std::out_of_range if the key is not found in the detection flags.
+         */
+        const bool GetDetectionFlag(const std::string& key) const;
+        
+        /**
+         * Retrieves the string value associated with a specific key in the detection flags.
+         * @param key The key for which to retrieve the string value.
+         * @return A constant reference to the string value associated with the key.
+         * @throws std::out_of_range if the key is not found in the detection flags.
+         */
+        const std::string &GetStringValue(const std::string& key) const;
 
-        const std::string &GetStringValue(const std::string& key) const{
-            auto it = m_DetectionFlags.find(key);
-            if (it != m_DetectionFlags.end()) {
-                return it->second.second;
-            } else {
-                throw std::out_of_range("Error while getting string value: Key not found in string value");
-            }
-        }
-        void InitializeReverseLookupTable() {
-            for (const auto& pair : m_DetectionFlags) {
-                m_reverseLookupTable[pair.second.second] = pair.first;
-            }
-        }
+        /**
+         * Initializes a reverse lookup table for efficient searching by description.
+         */
+        void InitializeReverseLookupTable();
 
-        std::optional<std::string> FindKeyByDescription(const std::string& description) const {
-            std::string newDescription = description;
-            std::regex re("use[A-Z]\\w*");
-            std::smatch match;
-                
-            if (std::regex_search(description, match, re)) {
-                newDescription = "hook";
-            }
-
-            auto it = m_reverseLookupTable.find(newDescription);
-            if (it != m_reverseLookupTable.end()) {
-                return it->second;
-            } else {
-                return std::nullopt;
-            }
-        }
+        /**
+         * Finds the key corresponding to a given description.
+         * @param description The description to search for.
+         * @return An optional containing the key if found, std::nullopt otherwise.
+         */
+        std::optional<std::string> FindKeyByDescription(const std::string& description) const;
 
     private: 
-        void InitializeDetectionFlags() {
-            m_DetectionFlags[CLIENT::USE_CLIENT] = std::make_pair(false, CLIENT_DESCRIPTIONS::USE_CLIENT_DESC);
-            m_DetectionFlags[CLIENT::HOOK] = std::make_pair(false, CLIENT_DESCRIPTIONS::HOOK_DESC);
-            m_DetectionFlags[CLIENT::LARGE_FILE] = std::make_pair(false, CLIENT_DESCRIPTIONS::LARGE_FILE_DESC);
-            m_DetectionFlags[CLIENT::MANY_WORDS] = std::make_pair(false, CLIENT_DESCRIPTIONS::MANY_WORDS_DESC);
-            m_DetectionFlags[CLIENT::WINDOW] = std::make_pair(false, CLIENT_DESCRIPTIONS::WINDOW_DESC);
-            m_DetectionFlags[CLIENT::DOCUMENT] = std::make_pair(false, CLIENT_DESCRIPTIONS::DOCUMENT_DESC);
-            m_DetectionFlags[CLIENT::BUTTON] = std::make_pair(false, CLIENT_DESCRIPTIONS::BUTTON_DESC);
-            m_DetectionFlags[CLIENT::ONCLICK] = std::make_pair(false, CLIENT_DESCRIPTIONS::ONCLICK_DESC);
-            m_DetectionFlags[CLIENT::EVENT] = std::make_pair(false, CLIENT_DESCRIPTIONS::EVENT_DESC);
-            m_DetectionFlags[CLIENT::ROUTER] = std::make_pair(false, CLIENT_DESCRIPTIONS::ROUTER_DESC);
-            m_DetectionFlags[CLIENT::LOCAL] = std::make_pair(false, CLIENT_DESCRIPTIONS::LOCAL_DESC);
-            m_DetectionFlags[CLIENT::DYNAMIC] = std::make_pair(false, CLIENT_DESCRIPTIONS::DYNAMIC_DESC);
-        }
+
+    /**
+ * Initializes the detection flags with default values and descriptions.
+ */
+        void InitializeDetectionFlags();
 
 
         std::map<std::string, std::pair<bool, std::string>> m_DetectionFlags;

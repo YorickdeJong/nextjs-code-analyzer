@@ -4,7 +4,7 @@
 
 #include "analysis/analysis.h"
 #include "reporter/reporter.h"
-#include "reporter/strategy/useclient_strategy.h"
+#include "reporter/strategy/use_client_strategy.h"
 #include "reporter/strategy/comment_strategy_interface.h"
 
 
