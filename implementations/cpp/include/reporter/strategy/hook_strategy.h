@@ -1,8 +1,9 @@
 #pragma once
-#include "reporter/strategy/comment_strategy_interface.h"
+
 #include <string> 
 #include <regex>
 
+#include "reporter/strategy/comment_strategy_interface.h"
 
 class HookStrategy : public CommentStrategyInterface {
     public:
@@ -12,12 +13,12 @@ class HookStrategy : public CommentStrategyInterface {
                 javascriptTokenValue + " or add 'use client' to make this file client side";
             
 
-            bool specificCondition = analysisReport.hookDetected;
+            bool specificCondition = analysisReport.GetDetectionFlag(CLIENT::HOOK);
             
 
             std::string returnText = ReturnMessage(text1, text2, specificCondition, analysisReport);
             
-            if ( javascriptTokenValue == "useEffect" && analysisReport.hookDetected ) {
+            if ( javascriptTokenValue == CLIENT_DESCRIPTIONS::USE_EFFECT_DESC && specificCondition) {
                 returnText += "If you are using an async await fetch in your useEffect, "
                   "consider making this component server side and make this component async. Example: "
                   "async function Component() {"
@@ -36,13 +37,13 @@ class HookStrategy : public CommentStrategyInterface {
                 std::regex re("use[A-Z]\\w*");
                 std::smatch match;
                 if ( std::regex_search(javascriptTokenValue, match, re) && 
-                     javascriptTokenValue != "use client"
+                     javascriptTokenValue != CLIENT_DESCRIPTIONS::USE_CLIENT_DESC
                     ) {
                         comments = CommentText(analysisReport, javascriptTokenValue);
                         return false;
                 }
 
-                return false;
+                return true;
         }
 
 };

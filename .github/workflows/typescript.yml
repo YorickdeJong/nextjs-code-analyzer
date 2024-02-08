@@ -25,9 +25,9 @@ jobs:
       working-directory: ./implementations/typescript
 
     # # Optionally run tests for the main TypeScript project
-    # - name: Test TypeScript project
-    #   run: npm test
-    #   working-directory: ./implementations/typescript
+    - name: Test TypeScript project
+      run: npm test:ts
+      working-directory: ./
 
     # Build the VS Code extension
     - name: Build VS Code Extension

@@ -4,17 +4,20 @@
   "description": "nextjs_code_analyzer",
   "main": "index.js",
   "scripts": {
-    "test": "node implementations/typescript/src/out/parse.js implementations/typescript/src/tests/test.js",
+    "test:cpp": "cd implementations/cpp/build/tests && ctest",
+    "test:ts": "jest",
+    "test": "npm run test:cpp && npm run test:ts",
     "install-packages": "npm install && cd implementations/typescript && npm install && cd ../.. && cmake-js install -d 'implementations/cpp'",
     "build": "cd implementations/typescript/src && npx tsc && cd ../.. && cmake-js build -j8 -d 'cpp'",
     "debug-build": "cd implementations/typescript/src && npx tsc && cd ../.. && cmake-js build -g -d 'cpp' --debug"
   },
   "author": "Yorick de Jong",
   "license": "ISC",
-  "dependencies": {
-  },
   "devDependencies": {
-    "cmake-js": "^7.3.0"
+    "@types/jest": "^29.5.12",
+    "cmake-js": "^7.3.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.2"
   },
   "contributes": {
     "commands": [

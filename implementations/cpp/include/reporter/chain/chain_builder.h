@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+
 #include "reporter/strategy/comment_strategy_interface.h"
 #include "reporter/strategy/hook_strategy.h"
 #include "reporter/strategy/useclient_strategy.h"

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+
 #include "reporter/strategy/comment_strategy_interface.h"
 #include "reporter/chain/chain_builder.h"
 

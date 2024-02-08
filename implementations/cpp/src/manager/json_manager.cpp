@@ -12,13 +12,13 @@ JsonManager::JsonManager(const nlohmann::json &_json, Napi::Env &_env)
     // The m_json object is passed by reference, so no std::move is used here.
 }
 
-void JsonManager::Modify(std::string commentText) {
+void JsonManager::ModifyJsonObject(size_t index, const std::string& commentText) {
     nlohmann::json comment;
     comment["value"] = commentText;
-    comment["line"] = m_json["loc"]["start"]["line"];
-    comment["start"] = m_json["loc"]["start"]["index"];
-    comment["end"] = m_json["loc"]["end"]["index"];
-    m_json["comment"] = comment;
+    comment["line"] = m_json["tokens"][index]["loc"]["start"]["line"];
+    comment["start"] = m_json["tokens"][index]["loc"]["start"]["index"];
+    comment["end"] = m_json["tokens"][index]["loc"]["end"]["index"];
+    m_json["tokens"][index]["comment"] = comment;
 }
 
 

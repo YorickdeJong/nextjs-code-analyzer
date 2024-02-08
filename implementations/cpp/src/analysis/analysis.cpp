@@ -7,8 +7,12 @@
 void Analyzer::AnalyzeJson(const nlohmann::json &j) {
 
 
+    if (!j.contains("tokens")) {
+        throw std::runtime_error("Invalid token structure: 'tokens' is missing.");
+    }
     
     InitAnalyseResult(j);
+
 
     for (auto& token : j["tokens"]) {
         
@@ -18,16 +22,7 @@ void Analyzer::AnalyzeJson(const nlohmann::json &j) {
 
         const std::string &value = token["value"];
 
-        AddTokenInfo(token, m_tokenInfos, value, CLIENT::USE_CLIENT, m_analysisResult.useClientDetected);
-        AddTokenInfo(token, m_tokenInfos, value, CLIENT::WINDOW, m_analysisResult.windowDetected);
-        AddTokenInfo(token, m_tokenInfos, value, CLIENT::DOCUMENT, m_analysisResult.documentDetected);
-        AddTokenInfo(token, m_tokenInfos, value, CLIENT::BUTTON, m_analysisResult.buttontDetected);
-        AddTokenInfo(token, m_tokenInfos, value, CLIENT::ONCLICK, m_analysisResult.onClickDetected);
-        AddTokenInfo(token, m_tokenInfos, value, CLIENT::EVENT, m_analysisResult.eventDetected);
-        AddTokenInfo(token, m_tokenInfos, value, CLIENT::ROUTER, m_analysisResult.routerDetected);
-        AddTokenInfo(token, m_tokenInfos, value, CLIENT::LOCAL, m_analysisResult.localDetected);
-        AddTokenInfo(token, m_tokenInfos, value, CLIENT::DYNAMIC, m_analysisResult.dynamicDetected);
-        AddTokenInfoHooks(token, m_tokenInfos, value, m_analysisResult.hookDetected);
+        AddTokenInfo(token, m_tokenInfos, value);
 
     }
 }
@@ -36,46 +31,68 @@ void Analyzer::AnalyzeJson(const nlohmann::json &j) {
 
 
 void Analyzer::AddTokenInfo(const nlohmann::json &token, std::vector<TokenInfo> &tokenInfos,
-    const std::string &value, const std::string& compareValue, bool &analysisResultValue
+    const std::string &value
 ) {
-    if (value == compareValue){
-        analysisResultValue = true;
-
-        TokenInfo info;
-        info.value = token["value"].get<std::string>();
-        info.line = token["loc"]["start"]["line"];
-        info.start = token["loc"]["start"]["index"];
-        info.end = token["loc"]["end"]["index"];
-        tokenInfos.emplace_back(info);
+    if (!token.contains("loc") || !token["loc"]["start"].contains("line")) {
+        throw std::runtime_error("Invalid token structure: 'loc' or 'line' missing.");
     }
+
+    auto keyOpt = m_analysisResult.FindKeyByDescription(value);
+    
+    //return if key is not found
+    if (!keyOpt.has_value()) {
+        return;
+    }
+    
+    // Use the key value
+    const std::string& key = keyOpt.value();
+    m_analysisResult.SetDetectionFlag(key, true);
+
+
+    TokenInfo info;
+    info.value = token["value"].get<std::string>();
+    info.line = token["loc"]["start"]["line"];
+    info.startIndex = token["loc"]["start"]["index"];
+    info.endIndex = token["loc"]["end"]["index"];
+    tokenInfos.emplace_back(info);
+
 }
 
-void Analyzer::AddTokenInfoHooks(const nlohmann::json &token, std::vector<TokenInfo> &tokenInfos,
-    const std::string &value, bool &analysisResultValue
-) {
-    std::regex re("use[A-Z]\\w*");
-    std::smatch match;
+// void Analyzer::AddTokenInfoHooks(const nlohmann::json &token, std::vector<TokenInfo> &tokenInfos,
+//     const std::string &value
+// ) {
+//     if (!token.contains("loc") || !token["loc"]["start"].contains("line")) {
+//             throw std::runtime_error("Invalid token structure: 'loc' or 'line' missing.");
+//     }
+    
+//     std::regex re("use[A-Z]\\w*");
+//     std::smatch match;
         
-    if (std::regex_search(value, match, re) && 
-                     value != "use client") {
+//     if (std::regex_search(value, match, re) && 
+//                      value == "use client") {
 
-        analysisResultValue = true;
-
-        TokenInfo info;
-        info.value = token["value"].get<std::string>();
-        info.line = token["loc"]["start"]["line"];
-        info.start = token["loc"]["start"]["index"];
-        info.end = token["loc"]["end"]["index"];
-        tokenInfos.emplace_back(info);
-    }
-}
+//         const std::string key = m_analysisResult.FindKeyByDescription(value);
+//         m_analysisResult.SetDetectionFlag(key, true);
+    
+//         TokenInfo info;
+//         info.value = token["value"].get<std::string>();
+//         info.line = token["loc"]["start"]["line"];
+//         info.start = token["loc"]["start"]["index"];
+//         info.end = token["loc"]["end"]["index"];
+//         tokenInfos.emplace_back(info);
+//     }
+// }
 
 
 void Analyzer::InitAnalyseResult(const nlohmann::json &j) {
-    m_analysisResult.useClientDetected = false;
-    m_analysisResult.hookDetected = false;
-    m_analysisResult.largeFileDetected = j["loc"]["end"]["line"] > 99;
-    m_analysisResult.manyWordsInFile = false;
+
+    if (!j["loc"]["start"].contains("line")) {
+        throw std::runtime_error("Invalid token structure: 'tokens' is missing.");
+    }
+
+    // Check for large file
+    const bool largeFile = j["loc"]["end"]["line"] > 99;
+    m_analysisResult.SetDetectionFlag(CLIENT::LARGE_FILE, largeFile);
 
     // Determine if file contains to many words, which is bad for SEO
     int count = 0;
@@ -86,7 +103,7 @@ void Analyzer::InitAnalyseResult(const nlohmann::json &j) {
     }
 
     if (count > 30) {
-        m_analysisResult.manyWordsInFile = true;
+        m_analysisResult.SetDetectionFlag(CLIENT::MANY_WORDS, false);
     }
 
 }

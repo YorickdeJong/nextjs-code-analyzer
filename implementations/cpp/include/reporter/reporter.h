@@ -5,9 +5,11 @@
 #include <regex>
 #include <map>
 #include <iostream>
+
 #include "models/token_info.h"
 #include "models/analysis_report.h"
 #include "manager/json_manager.h"
+#include "utils/constants.h"
 #include "reporter/chain/comment_strategy_chain_builder.h"
 #include "reporter/strategy/comment_strategy_interface.h"
 

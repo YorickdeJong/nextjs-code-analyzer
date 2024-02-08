@@ -1,8 +1,9 @@
 #pragma once
 
+#include <string> 
+
 #include "models/analysis_report.h"
 #include "models/token_info.h"
-#include <string> 
 
 class CommentStrategyInterface{
     public: 
@@ -17,12 +18,14 @@ class CommentStrategyInterface{
         std::string ReturnMessage(const std::string &text1, const std::string &text2, 
             bool specificCondition, const AnalysisReport &analysisReport) const {
                 std::string returnText = "";
-                
-                if (analysisReport.useClientDetected && analysisReport.largeFileDetected 
+                const bool isUseClientPresent = analysisReport.GetDetectionFlag(CLIENT::USE_CLIENT);
+                const bool isLargeFilePresent = analysisReport.GetDetectionFlag(CLIENT::LARGE_FILE);
+
+                if (isUseClientPresent && isLargeFilePresent 
                     && specificCondition) {
                         returnText += text1 + " \n";
                 }
-                if (!analysisReport.useClientDetected 
+                if (!isUseClientPresent 
                     && specificCondition) {
                         returnText += text2  + " \n";
                 }

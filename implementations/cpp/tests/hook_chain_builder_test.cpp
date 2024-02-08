@@ -1,6 +1,8 @@
 #include <gtest/gtest.h>
 #include <unordered_set>
 #include <iostream>
+
+#include "utils/constants.h"
 #include "reporter/strategy/comment_strategy_interface.h"
 #include "reporter/strategy/hook_strategy.h"
 #include "reporter/strategy/useclient_strategy.h"
@@ -19,7 +21,7 @@ protected:
     AnalysisReport analysisReport;
     UseClientStrategy useClientStrategy;
     ChainBuilder chainBuilder;
-    const std::string javascriptTokenValue = "useEffect";
+    const std::string javascriptTokenValue = CLIENT_DESCRIPTIONS::USE_EFFECT_DESC;
     std::string comments;
 
     void SetUp() override {
@@ -51,7 +53,7 @@ protected:
     AnalysisReport analysisReport;
     UseClientStrategy useClientStrategy;
     ChainBuilder chainBuilder;
-    const std::string javascriptTokenValue = "useState";
+    const std::string javascriptTokenValue = CLIENT_DESCRIPTIONS::USE_STATE_DESC;
     std::string comments;
     
     void SetUp() override {
@@ -107,9 +109,10 @@ TEST_F(UseEffectStrategyTest, ExecuteChain_WithUseClientAndLargeFileFlags) {
     // Rationale: We expect no comments since the conditions for adding comments are not satisfied
     // even though flags are set, demonstrating conditional comment generation.
 
-    analysisReport.useClientDetected = true;
-    analysisReport.largeFileDetected = true;
-    analysisReport.hookDetected = false;
+    analysisReport.SetDetectionFlag(CLIENT::USE_CLIENT, true);
+    analysisReport.SetDetectionFlag(CLIENT::LARGE_FILE, false);
+    analysisReport.SetDetectionFlag(CLIENT::HOOK, false);
+
     
     std::string expectedText1 = GetExpectedText1();
     std::string expectedText2 = GetExpectedText2();
@@ -133,9 +136,9 @@ TEST_F(UseEffectStrategyTest, ExecuteChain_WithUseClientLargeFileAndUseEffectFla
     // Expected Behavior: The comments should include suggestions for both large file handling and using useEffect hook.
     // Rationale: This test ensures that when all relevant conditions are met, appropriate advice is generated for optimizing useEffect usage.
     
-    analysisReport.useClientDetected = true;
-    analysisReport.largeFileDetected = true;
-    analysisReport.hookDetected = true;
+    analysisReport.SetDetectionFlag(CLIENT::USE_CLIENT, true);
+    analysisReport.SetDetectionFlag(CLIENT::LARGE_FILE, true);
+    analysisReport.SetDetectionFlag(CLIENT::HOOK, true);
 
     std::string expectedText1 = GetExpectedText1();
     std::string expectedText2 = GetExpectedText2();
@@ -159,9 +162,10 @@ TEST_F(UseEffectStrategyTest, ExecuteChain_WithoutUseClientLargeFileAndUseEffect
     // Expected Behavior: Comments should include advice related to large file and hook usage, but not for useClient.
     // Rationale: Validates that the absence of the useClient flag correctly omits client-specific advice.
     
-    analysisReport.useClientDetected = false;
-    analysisReport.largeFileDetected = true;
-    analysisReport.hookDetected = true;
+        
+    analysisReport.SetDetectionFlag(CLIENT::USE_CLIENT, false);
+    analysisReport.SetDetectionFlag(CLIENT::LARGE_FILE, true);
+    analysisReport.SetDetectionFlag(CLIENT::HOOK, true);
 
     std::string expectedText1 = GetExpectedText1();
     std::string expectedText2 = GetExpectedText2();
@@ -185,9 +189,10 @@ TEST_F(UseEffectStrategyTest, ExecuteChain_WithoutUseClientLargeFileAndWithoutUs
     // Expected Behavior: No comments should be generated since hookDetected flag, crucial for this strategy, is false.
     // Rationale: Ensures that the strategy chain correctly halts when a necessary condition (hookDetected) is not met.
 
-    analysisReport.useClientDetected = false;
-    analysisReport.largeFileDetected = true;
-    analysisReport.hookDetected = false;
+    analysisReport.SetDetectionFlag(CLIENT::USE_CLIENT, false);
+    analysisReport.SetDetectionFlag(CLIENT::LARGE_FILE, true);
+    analysisReport.SetDetectionFlag(CLIENT::HOOK, false);
+
 
     std::string expectedText1 = GetExpectedText1();
     std::string expectedText2 = GetExpectedText2();
@@ -212,9 +217,9 @@ TEST_F(UseStateStrategyTest, ExecuteChain_WithUseClientLargeFileAndHookFlags) {
     // Expected Behavior: Comments should reflect advice for handling large files in the context of useState hook.
     // Rationale: Ensures that when useState is used in a large file with a client detected, relevant advice is given.
 
-    analysisReport.useClientDetected = true;
-    analysisReport.largeFileDetected = true;
-    analysisReport.hookDetected = true;
+    analysisReport.SetDetectionFlag(CLIENT::USE_CLIENT, true);
+    analysisReport.SetDetectionFlag(CLIENT::LARGE_FILE, true);
+    analysisReport.SetDetectionFlag(CLIENT::HOOK, true);
 
     std::string expectedText1 = GetExpectedText1();
     std::string expectedText2 = GetExpectedText2();
@@ -238,9 +243,10 @@ TEST_F(UseStateStrategyTest, ExecuteChain_WithoutUseClientLargeFileAndHookFlags)
     // Expected Behavior: Comments should advise on handling large files, without client-specific advice.
     // Rationale: Validates that useState strategies provide correct advice when no client usage is detected.
 
-    analysisReport.useClientDetected = false;
-    analysisReport.largeFileDetected = true;
-    analysisReport.hookDetected = true;
+
+    analysisReport.SetDetectionFlag(CLIENT::USE_CLIENT, false);
+    analysisReport.SetDetectionFlag(CLIENT::LARGE_FILE, true);
+    analysisReport.SetDetectionFlag(CLIENT::HOOK, true);
 
 
     std::string expectedText1 = GetExpectedText1();
@@ -265,10 +271,10 @@ TEST_F(UseStateStrategyTest, ExecuteChain_WithoutUseClientLargeFileAndWithoutHoo
     // Expected Behavior: No comments should be generated as the crucial hookDetected condition is not met.
     // Rationale: Confirms that the absence of hook detection correctly leads to no comments being generated.
 
-    analysisReport.useClientDetected = false;
-    analysisReport.largeFileDetected = true;
-    analysisReport.hookDetected = false;
 
+    analysisReport.SetDetectionFlag(CLIENT::USE_CLIENT, false);
+    analysisReport.SetDetectionFlag(CLIENT::LARGE_FILE, true);
+    analysisReport.SetDetectionFlag(CLIENT::HOOK, false);
 
     std::string expectedText1 = GetExpectedText1();
     std::string expectedText2 = GetExpectedText2();

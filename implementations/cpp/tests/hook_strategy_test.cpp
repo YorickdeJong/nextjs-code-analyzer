@@ -1,10 +1,9 @@
-
-
-#include "reporter/reporter.h"
 #include <gtest/gtest.h>
 #include <unordered_set>
-#include "analysis/analysis.h"
 #include <iostream>
+
+#include "analysis/analysis.h"
+#include "reporter/reporter.h"
 #include "reporter/strategy/useclient_strategy.h"
 #include "reporter/strategy/comment_strategy_interface.h"
 
@@ -15,7 +14,7 @@ protected:
     AnalysisReport analysisReport; 
     UseClientStrategy useClientStrategy;
     
-    const std::string javascriptTokenValue = "useEffect";
+    const std::string javascriptTokenValue = CLIENT_DESCRIPTIONS::USE_EFFECT_DESC;
     std::string comments;
     std::string textUseEffect;
 
@@ -48,7 +47,7 @@ protected:
     AnalysisReport analysisReport; 
     UseClientStrategy useClientStrategy;
     
-    const std::string javascriptTokenValue = "useState";
+    const std::string javascriptTokenValue = CLIENT_DESCRIPTIONS::USE_STATE_DESC;
     std::string comments;
     std::string textUseEffect;
 
@@ -85,11 +84,12 @@ TEST_F(UseEffectStrategyTest, useEffectWithUseClientAndLargeFile) {
     // Expected Behavior: The return text should match the expected text for useClient and large file scenarios.
     // Rationale: Ensures that useClientStrategy correctly processes and returns messages when all relevant flags are active.
 
-    analysisReport.useClientDetected = true;
-    analysisReport.largeFileDetected = true;
-    analysisReport.hookDetected = true;
 
-    bool isUseClientPresent = analysisReport.hookDetected;
+    analysisReport.SetDetectionFlag(CLIENT::USE_CLIENT, true);
+    analysisReport.SetDetectionFlag(CLIENT::LARGE_FILE, true);
+    analysisReport.SetDetectionFlag(CLIENT::HOOK, true);
+
+    const bool isUseClientPresent = analysisReport.GetDetectionFlag(CLIENT::HOOK);
     const std::string getExpectedText1 = GetExpectedText1();
     const std::string getExpectedText2 = GetExpectedText2();
 
@@ -97,7 +97,7 @@ TEST_F(UseEffectStrategyTest, useEffectWithUseClientAndLargeFile) {
     
     EXPECT_EQ(returnText, getExpectedText1 + " \n");
 
-    if (javascriptTokenValue == "useEffect" && analysisReport.hookDetected) {
+    if (javascriptTokenValue == CLIENT_DESCRIPTIONS::USE_EFFECT_DESC && isUseClientPresent) {
         textUseEffect = GetExpectedTextUseEffect();
         returnText += textUseEffect;
     }
@@ -112,11 +112,13 @@ TEST_F(UseEffectStrategyTest, useEffectWithoutUseClientAndLargeFile) {
     // Expected Behavior: Return text should include advice for large file handling without useClient specific message.
     // Rationale: Validates that useClientStrategy omits client-specific advice in the absence of the useClient flag.
 
-    analysisReport.useClientDetected = false;
-    analysisReport.largeFileDetected = true;
-    analysisReport.hookDetected = true;
 
-    bool isUseClientPresent = analysisReport.hookDetected;
+
+    analysisReport.SetDetectionFlag(CLIENT::USE_CLIENT, false);
+    analysisReport.SetDetectionFlag(CLIENT::LARGE_FILE, true);
+    analysisReport.SetDetectionFlag(CLIENT::HOOK, true);
+
+    const bool isUseClientPresent = analysisReport.GetDetectionFlag(CLIENT::HOOK);
     const std::string getExpectedText1 = GetExpectedText1();
     const std::string getExpectedText2 = GetExpectedText2();
 
@@ -124,7 +126,7 @@ TEST_F(UseEffectStrategyTest, useEffectWithoutUseClientAndLargeFile) {
     
     EXPECT_EQ(returnText, getExpectedText2 + " \n");
 
-    if (javascriptTokenValue == "useEffect" && analysisReport.hookDetected) {
+    if (javascriptTokenValue == CLIENT_DESCRIPTIONS::USE_EFFECT_DESC && isUseClientPresent) {
         textUseEffect = GetExpectedTextUseEffect();
         returnText += textUseEffect;
     }
@@ -140,11 +142,12 @@ TEST_F(UseEffectStrategyTest, NoUseEffectAndUseClient) {
     // Expected Behavior: Return text should be empty as no conditions are met for generating advice.
     // Rationale: Confirms that the absence of hook detection results in no advice being generated.
 
-    analysisReport.useClientDetected = false;
-    analysisReport.largeFileDetected = true;
-    analysisReport.hookDetected = false;
 
-    bool isUseClientPresent = analysisReport.hookDetected;
+    analysisReport.SetDetectionFlag(CLIENT::USE_CLIENT, false);
+    analysisReport.SetDetectionFlag(CLIENT::LARGE_FILE, true);
+    analysisReport.SetDetectionFlag(CLIENT::HOOK, false);
+
+    const bool isUseClientPresent = analysisReport.GetDetectionFlag(CLIENT::HOOK);
     const std::string getExpectedText1 = GetExpectedText1();
     const std::string getExpectedText2 = GetExpectedText2();
 
@@ -152,7 +155,7 @@ TEST_F(UseEffectStrategyTest, NoUseEffectAndUseClient) {
     
     EXPECT_EQ(returnText, "");
 
-    if (javascriptTokenValue == "useEffect" && analysisReport.hookDetected) {
+    if (javascriptTokenValue == CLIENT_DESCRIPTIONS::USE_EFFECT_DESC && isUseClientPresent) {
         textUseEffect = GetExpectedTextUseEffect();
         returnText += textUseEffect;
     }
@@ -161,35 +164,6 @@ TEST_F(UseEffectStrategyTest, NoUseEffectAndUseClient) {
 
 }
 
-
-
-
-TEST_F(UseEffectStrategyTest, useEffectDetectedWithUseClientAndLargeFile) {
-
-    // Test Scenario: useEffect detected with both useClient and large file flags set.
-    // Expected Behavior: Return text should include the appropriate message for useEffect with both flags active.
-    // Rationale: Checks that useClientStrategy correctly combines advice for useEffect when multiple conditions are met.
-
-    analysisReport.useClientDetected = true;
-    analysisReport.largeFileDetected = true;
-    analysisReport.hookDetected = true;
-    
-    bool isUseClientPresent = analysisReport.hookDetected;
-    const std::string getExpectedText1 = GetExpectedText1();
-    const std::string getExpectedText2 = GetExpectedText2();
-
-    std::string returnText = useClientStrategy.ReturnMessage(getExpectedText1, getExpectedText2, isUseClientPresent, analysisReport);
-    
-    EXPECT_EQ(returnText, getExpectedText1 + " \n");
-
-    if (javascriptTokenValue == "useEffect" && analysisReport.hookDetected) {
-        textUseEffect = GetExpectedTextUseEffect();
-        returnText += textUseEffect;
-    }
-
-    EXPECT_EQ(returnText, getExpectedText1 + " \n" + textUseEffect);
-
-}
 
 
 
@@ -199,11 +173,11 @@ TEST_F(UseStateStrategyTest, HookWithUseClientAndLargeFile) {
     // Expected Behavior: Return text should include the expected message for a large file with use client.
     // Rationale: Verifies that useState scenarios correctly handle the combination of useClient and large file flags.
 
-    analysisReport.useClientDetected = true;
-    analysisReport.largeFileDetected = true;
-    analysisReport.hookDetected = true;
+    analysisReport.SetDetectionFlag(CLIENT::USE_CLIENT, true);
+    analysisReport.SetDetectionFlag(CLIENT::LARGE_FILE, true);
+    analysisReport.SetDetectionFlag(CLIENT::HOOK, true);
 
-    bool isUseClientPresent = analysisReport.hookDetected;
+    const bool isUseClientPresent = analysisReport.GetDetectionFlag(CLIENT::HOOK);
     const std::string getExpectedText1 = GetExpectedText1();
     const std::string getExpectedText2 = GetExpectedText2();
 
@@ -212,7 +186,7 @@ TEST_F(UseStateStrategyTest, HookWithUseClientAndLargeFile) {
     EXPECT_EQ(returnText, getExpectedText1 + " \n");
 
 
-    if (javascriptTokenValue == "useEffect" && analysisReport.hookDetected) {
+    if (javascriptTokenValue == CLIENT_DESCRIPTIONS::USE_EFFECT_DESC && isUseClientPresent) {
         textUseEffect = GetExpectedTextUseEffect();
         returnText += textUseEffect;
     }
@@ -228,11 +202,12 @@ TEST_F(UseStateStrategyTest, HookWithNoUseClientAndLargeFile) {
     // Expected Behavior: Return text should only reflect the large file scenario without useClient-specific advice.
     // Rationale: Ensures that the absence of the useClient flag leads to omission of client-specific advice.
 
-    analysisReport.useClientDetected = false;
-    analysisReport.largeFileDetected = true;
-    analysisReport.hookDetected = true;
+    analysisReport.SetDetectionFlag(CLIENT::USE_CLIENT, false);
+    analysisReport.SetDetectionFlag(CLIENT::LARGE_FILE, true);
+    analysisReport.SetDetectionFlag(CLIENT::HOOK, true);
 
-    bool isUseClientPresent = analysisReport.hookDetected;
+
+    const bool isUseClientPresent = analysisReport.GetDetectionFlag(CLIENT::HOOK);
     const std::string getExpectedText1 = GetExpectedText1();
     const std::string getExpectedText2 = GetExpectedText2();
 
@@ -241,7 +216,7 @@ TEST_F(UseStateStrategyTest, HookWithNoUseClientAndLargeFile) {
     EXPECT_EQ(returnText, getExpectedText2 + " \n");
 
 
-    if (javascriptTokenValue == "useEffect" && analysisReport.hookDetected) {
+    if (javascriptTokenValue == CLIENT_DESCRIPTIONS::USE_EFFECT_DESC && isUseClientPresent) {
         textUseEffect = GetExpectedTextUseEffect();
         returnText += textUseEffect;
     }
@@ -257,11 +232,12 @@ TEST_F(UseStateStrategyTest, NoHookWithNoUseClientAndLargeFile) {
     // Expected Behavior: Return text should be empty as the primary condition (hook detection) is not met.
     // Rationale: Confirms that no advice is generated when the hook detection condition is not satisfied.
 
-    analysisReport.useClientDetected = false;
-    analysisReport.largeFileDetected = true;
-    analysisReport.hookDetected = false;
 
-    bool isUseClientPresent = analysisReport.hookDetected;
+    analysisReport.SetDetectionFlag(CLIENT::USE_CLIENT, false);
+    analysisReport.SetDetectionFlag(CLIENT::LARGE_FILE, true);
+    analysisReport.SetDetectionFlag(CLIENT::HOOK, false);
+
+    const bool isUseClientPresent = analysisReport.GetDetectionFlag(CLIENT::HOOK);
     const std::string getExpectedText1 = GetExpectedText1();
     const std::string getExpectedText2 = GetExpectedText2();
 
@@ -270,7 +246,7 @@ TEST_F(UseStateStrategyTest, NoHookWithNoUseClientAndLargeFile) {
     EXPECT_EQ(returnText, "");
 
 
-    if (javascriptTokenValue == "useEffect" && analysisReport.hookDetected) {
+    if (javascriptTokenValue == CLIENT_DESCRIPTIONS::USE_EFFECT_DESC && isUseClientPresent) {
         textUseEffect = GetExpectedTextUseEffect();
         returnText += textUseEffect;
     }

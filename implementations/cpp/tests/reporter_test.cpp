@@ -1,9 +1,11 @@
-#include "reporter/reporter.h"
 #include <gtest/gtest.h>
 #include <unordered_set>
-#include "analysis/analysis.h"
 #include <iostream>
- 
+
+#include "analysis/analysis.h"
+#include "reporter/reporter.h"
+#include "utils/constants.h"
+
 TEST(ReporterTest, AddCommentTokens) {
 
     Analyzer analyzer;
@@ -23,14 +25,14 @@ TEST(ReporterTest, AddCommentTokens) {
                 {"loc", {{"start", {{"line", 1}, {"index", 11}}}, {"end", {{"line", 1}, {"index", 23}}}}},
                 {"start", 11},
                 {"type", "Keyword"},
-                {"value", "use client"}
+                {"value",CLIENT_DESCRIPTIONS::USE_CLIENT_DESC}
             },
             {
                 {"end", 23},
                 {"loc", {{"start", {{"line", 1}, {"index", 11}}}, {"end", {{"line", 1}, {"index", 23}}}}},
                 {"start", 11},
                 {"type", "Keyword"},
-                {"value", "useState"}
+                {"value", CLIENT_DESCRIPTIONS::USE_STATE_DESC}
             },
         }}
     };

@@ -12,8 +12,9 @@ class JsonManager {
         JsonManager(const Napi::CallbackInfo &_info, Napi::Env &_env);
         JsonManager(const nlohmann::json &_json, Napi::Env &_env);
         void JsonToNapiValue();
-        void Modify(std::string commentText);
+        void ModifyJsonObject(size_t index, const std::string& commentText);
         const nlohmann::json &GetJson() const { return m_json; };
+        void SetJson(){ }
         Napi::Value GetReturnData() { return m_returnData; };
 
     private: 

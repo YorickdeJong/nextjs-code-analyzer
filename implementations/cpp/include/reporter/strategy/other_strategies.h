@@ -1,7 +1,8 @@
 #pragma once
-#include "reporter/strategy/comment_strategy_interface.h"
+
 #include <string> 
 
+#include "reporter/strategy/comment_strategy_interface.h"
 
 class WindowStrategy : public CommentStrategyInterface {
     public:   
@@ -10,14 +11,14 @@ class WindowStrategy : public CommentStrategyInterface {
             const std::string text2 = "No use client detected, consider refactoring " + 
                 javascriptTokenValue + " or add 'use client' to make this file client side";
             
-            bool specificCondition = analysisReport.windowDetected;
+            bool specificCondition = analysisReport.GetDetectionFlag(CLIENT::WINDOW);
             std::string returnText = ReturnMessage(text1, text2, specificCondition, analysisReport);
             return returnText;
         }
 
        bool ExecuteStrategy(const AnalysisReport &analysisReport, 
             std::string &comments, const std::string &javascriptTokenValue) const override {
-                if (javascriptTokenValue == "window") {
+                if (javascriptTokenValue == CLIENT_DESCRIPTIONS::WINDOW_DESC) {
                     comments = CommentText(analysisReport, javascriptTokenValue);
                     return false;
                 }
@@ -34,14 +35,14 @@ class DocumentStrategy : public CommentStrategyInterface {
             const std::string text2 = "No use client detected, consider refactoring " + 
                 javascriptTokenValue + " or add 'use client' to make this file client side";
             
-            bool specificCondition = analysisReport.documentDetected;
+            bool specificCondition = analysisReport.GetDetectionFlag(CLIENT::DOCUMENT);
             std::string returnText = ReturnMessage(text1, text2, specificCondition, analysisReport);
             return returnText;
         }
 
         bool ExecuteStrategy(const AnalysisReport &analysisReport, 
             std::string &comments, const std::string &javascriptTokenValue) const override {
-                if (javascriptTokenValue == "document") {
+                if (javascriptTokenValue == CLIENT_DESCRIPTIONS::DOCUMENT_DESC) {
                     comments = CommentText(analysisReport, javascriptTokenValue);
                     return false;
                 }
@@ -60,14 +61,14 @@ class DynamicStrategy : public CommentStrategyInterface {
             const std::string text2 = "No use client detected, consider refactoring " + 
                 javascriptTokenValue + " or add 'use client' to make this file client side";
             
-            bool specificCondition = analysisReport.dynamicDetected;
+            bool specificCondition = analysisReport.GetDetectionFlag(CLIENT::DYNAMIC); 
             std::string returnText = ReturnMessage(text1, text2, specificCondition, analysisReport);
             return returnText;
         }
 
         bool ExecuteStrategy(const AnalysisReport &analysisReport, 
             std::string &comments, const std::string &javascriptTokenValue) const override {
-                if (javascriptTokenValue == "dynamic") {
+                if (javascriptTokenValue == CLIENT_DESCRIPTIONS::DYNAMIC_DESC) {
                     comments = CommentText(analysisReport, javascriptTokenValue);
                     return false;
                 }
@@ -85,7 +86,7 @@ class LocalStorageStragy : public CommentStrategyInterface {
             const std::string text2 = "No use client detected, consider refactoring " + 
                 javascriptTokenValue + " or add 'use client' to make this file client side";
             
-            bool specificCondition = analysisReport.localDetected;
+            bool specificCondition = analysisReport.GetDetectionFlag(CLIENT::LOCAL); 
             std::string returnText = ReturnMessage(text1, text2, specificCondition, analysisReport);
             return returnText;
         }
@@ -93,7 +94,7 @@ class LocalStorageStragy : public CommentStrategyInterface {
 
         bool ExecuteStrategy(const AnalysisReport &analysisReport, 
             std::string &comments, const std::string &javascriptTokenValue) const override {
-                if (javascriptTokenValue == "local") {
+                if (javascriptTokenValue == CLIENT_DESCRIPTIONS::LOCAL_DESC) {
                     comments = CommentText(analysisReport, javascriptTokenValue);
                     return false;
                 }
@@ -109,7 +110,7 @@ class RouterStrategy : public CommentStrategyInterface {
             const std::string text2 = "No use client detected, consider refactoring " + 
                 javascriptTokenValue + " or add 'use client' to make this file client side";
             
-            bool specificCondition = analysisReport.routerDetected;
+            bool specificCondition = analysisReport.GetDetectionFlag(CLIENT::ROUTER); 
             std::string returnText = ReturnMessage(text1, text2, specificCondition, analysisReport);
             return returnText;
         }
@@ -117,7 +118,7 @@ class RouterStrategy : public CommentStrategyInterface {
 
         bool ExecuteStrategy(const AnalysisReport &analysisReport, 
             std::string &comments, const std::string &javascriptTokenValue) const override {
-                if (javascriptTokenValue == "router") {
+                if (javascriptTokenValue == CLIENT_DESCRIPTIONS::ROUTER_DESC) {
                     comments = CommentText(analysisReport, javascriptTokenValue);
                     return false;
                 }
@@ -133,7 +134,7 @@ class EventStrategy : public CommentStrategyInterface {
             const std::string text2 = "No use client detected, consider refactoring " + 
                 javascriptTokenValue + " or add 'use client' to make this file client side";
             
-            bool specificCondition = analysisReport.eventDetected;
+            bool specificCondition = analysisReport.GetDetectionFlag(CLIENT::EVENT);
             std::string returnText = ReturnMessage(text1, text2, specificCondition, analysisReport);
             return returnText;
         }
@@ -141,7 +142,7 @@ class EventStrategy : public CommentStrategyInterface {
 
         bool ExecuteStrategy(const AnalysisReport &analysisReport, 
             std::string &comments, const std::string &javascriptTokenValue) const override {
-                if (javascriptTokenValue == "event") {
+                if (javascriptTokenValue == CLIENT_DESCRIPTIONS::EVENT_DESC) {
                     comments = CommentText(analysisReport, javascriptTokenValue);
                     return false;
                 }
@@ -159,7 +160,7 @@ class ButtonStrategy : public CommentStrategyInterface {
             const std::string text2 = "No use client detected, consider refactoring " + 
                 javascriptTokenValue + " or add 'use client' to make this file client side";
             
-            bool specificCondition = analysisReport.buttontDetected;
+            bool specificCondition = analysisReport.GetDetectionFlag(CLIENT::BUTTON);
             std::string returnText = ReturnMessage(text1, text2, specificCondition, analysisReport);
             return returnText;
         }
@@ -167,7 +168,7 @@ class ButtonStrategy : public CommentStrategyInterface {
 
         bool ExecuteStrategy(const AnalysisReport &analysisReport, 
             std::string &comments, const std::string &javascriptTokenValue) const override {
-                if (javascriptTokenValue == "button") {
+                if (javascriptTokenValue == CLIENT_DESCRIPTIONS::BUTTON_DESC) {
                     comments = CommentText(analysisReport, javascriptTokenValue);
                     return false;
                 }

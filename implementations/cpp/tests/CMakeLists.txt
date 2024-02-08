@@ -5,6 +5,7 @@ set(INCLUDE_DIR "${PROJECT_SOURCE_DIR}/include")
 include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 
 target_include_directories(reporter PUBLIC 
+    ${NODE_ADDON_API_DIR}
     ${FOLDER_SOURCE_DIR}/include
     ${INCLUDE_DIR} 
     ${PROJECT_SOURCE_DIR}/src/reader 

@@ -1,6 +1,8 @@
 #include <gtest/gtest.h>
 #include <unordered_set>
 #include <iostream>
+
+#include "utils/constants.h"
 #include "reporter/strategy/comment_strategy_interface.h"
 #include "reporter/strategy/hook_strategy.h"
 #include "reporter/strategy/useclient_strategy.h"
@@ -14,7 +16,7 @@ protected:
     CommentStrategyChain commentStrategy;
     ChainBuilder chainBuilder;
     AnalysisReport analysisReport;
-    const std::string javascriptToken = "use client";
+    const std::string javascriptToken = CLIENT_DESCRIPTIONS::USE_CLIENT_DESC;
     std::string comments;
 
     void SetUp() override {
@@ -65,11 +67,10 @@ TEST_F(UseClientStrategyTest, ExecuteChain_LargeFileWithUseClient) {
     // Expected Behavior: Comments should indicate large file detection and suggest refactoring 'use client'.
     // Rationale: Ensures the strategy correctly processes scenarios with both useClient and largeFile conditions met.
 
-    analysisReport.useClientDetected = true;
-    analysisReport.largeFileDetected = true;
-    analysisReport.hookDetected = false;
-    analysisReport.manyWordsInFile = false;
-    
+    analysisReport.SetDetectionFlag(CLIENT::USE_CLIENT, true);
+    analysisReport.SetDetectionFlag(CLIENT::LARGE_FILE, true);
+    analysisReport.SetDetectionFlag(CLIENT::HOOK, false);
+    analysisReport.SetDetectionFlag(CLIENT::MANY_WORDS, false);
 
     const std::string largeFileDetected = LargeFileDetected();
     const std::string emptyText = EmptyText();
@@ -93,10 +94,11 @@ TEST_F(UseClientStrategyTest, ExecuteChain_LargeFileWithUseClientAndMayWords) {
     // Expected Behavior: Comments should include suggestions for both large file and many words detection.
     // Rationale: Checks the strategy's ability to handle multiple flag conditions and provide combined advice.
     
-    analysisReport.useClientDetected = true;
-    analysisReport.largeFileDetected = true;
-    analysisReport.hookDetected = false;
-    analysisReport.manyWordsInFile = true;
+    analysisReport.SetDetectionFlag(CLIENT::USE_CLIENT, true);
+    analysisReport.SetDetectionFlag(CLIENT::LARGE_FILE, true);
+    analysisReport.SetDetectionFlag(CLIENT::HOOK, false);
+    analysisReport.SetDetectionFlag(CLIENT::MANY_WORDS, true);
+
 
     const std::string largeFileDetected = LargeFileDetected();
     const std::string emptyText = EmptyText();
@@ -122,10 +124,10 @@ TEST_F(UseClientStrategyTest, ExecuteChain_LargeFileWithUseClientAndMayWordsAndH
     // Expected Behavior: Comments should reflect large file and many words detection, ignoring hook detection.
     // Rationale: Verifies strategy's response to multiple active flags, prioritizing large file and word count advice.
 
-    analysisReport.useClientDetected = true;
-    analysisReport.largeFileDetected = true;
-    analysisReport.hookDetected = true;
-    analysisReport.manyWordsInFile = true;
+    analysisReport.SetDetectionFlag(CLIENT::USE_CLIENT, true);
+    analysisReport.SetDetectionFlag(CLIENT::LARGE_FILE, true);
+    analysisReport.SetDetectionFlag(CLIENT::HOOK, true);
+    analysisReport.SetDetectionFlag(CLIENT::MANY_WORDS, true);
 
     const std::string largeFileDetected = LargeFileDetected();
     const std::string emptyText = EmptyText();
@@ -148,10 +150,10 @@ TEST_F(UseClientStrategyTest, ExecuteChain_LargeFileMayWordsAndHook) {
     // Expected Behavior: No comments should be generated as the useClient flag, crucial for this strategy, is not set.
     // Rationale: Confirms that the strategy does not generate comments when the primary useClient condition is not met.
 
-    analysisReport.useClientDetected = false;
-    analysisReport.largeFileDetected = true;
-    analysisReport.hookDetected = true;
-    analysisReport.manyWordsInFile = true;
+    analysisReport.SetDetectionFlag(CLIENT::USE_CLIENT, false);
+    analysisReport.SetDetectionFlag(CLIENT::LARGE_FILE, true);
+    analysisReport.SetDetectionFlag(CLIENT::HOOK, true);
+    analysisReport.SetDetectionFlag(CLIENT::MANY_WORDS, true);
 
     const std::string largeFileDetected = LargeFileDetected();
     const std::string emptyText = EmptyText();
@@ -176,10 +178,11 @@ TEST_F(UseClientStrategyTest, ExecuteChain_LargeFileUseClientHook) {
     // Expected Behavior: Comments should only reflect the large file detection and not consider the hook.
     // Rationale: Validates that the strategy provides relevant advice for large files while ignoring irrelevant flags.
     
-    analysisReport.useClientDetected = true;
-    analysisReport.largeFileDetected = true;
-    analysisReport.hookDetected = true;
-    analysisReport.manyWordsInFile = false;
+
+    analysisReport.SetDetectionFlag(CLIENT::USE_CLIENT, true);
+    analysisReport.SetDetectionFlag(CLIENT::LARGE_FILE, true);
+    analysisReport.SetDetectionFlag(CLIENT::HOOK, true);
+    analysisReport.SetDetectionFlag(CLIENT::MANY_WORDS, false);
 
     const std::string largeFileDetected = LargeFileDetected();
     const std::string emptyText = EmptyText();
@@ -203,10 +206,12 @@ TEST_F(UseClientStrategyTest, ExecuteChain_UseClientHook) {
     // Expected Behavior: No comments should be generated as neither large file nor many words conditions are met.
     // Rationale: Ensures that the strategy remains silent in the absence of specific conditions despite useClient being set.
 
-    analysisReport.useClientDetected = true;
-    analysisReport.largeFileDetected = false;
-    analysisReport.hookDetected = true;
-    analysisReport.manyWordsInFile = false;
+
+    analysisReport.SetDetectionFlag(CLIENT::USE_CLIENT, true);
+    analysisReport.SetDetectionFlag(CLIENT::LARGE_FILE, false);
+    analysisReport.SetDetectionFlag(CLIENT::HOOK, true);
+    analysisReport.SetDetectionFlag(CLIENT::MANY_WORDS, false);
+
 
     const std::string largeFileDetected = LargeFileDetected();
     const std::string emptyText = EmptyText();
@@ -229,11 +234,13 @@ TEST_F(UseClientStrategyTest, ExecuteChain_UseClient) {
     // Test Scenario: Only useClient flag is set in the analysis report.
     // Expected Behavior: Comments should suggest removing 'use client' as no client-side components are detected.
     // Rationale: Verifies that the strategy provides advice to remove 'use client' when it's unnecessary.
-    
-    analysisReport.useClientDetected = true;
-    analysisReport.largeFileDetected = false;
-    analysisReport.hookDetected = false;
-    analysisReport.manyWordsInFile = false;
+
+
+    analysisReport.SetDetectionFlag(CLIENT::USE_CLIENT, true);
+    analysisReport.SetDetectionFlag(CLIENT::LARGE_FILE, false);
+    analysisReport.SetDetectionFlag(CLIENT::HOOK, false);
+    analysisReport.SetDetectionFlag(CLIENT::MANY_WORDS, false);
+
 
     const std::string largeFileDetected = LargeFileDetected();
     const std::string emptyText = EmptyText();

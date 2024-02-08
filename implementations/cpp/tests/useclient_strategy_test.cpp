@@ -1,8 +1,10 @@
-#include "reporter/reporter.h"
 #include <gtest/gtest.h>
 #include <unordered_set>
-#include "analysis/analysis.h"
 #include <iostream>
+
+#include "utils/constants.h"
+#include "reporter/reporter.h"
+#include "analysis/analysis.h"
 #include "reporter/strategy/useclient_strategy.h"
 #include "reporter/strategy/comment_strategy_interface.h"
 
@@ -15,7 +17,7 @@ class UseClientStrategyTest : public ::testing::Test {
 protected:
     AnalysisReport analysisReport; 
     UseClientStrategy useClientStrategy; 
-    const std::string javascriptToken = "use client";
+    const std::string javascriptToken = CLIENT_DESCRIPTIONS::USE_CLIENT_DESC;
     std::string comments;
 
     void SetUp() override {
@@ -48,34 +50,36 @@ TEST_F(UseClientStrategyTest, largefileWithManyWordsAndUseClient) {
     // Expected Behavior: Return text should include advice for large file and many words.
     // Rationale: Validates that the strategy combines messages for both large file and many words scenarios.
 
-    analysisReport.useClientDetected = true;
-    analysisReport.largeFileDetected = true;
-    analysisReport.manyWordsInFile = true;
+
+    analysisReport.SetDetectionFlag(CLIENT::USE_CLIENT, true);
+    analysisReport.SetDetectionFlag(CLIENT::LARGE_FILE, true);
+    analysisReport.SetDetectionFlag(CLIENT::MANY_WORDS, true);
 
     const std::string largeFileDetected = LargeFileDetected();
     const std::string emptyText = EmptyText();
     const std::string getManyWords = GetManyWords();
     const std::string removeClient = RemoveClient();
 
-    bool isUseClientPresent = analysisReport.useClientDetected;
-
+    bool isUseClientPresent = analysisReport.GetDetectionFlag(CLIENT::USE_CLIENT);
+    bool isManyWordsPresent = analysisReport.GetDetectionFlag(CLIENT::MANY_WORDS);
+    
     std::string returnText = useClientStrategy.ReturnMessage(largeFileDetected, emptyText, isUseClientPresent, analysisReport);
     
     EXPECT_EQ(returnText, largeFileDetected + " \n");
 
-    if (analysisReport.manyWordsInFile && analysisReport.useClientDetected ) {
+    if (isManyWordsPresent && isUseClientPresent ) {
             returnText += getManyWords;
     }
 
     EXPECT_EQ(returnText, largeFileDetected + " \n" + getManyWords);
 
-    if (analysisReport.useClientDetected && !analysisReport.largeFileDetected 
+    if (isUseClientPresent 
             && useClientStrategy.AllvaluesFalse(analysisReport)) { 
             returnText += removeClient;
 
     }
 
-    EXPECT_EQ(returnText, largeFileDetected + " \n" + getManyWords);
+    EXPECT_EQ(returnText, largeFileDetected + " \n" + getManyWords + removeClient);
 
 }
 
@@ -86,28 +90,29 @@ TEST_F(UseClientStrategyTest, manyWordsAndUseClient) {
     // Expected Behavior: Return text should include advice for many words and a message to consider removing 'use client'.
     // Rationale: Checks the strategy's handling of a scenario where many words are detected in a client-used file.
 
-    analysisReport.useClientDetected = true;
-    analysisReport.largeFileDetected = false;
-    analysisReport.manyWordsInFile = true;
+    analysisReport.SetDetectionFlag(CLIENT::USE_CLIENT, true);
+    analysisReport.SetDetectionFlag(CLIENT::LARGE_FILE, false);
+    analysisReport.SetDetectionFlag(CLIENT::MANY_WORDS, true);
 
     const std::string largeFileDetected = LargeFileDetected();
     const std::string emptyText = EmptyText();
     const std::string getManyWords = GetManyWords();
     const std::string removeClient = RemoveClient();
 
-    bool isUseClientPresent = analysisReport.useClientDetected;
+    bool isUseClientPresent = analysisReport.GetDetectionFlag(CLIENT::USE_CLIENT);
+    bool isManyWordsPresent = analysisReport.GetDetectionFlag(CLIENT::MANY_WORDS);
 
     std::string returnText = useClientStrategy.ReturnMessage(largeFileDetected, emptyText, isUseClientPresent, analysisReport);
     
     EXPECT_EQ(returnText, "");
 
-    if (analysisReport.manyWordsInFile && analysisReport.useClientDetected ) {
+    if (isManyWordsPresent && isUseClientPresent ) {
             returnText += getManyWords;
     }
 
     EXPECT_EQ(returnText, getManyWords);
 
-    if (analysisReport.useClientDetected && !analysisReport.largeFileDetected 
+    if (isUseClientPresent
             && useClientStrategy.AllvaluesFalse(analysisReport)) { 
             returnText += removeClient;
 
@@ -125,28 +130,30 @@ TEST_F(UseClientStrategyTest, returnEmpty) {
     // Expected Behavior: Return text should be empty as the crucial useClient condition is not met.
     // Rationale: Confirms that the strategy does not generate comments when the primary useClient condition is absent.
 
-    analysisReport.useClientDetected = false;
-    analysisReport.largeFileDetected = false;
-    analysisReport.manyWordsInFile = true;
+
+    analysisReport.SetDetectionFlag(CLIENT::USE_CLIENT, false);
+    analysisReport.SetDetectionFlag(CLIENT::LARGE_FILE, false);
+    analysisReport.SetDetectionFlag(CLIENT::MANY_WORDS, true);
 
     const std::string largeFileDetected = LargeFileDetected();
     const std::string emptyText = EmptyText();
     const std::string getManyWords = GetManyWords();
     const std::string removeClient = RemoveClient();
 
-    bool isUseClientPresent = analysisReport.useClientDetected;
+    bool isUseClientPresent = analysisReport.GetDetectionFlag(CLIENT::USE_CLIENT);
+    bool isManyWordsPresent = analysisReport.GetDetectionFlag(CLIENT::MANY_WORDS);
 
     std::string returnText = useClientStrategy.ReturnMessage(largeFileDetected, emptyText, isUseClientPresent, analysisReport);
     
     EXPECT_EQ(returnText, "");
 
-    if (analysisReport.manyWordsInFile && analysisReport.useClientDetected ) {
+    if (isManyWordsPresent && isUseClientPresent ) {
             returnText += getManyWords;
     }
 
     EXPECT_EQ(returnText, "");
 
-    if (analysisReport.useClientDetected && !analysisReport.largeFileDetected 
+    if (isUseClientPresent 
             && useClientStrategy.AllvaluesFalse(analysisReport)) { 
             returnText += removeClient;
 
@@ -164,29 +171,31 @@ TEST_F(UseClientStrategyTest, removeClient) {
     // Expected Behavior: Return text should suggest removing 'use client' as no other conditions are met.
     // Rationale: Ensures that the strategy advises removal of 'use client' when it is unnecessary.
     
-    analysisReport.useClientDetected = true;
-    analysisReport.largeFileDetected = false;
-    analysisReport.manyWordsInFile = false;
+
+    analysisReport.SetDetectionFlag(CLIENT::USE_CLIENT, true);
+    analysisReport.SetDetectionFlag(CLIENT::LARGE_FILE, false);
+    analysisReport.SetDetectionFlag(CLIENT::MANY_WORDS, false);
 
     const std::string largeFileDetected = LargeFileDetected();
     const std::string emptyText = EmptyText();
     const std::string getManyWords = GetManyWords();
     const std::string removeClient = RemoveClient();
 
-    bool isUseClientPresent = analysisReport.useClientDetected;
+    bool isUseClientPresent = analysisReport.GetDetectionFlag(CLIENT::USE_CLIENT);
+    bool isManyWordsPresent = analysisReport.GetDetectionFlag(CLIENT::MANY_WORDS);
 
     std::string returnText = useClientStrategy.ReturnMessage(largeFileDetected, emptyText, isUseClientPresent, analysisReport);
     
     EXPECT_EQ(returnText, "");
 
-    if (analysisReport.manyWordsInFile && analysisReport.useClientDetected ) {
+    if (isManyWordsPresent && isUseClientPresent ) {
             returnText += getManyWords;
     }
 
     EXPECT_EQ(returnText, "");
 
 
-    if (analysisReport.useClientDetected && !analysisReport.largeFileDetected 
+    if (isUseClientPresent 
             && useClientStrategy.AllvaluesFalse(analysisReport)) { 
             returnText += removeClient;
 
@@ -204,35 +213,36 @@ TEST_F(UseClientStrategyTest, largeFile) {
     // Expected Behavior: Return text should include advice for large file scenario.
     // Rationale: Verifies the strategy's ability to provide correct advice for large files in the presence of useClient.
     
-    analysisReport.useClientDetected = true;
-    analysisReport.largeFileDetected = true;
-    analysisReport.manyWordsInFile = false;
+    analysisReport.SetDetectionFlag(CLIENT::USE_CLIENT, true);
+    analysisReport.SetDetectionFlag(CLIENT::LARGE_FILE, true);
+    analysisReport.SetDetectionFlag(CLIENT::MANY_WORDS, false);
 
     const std::string largeFileDetected = LargeFileDetected();
     const std::string emptyText = EmptyText();
     const std::string getManyWords = GetManyWords();
     const std::string removeClient = RemoveClient();
 
-    bool isUseClientPresent = analysisReport.useClientDetected;
+    bool isUseClientPresent = analysisReport.GetDetectionFlag(CLIENT::USE_CLIENT);
+    bool isManyWordsPresent = analysisReport.GetDetectionFlag(CLIENT::MANY_WORDS);
 
     std::string returnText = useClientStrategy.ReturnMessage(largeFileDetected, emptyText, isUseClientPresent, analysisReport);
     
     EXPECT_EQ(returnText, largeFileDetected + " \n");
 
     
-    if (analysisReport.manyWordsInFile && analysisReport.useClientDetected ) {
+    if (isManyWordsPresent && isUseClientPresent ) {
             returnText += getManyWords;
     }
 
     EXPECT_EQ(returnText, largeFileDetected + " \n");
 
-    if (analysisReport.useClientDetected && !analysisReport.largeFileDetected 
+    if (isUseClientPresent 
             && useClientStrategy.AllvaluesFalse(analysisReport)) { 
             returnText += removeClient;
 
     }
 
 
-    EXPECT_EQ(returnText, largeFileDetected + " \n");
+    EXPECT_EQ(returnText, largeFileDetected + " \n" + removeClient);
 
 }

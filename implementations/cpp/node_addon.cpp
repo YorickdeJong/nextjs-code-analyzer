@@ -47,8 +47,7 @@ Napi::Object Init(Napi::Env env, Napi::Object exports)
         Napi::String::New(env, "CreateReport"),
         Napi::Function::New(env, CreateReport)
     );
-  
-    std::cout << "JSON Object: " << std::endl;
+
     return exports;
 }
 

@@ -17,20 +17,21 @@ void Reporter::AddCommentsToJsonObject(JsonManager& jsonManager){
 
     PopulateTokensToComment(m_tokenInfos, tokensToComment);
 
-    for (auto& jToken : jsonManager.GetJson()["tokens"]) {
+    const nlohmann::json &jsonObject = jsonManager.GetJson();
+    for (size_t i = 0; i < jsonObject["tokens"].size(); ++i) {
+        const auto& jToken = jsonObject["tokens"][i];
         if (!jToken.contains("value") || !jToken["value"].is_string()) {
-            continue; // Skip to the next iteration if conditions are not met
+            continue;
         }
 
         std::string javascriptTokenValue = jToken["value"];
         if (tokensToComment.find(javascriptTokenValue) == tokensToComment.end()) {
-            continue; // Skip to the next iteration if value is not in tokensToComment
+            continue;
         }
 
-        std::string comments = commentStrategyChain.ExecuteChain( chainBuilder, m_analysisReport, 
-            javascriptTokenValue);
+        std::string comments = commentStrategyChain.ExecuteChain(chainBuilder, m_analysisReport, javascriptTokenValue);
         
-        jsonManager.Modify(comments);
+        jsonManager.ModifyJsonObject(i, comments);
     }
     
 }

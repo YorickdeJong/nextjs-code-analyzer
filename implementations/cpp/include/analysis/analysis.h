@@ -4,9 +4,10 @@
 #include <iostream>
 #include <vector>
 #include <unordered_set>
-#include "models/analysis_report.h"
-#include "models/token_info.h"
 #include <regex>
+
+#include "models/token_info.h"
+#include "models/analysis_report.h"
 #include "utils/constants.h"
 
 // Analyzer is responsible for analyzing JSON data and setting a set of values
@@ -20,17 +21,31 @@ class Analyzer {
     public:
         Analyzer(): m_analysisResult(), m_tokenInfos() {};
         void AnalyzeJson( const nlohmann::json &j ); 
-        void AddTokenInfo( const nlohmann::json &token, std::vector<TokenInfo> &tokenInfos,
-            const std::string &value, const std::string& compareValue, bool &analysisResultValues );
-
-        void AddTokenInfoHooks( const nlohmann::json &token, std::vector<TokenInfo> &tokenInfos,
-           const std::string &value, bool &analysisResultValue );
+       
 
         const AnalysisReport& GetAnalysisResult() const { return m_analysisResult; };
         const std::vector<TokenInfo>& GetTokenInfos() const { return m_tokenInfos; };
 
+        bool GetDetectionFlag(const std::string& key) {
+            return m_analysisResult.GetDetectionFlag(key);
+        }
+        const std::string &GetStringValue(const std::string& key) const {
+            return m_analysisResult.GetStringValue(key);
+        }
+        
+        void SetDetectionFlag(const std::string& key, bool value) {
+            m_analysisResult.SetDetectionFlag(key, value);
+        }
     private:    
         void InitAnalyseResult(const nlohmann::json &j);
+        
+        void AddTokenInfo( const nlohmann::json &token, std::vector<TokenInfo> &tokenInfos,
+            const std::string &value);
+        
+        void AddTokenInfoHooks( const nlohmann::json &token, std::vector<TokenInfo> &tokenInfos,
+           const std::string &value);
+
+
 
         AnalysisReport m_analysisResult; 
         std::vector<TokenInfo> m_tokenInfos;

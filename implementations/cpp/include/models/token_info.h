@@ -6,6 +6,6 @@
 struct TokenInfo {
     std::string value;
     int line;
-    int start;
-    int end;
+    int startIndex;
+    int endIndex;
 };
