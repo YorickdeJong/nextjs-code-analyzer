@@ -58,6 +58,7 @@ std::optional<std::string> AnalysisReport::FindKeyByDescription(const std::strin
         }
     }
 
+        
     auto it = m_reverseLookupTable.find(newDescription);
     if (it != m_reverseLookupTable.end()) {
         // Returns CLIENT namespaced variable 

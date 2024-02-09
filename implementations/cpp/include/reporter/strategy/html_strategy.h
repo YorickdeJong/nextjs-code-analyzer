@@ -26,8 +26,6 @@ class HtmlStrategy : public CommentStrategyInterface {
         bool ExecuteStrategy(const AnalysisReport &analysisReport, 
             std::string &comments, const std::string &javascriptTokenValue) const override {
                 bool isUseClientPresent = analysisReport.GetDetectionFlag(CLIENT::USE_CLIENT);
-                bool htmlElementDetected = analysisReport.GetDetectionFlag(CLIENT::HTML);
-                bool isManyWordsPresent = analysisReport.GetDetectionFlag(CLIENT::MANY_WORDS);
                 
                 for (const std::string &htmlElement : HTML_ELEMENTS::HTML_ARRAY) {
                     if (javascriptTokenValue == htmlElement && isUseClientPresent) {

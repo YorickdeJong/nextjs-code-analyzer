@@ -38,39 +38,47 @@ void JsonManager::ModifyJsonObject(size_t index, const std::string& commentText)
   * function to convert Json to Napi values, such that they can be parsed back into the javascript file
   */ 
 void JsonManager::JsonToNapiValue() {
+
+  if (m_json.length == 0) {
+    throw std::runtime_error("Error: m_json is empty"); 
+  }
+
   // Helper lambda for recursive handling
   std::function<Napi::Value(const nlohmann::json&)> convertToJson;
   convertToJson = [&](const nlohmann::json& j) -> Napi::Value {
-    if (j.is_null()) {
-      return m_env.Null();
-    } 
-    else if (j.is_boolean()) {
-      return Napi::Boolean::New(m_env, j.get<bool>());
-    } 
-    else if (j.is_number()) {
-      return Napi::Number::New(m_env, j.get<double>());
-    } 
-    else if (j.is_string()) {
-      return Napi::String::New(m_env, j.get<std::string>());
-    } 
-    else if (j.is_object()) {
-      Napi::Object obj = Napi::Object::New(m_env);
-      for (const auto& el : j.items()) {
-        obj.Set(el.key(), convertToJson(el.value()));
+      if (j.is_null()) {
+          return m_env.Null();
+      } 
+      else if (j.is_boolean()) {
+          return Napi::Boolean::New(m_env, j.get<bool>());
+      } 
+      else if (j.is_number()) {
+          return Napi::Number::New(m_env, j.get<double>());
+      } 
+      else if (j.is_string()) {
+          return Napi::String::New(m_env, j.get<std::string>());
+      } 
+      else if (j.is_object()) {
+          Napi::Object obj = Napi::Object::New(m_env);
+
+          for (const auto& el : j.items()) {
+              obj.Set(el.key(), convertToJson(el.value()));
+          }
+
+          return obj;
+      } 
+      else if (j.is_array()) {
+          Napi::Array array = Napi::Array::New(m_env);
+          size_t i = 0;
+
+          for (const auto& item : j) {
+              array[i++] = convertToJson(item);
+          }
+          return array;
+      } 
+      else {
+          return m_env.Undefined();
       }
-      return obj;
-    } 
-    else if (j.is_array()) {
-      Napi::Array array = Napi::Array::New(m_env);
-      size_t i = 0;
-      for (const auto& item : j) {
-        array[i++] = convertToJson(item);
-      }
-      return array;
-    } 
-    else {
-      return m_env.Undefined();
-    }
   };
 
   m_returnData = convertToJson(m_json);

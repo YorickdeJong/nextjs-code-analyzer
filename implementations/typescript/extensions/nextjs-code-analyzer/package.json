@@ -9,15 +9,32 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onCommand:nextjs-code-analyzer.nextjs",
+    "onCommand:nextjs-code-analyzer.toggleIgnoreWarnings"
+  ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
         "command": "nextjs-code-analyzer.nextjs",
         "title": "NEXTJS"
+      },
+      {
+        "command": "nextjs-code-analyzer.toggleIgnoreWarnings",
+        "title": "Toggle Ignore Warnings"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "NextJS Code Analyzer",
+      "properties": {
+          "nextjsCodeAnalyzer.ignoreWarnings": {
+              "type": "boolean",
+              "default": false,
+              "description": "Ignore warnings from NextJS Code Analyzer."
+          }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",

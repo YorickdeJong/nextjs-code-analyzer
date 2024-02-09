@@ -31,10 +31,16 @@ void Reporter::AddCommentsToJsonObject(JsonManager& jsonManager){
             continue;
         }
 
-        std::string comments = commentStrategyChain.ExecuteChain(chainBuilder, m_analysisReport, javascriptTokenValue);
-            
-        // Modify the JSON object with the generated comments for the current token.
-        jsonManager.ModifyJsonObject(i, comments);
+        try {
+            std::string comments = commentStrategyChain.ExecuteChain(chainBuilder, m_analysisReport, javascriptTokenValue);
+
+            // Modify the JSON object with the generated comments for the current token.
+            jsonManager.ModifyJsonObject(i, comments);
+        }
+        catch(const std::exception &e) {
+            std::cerr << "Error processing token at" << i << ": " << e.what() << std::endl;
+            continue;
+        }
     }
 }
 

@@ -8,7 +8,6 @@ export class ActivateExtension {
 
     constructor(context: vscode.ExtensionContext) {
         this.codeAnalyzer = new CodeAnalyzer();
-        console.log(this.codeAnalyzer)
         this.diagnosticManager = new DiagnosticManager();
 
         this.registerEvents(context);
@@ -16,7 +15,6 @@ export class ActivateExtension {
 
     private registerEvents(context: vscode.ExtensionContext) {
 
-        console.log('context', context)
         context.subscriptions.push(
             vscode.window.onDidChangeActiveTextEditor(editor => {
                 if (editor) {
@@ -32,6 +30,11 @@ export class ActivateExtension {
             }),
         );
         
+        context.subscriptions.push(vscode.commands.registerCommand('nextjs-code-analyzer.toggleIgnoreWarnings', () => {
+            console.log('Toggle command executed');
+            this.toggleIgnoreWarnings();
+        }));
+        
         context.subscriptions.push(vscode.commands.registerCommand('nextjs-code-analyzer.nextjs', () => {
                 const activeEditor = vscode.window.activeTextEditor;
                 if (activeEditor) {
@@ -39,10 +42,19 @@ export class ActivateExtension {
                 }
             })
         );
+
+
+          
     }
 
     private runAnalysis(editor: vscode.TextEditor) {
         const diagnostics = this.codeAnalyzer.analyzeCode(editor.document.getText());
         this.diagnosticManager.updateDiagnostics(editor.document, diagnostics);
+    }
+
+    private toggleIgnoreWarnings() {
+        const config = vscode.workspace.getConfiguration();
+        const currentSetting = config.get('nextjsCodeAnalyzer.ignoreWarnings');
+        config.update('nextjsCodeAnalyzer.ignoreWarnings', !currentSetting, vscode.ConfigurationTarget.Global);
     }
 }

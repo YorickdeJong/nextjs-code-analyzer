@@ -7,7 +7,12 @@ export class DiagnosticManager {
         this.diagnosticCollection = vscode.languages.createDiagnosticCollection('codeAnalyzer');
     }
 
-    public updateDiagnostics(document: vscode.TextDocument, diagnostics: vscode.Diagnostic[]) {
+    updateDiagnostics(document: vscode.TextDocument, diagnostics: vscode.Diagnostic[]) {
+        const ignoreWarnings = vscode.workspace.getConfiguration().get('nextjsCodeAnalyzer.ignoreWarnings');
+        if (ignoreWarnings) {
+            diagnostics = diagnostics.filter(diagnostic => diagnostic.severity !== vscode.DiagnosticSeverity.Warning);
+        }
         this.diagnosticCollection.set(document.uri, diagnostics);
     }
+        
 }

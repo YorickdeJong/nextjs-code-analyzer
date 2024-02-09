@@ -9,11 +9,19 @@ std::string CommentStrategyChain::ExecuteChain(const ChainBuilder& builder, cons
                                                 const std::string &javascriptTokenValue) {
     
     std::string comments = "";
-    // Process each strategy to generate comments.
-    for (const auto& strategy : builder.GetStrategies()) {
-        if (!strategy->ExecuteStrategy(analysisReport, comments, javascriptTokenValue)) {
-            break; // Stop processing if a strategy indicates completion.
+
+    try {
+        // Process each strategy to generate comments.
+        for (const auto& strategy : builder.GetStrategies()) {
+            if (strategy == nullptr) {
+                throw std::invalid_argument("Encountered null strategy in chain.");
+            } 
+            if (!strategy->ExecuteStrategy(analysisReport, comments, javascriptTokenValue)) {
+                break; // Stop processing if a strategy indicates completion.
+            }
         }
+    } catch (const std::exception& e) {
+        std::cerr << e.what() << std::endl;
     }
     return comments;
 }

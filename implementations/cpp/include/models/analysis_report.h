@@ -5,6 +5,7 @@
 #include <optional>
 #include <regex>
 #include <map>
+#include <iostream>
 #include "utils/constants.h"
 
 class AnalysisReport {
