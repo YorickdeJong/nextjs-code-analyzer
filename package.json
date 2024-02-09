@@ -8,9 +8,13 @@
     "test:ts": "jest",
     "test": "npm run test:cpp && npm run test:ts",
     "parse-data": "cd implementations/typescript/src/out && node index.js",
-    "install-packages": "npm install && cd implementations/typescript && npm install && cd ../.. && cmake-js install -d 'implementations/cpp'",
-    "build": "cd implementations/typescript/src && npx tsc && cd ../.. && cmake-js build -j8 -d 'cpp'",
-    "debug-build": "cd implementations/typescript/src && npx tsc && cd ../.. && cmake-js build -g -d 'cpp' --debug"
+    "install:ts": "npm install && cd implementations/typescript && cd extensions/nextjs-code-analyzer && npm install && npm install",
+    "install:cpp": "cmake-js install -d 'implementations/cpp'",
+    "install-packages": "npm run install:ts && npm run install:cpp",
+    "build:ts": "cd implementations/typescript/src && npx tsc",
+    "build:cpp": "cmake-js build -j8 -d 'implementations/cpp'",
+    "build": "npm run build:ts && npm run build:cpp",
+    "debug-build": "cmake-js build -g -d 'implementations/cpp' --debug"
   },
   "author": "Yorick de Jong",
   "license": "ISC",

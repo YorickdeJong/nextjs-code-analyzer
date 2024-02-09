@@ -38,7 +38,7 @@ To set up the project, follow these steps:
 1. **Clone the Repository:**
 
 ```bash
-   git clone --recurse-submodules https://github.com/YorickdeJong/nextjs-code-analyzer.git 
+git clone --recurse-submodules https://github.com/YorickdeJong/nextjs-code-analyzer.git 
 ```
 
 Install JavaScript Dependencies and build cmake:
@@ -58,13 +58,13 @@ yarn install
 To build to C++ and typescript files, run:
 
 ```bash
-    npm run build
+npm run build
 ```
 
 To build in debug mode, run:
 
 ```bash
-    npm run debug-build
+npm run debug-build
 ```
 
 ## Parsing
@@ -72,7 +72,7 @@ To build in debug mode, run:
 Run the following command to parse data:
 
 ```bash
-    node parse <path_to_file_name>
+node parse <path_to_file_name>
 ```
 
 
