@@ -10,10 +10,7 @@
 class AnalysisReport {
     
     public: 
-        AnalysisReport() {
-           InitializeDetectionFlags();
-           InitializeReverseLookupTable();
-        }
+        AnalysisReport();
 
         /**
          * Sets a detection flag in the analysis report.
@@ -59,9 +56,9 @@ class AnalysisReport {
 
     private: 
 
-    /**
- * Initializes the detection flags with default values and descriptions.
- */
+        /**
+         * Initializes the detection flags with default values and descriptions.
+         */
         void InitializeDetectionFlags();
 
 

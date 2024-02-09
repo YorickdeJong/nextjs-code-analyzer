@@ -31,10 +31,10 @@ class UseClientStrategy : public CommentStrategyInterface {
             std::string &comments, const std::string &javascriptTokenValue) const override;
 
          /**
-     * Checks if all relevant values in the analysis report are false, indicating
-     * that no relevant 'use client' patterns were detected.
-     * @param analysisReport The analysis report containing the detection flags.
-     * @return A boolean indicating whether all relevant values are false.
-     */
+         * Checks if all relevant values in the analysis report are false, indicating
+         * that no relevant 'use client' patterns were detected.
+         * @param analysisReport The analysis report containing the detection flags.
+         * @return A boolean indicating whether all relevant values are false.
+         */
         bool AllvaluesFalse(const AnalysisReport &analysisReport) const;
 };

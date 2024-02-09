@@ -2,6 +2,7 @@
 #include <unordered_set>
 #include <iostream>
 
+#include "models/analysis_report.h"
 #include "analysis/analysis.h"
 #include "reporter/reporter.h"
 #include "reporter/strategy/use_client_strategy.h"

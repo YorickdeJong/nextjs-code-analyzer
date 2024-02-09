@@ -3,9 +3,10 @@
 #include <iostream>
 
 #include "utils/constants.h"
+#include "models/analysis_report.h"
 #include "reporter/strategy/comment_strategy_interface.h"
 #include "reporter/strategy/hook_strategy.h"
-#include "reporter/strategy/useclient_strategy.h"
+#include "reporter/strategy/use_client_strategy.h"
 #include "reporter/strategy/other_strategies.h"
 #include "reporter/chain/comment_strategy_chain_builder.h"
 

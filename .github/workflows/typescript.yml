@@ -8,14 +8,24 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     
+    - name: Setup Path
+      shell: bash
+      run: |
+        PROJ_NEW_PATH=$(echo $GITHUB_ACTION_PATH | sed 's|/home/runner/work/|/__w/|')
+        echo "PROJ_NEW_PATH=$PROJ_NEW_PATH" >> $GITHUB_ENV
+
     # Set up Node.js using the version specified in .nvmrc or just specify the version
     - name: Setup Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '14'
+        node-version: '20'
 
     # Install dependencies for the whole TypeScript project
-    - name: Install dependencies
+    - name: Install dependencies root
+      run: npm install
+      working-directory: ./
+    
+    - name: Install dependencies /typescript
       run: npm install
       working-directory: ./implementations/typescript
 
@@ -25,8 +35,9 @@ jobs:
       working-directory: ./implementations/typescript
 
     # # Optionally run tests for the main TypeScript project
+    
     - name: Test TypeScript project
-      run: npm test:ts
+      run: npm run test:ts
       working-directory: ./
 
     # Build the VS Code extension

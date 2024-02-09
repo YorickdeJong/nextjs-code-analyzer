@@ -17,7 +17,8 @@
     "@types/jest": "^29.5.12",
     "cmake-js": "^7.3.0",
     "jest": "^29.7.0",
-    "ts-jest": "^29.1.2"
+    "ts-jest": "^29.1.2",
+    "typescript": "^5.3.3"
   },
   "contributes": {
     "commands": [

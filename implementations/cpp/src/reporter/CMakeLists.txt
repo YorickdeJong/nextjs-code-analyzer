@@ -13,7 +13,7 @@ add_library(reporter
 
 
 
-target_link_libraries(reporter json_manager)
+target_link_libraries(reporter json_manager analysis_report)
 
 
 target_include_directories(reporter PUBLIC 

@@ -11,6 +11,7 @@ include_directories(${CMAKE_JS_INC})
 # FINDING NODE
 file(GLOB_RECURSE SOURCE_FILES 
     "${PROJECT_SOURCE_DIR}/src/**/*.cpp" 
+    "${PROJECT_SOURCE_DIR}/tests/**/*.cpp" 
     "${PROJECT_SOURCE_DIR}/include/**/*.h"
     "${PROJECT_SOURCE_DIR}/node_addon.cpp"
 )
@@ -46,16 +47,19 @@ enable_testing()
 add_subdirectory(src/manager)
 add_subdirectory(src/analysis)
 add_subdirectory(src/reporter)
+add_subdirectory(src/models)
 add_subdirectory(external/googletest)
 add_subdirectory(tests)
 
 
 
 #LINKING LIBRARIES
-target_link_libraries(${PROJECT_NAME} ${CMAKE_JS_LIB} json_manager analysis reporter)
+target_link_libraries(${PROJECT_NAME} ${CMAKE_JS_LIB} json_manager analysis reporter analysis_report)
 
 if(MSVC AND CMAKE_JS_NODELIB_DEF AND CMAKE_JS_NODELIB_TARGET)
   # Generate node.lib
   execute_process(COMMAND ${CMAKE_AR} /def:${CMAKE_JS_NODELIB_DEF} /out:${CMAKE_JS_NODELIB_TARGET} ${CMAKE_STATIC_LINKER_FLAGS})
 endif()
 
+# Define NAPI_VERSION
+add_definitions(-DNAPI_VERSION=3)
