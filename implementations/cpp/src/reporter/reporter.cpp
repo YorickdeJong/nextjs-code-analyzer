@@ -32,7 +32,7 @@ void Reporter::AddCommentsToJsonObject(JsonManager& jsonManager){
         }
 
         std::string comments = commentStrategyChain.ExecuteChain(chainBuilder, m_analysisReport, javascriptTokenValue);
-        
+            
         // Modify the JSON object with the generated comments for the current token.
         jsonManager.ModifyJsonObject(i, comments);
     }

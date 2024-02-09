@@ -21,6 +21,11 @@ JsonManager::JsonManager(const nlohmann::json &_json, Napi::Env &_env)
   */ 
 
 void JsonManager::ModifyJsonObject(size_t index, const std::string& commentText) {
+    
+    if (commentText == "") {
+        return;
+    }
+
     nlohmann::json comment;
     comment["value"] = commentText;
     comment["line"] = m_json["tokens"][index]["loc"]["start"]["line"];

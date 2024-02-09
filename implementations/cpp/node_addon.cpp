@@ -26,12 +26,10 @@ Napi::Value CreateReport(const Napi::CallbackInfo& info) {
     class JsonManager jsonManager(info, env);
     class Analyzer analyzer;
 
-
+  
     // Analyze code and add comments to sections
     analyzer.AnalyzeJson(jsonManager.GetJson());
   
-
-
     // Add the report to the json object
     Reporter reporter(analyzer.GetAnalysisResult(), analyzer.GetTokenInfos());
     reporter.AddCommentsToJsonObject(jsonManager);
@@ -39,8 +37,7 @@ Napi::Value CreateReport(const Napi::CallbackInfo& info) {
     // Convert the JSON object to a NAPI value.
     jsonManager.JsonToNapiValue();
     
-    
-
+  
     // Return value
     return Napi::Value(env, jsonManager.GetReturnData());
   }

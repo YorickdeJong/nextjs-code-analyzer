@@ -96,12 +96,16 @@ void Analyzer::InitAnalyseResult(const nlohmann::json &j) {
     int count = 0;
     for (auto &token : j["tokens"]) {
         if (token["type"].contains("label") && token["type"]["label"] == "jsxText") {
-            count += 1;    
+            std::string value = token["value"];
+            std::istringstream iss(value);
+            std::string word;
+            while (iss >> word) {
+                ++count;
+            }  
         }
     }
 
-    if (count > FILE_SPECS::FILE_LENGTH) {
-        m_analysisResult.SetDetectionFlag(CLIENT::MANY_WORDS, false);
-    }
+    const bool manyWords = count > FILE_SPECS::WORD_COUNT;
+    m_analysisResult.SetDetectionFlag(CLIENT::MANY_WORDS, manyWords);
 
 }

@@ -5,6 +5,7 @@
 #include <vector>
 #include <unordered_set>
 #include <regex>
+#include <sstream>
 
 #include "models/token_info.h"
 #include "models/analysis_report.h"

@@ -8,7 +8,7 @@
 std::string CommentStrategyChain::ExecuteChain(const ChainBuilder& builder, const AnalysisReport& analysisReport, 
                                                 const std::string &javascriptTokenValue) {
     
-    std::string comments;
+    std::string comments = "";
     // Process each strategy to generate comments.
     for (const auto& strategy : builder.GetStrategies()) {
         if (!strategy->ExecuteStrategy(analysisReport, comments, javascriptTokenValue)) {
