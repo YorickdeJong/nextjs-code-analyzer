@@ -3,7 +3,7 @@ import { CodeAnalyzer } from "../code_analyser";
 import * as path from "path";
 
 const basePath = process.cwd();
-const addonPath = path.join(basePath, './implementations/cpp/build/Release/NextJS_Analyser.node');
+const addonPath = path.join(basePath, '../../../cpp/build/Release/NextJS_Analyser.node');
 const filePath = path.join(basePath, './implementations/typescript/src/tests/test_data.js');
 
 test('check if parsed data is correctly commented', () => { // Correct syntax for arrow function

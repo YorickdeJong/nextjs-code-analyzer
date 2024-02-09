@@ -6,17 +6,18 @@
  * The order of addition determines the order of strategy execution in the chain.
  */
 void ChainBuilder::BuildChain() {
-            AddStrategy(std::make_unique<UseClientStrategy>());
-            AddStrategy(std::make_unique<HookStrategy>());
-            AddStrategy(std::make_unique<WindowStrategy>());
-            AddStrategy(std::make_unique<DocumentStrategy>());
-            AddStrategy(std::make_unique<DynamicStrategy>());
-            AddStrategy(std::make_unique<LocalStorageStragy>());
-            AddStrategy(std::make_unique<RouterStrategy>());
-            AddStrategy(std::make_unique<EventStrategy>());
-            AddStrategy(std::make_unique<ButtonStrategy>());
-        }
+    // Directly initializing each strategy in the array
+    m_Strategies[0] = std::make_unique<UseClientStrategy>();
+    m_Strategies[1] = std::make_unique<HookStrategy>();
+    m_Strategies[2] = std::make_unique<WindowStrategy>();
+    m_Strategies[3] = std::make_unique<DocumentStrategy>();
+    m_Strategies[4] = std::make_unique<DynamicStrategy>();
+    m_Strategies[5] = std::make_unique<LocalStorageStrategy>();
+    m_Strategies[6] = std::make_unique<RouterStrategy>();
+    m_Strategies[7] = std::make_unique<EventStrategy>();
+    m_Strategies[8] = std::make_unique<ButtonStrategy>();
+}
 
-void ChainBuilder::AddStrategy(std::unique_ptr<CommentStrategyInterface> strategy) {
-    m_Strategies.push_back(std::move(strategy));
+const std::array<std::unique_ptr<CommentStrategyInterface>, 9>& ChainBuilder::GetStrategies() const { 
+    return m_Strategies; 
 }

@@ -7,6 +7,7 @@
     "test:cpp": "cd implementations/cpp/build/tests && ctest",
     "test:ts": "jest",
     "test": "npm run test:cpp && npm run test:ts",
+    "parse-data": "cd implementations/typescript/src/out && node index.js",
     "install-packages": "npm install && cd implementations/typescript && npm install && cd ../.. && cmake-js install -d 'implementations/cpp'",
     "build": "cd implementations/typescript/src && npx tsc && cd ../.. && cmake-js build -j8 -d 'cpp'",
     "debug-build": "cd implementations/typescript/src && npx tsc && cd ../.. && cmake-js build -g -d 'cpp' --debug"

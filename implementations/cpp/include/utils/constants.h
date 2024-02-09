@@ -17,6 +17,7 @@ namespace CLIENT {
     const std::string ROUTER = "ROUTER"; 
     const std::string LOCAL = "LOCAL"; 
     const std::string DYNAMIC = "DYNAMIC"; 
+    const std::string HTML = "HTML"; 
 }
 
 
@@ -35,9 +36,18 @@ namespace CLIENT_DESCRIPTIONS {
     const std::string ROUTER_DESC = "router";
     const std::string LOCAL_DESC = "local";
     const std::string DYNAMIC_DESC = "dynamic";
-}
+    const std::string HTML_DESC = "html"; //or jsxName?  --> obj.tokens[0].type.label == jsxName -->
+ }
 
 namespace FILE_SPECS {
     const int WORD_COUNT = 30;
     const int FILE_LENGTH = 99;
+}
+
+namespace HTML_ELEMENTS {
+    const char p = 'p';
+    const char u = 'u';
+    const char a = 'a';
+    const char i = 'i';
+    const std::string h1 = "h1";
 }

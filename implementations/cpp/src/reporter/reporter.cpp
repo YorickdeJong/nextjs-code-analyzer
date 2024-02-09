@@ -39,6 +39,7 @@ void Reporter::AddCommentsToJsonObject(JsonManager& jsonManager){
 }
 
 
+
 void Reporter::PopulateTokensToComment(const std::vector<TokenInfo> &m_tokenInfos, 
                                        std::unordered_set<std::string> &tokensToComment) {
 

@@ -1,6 +1,8 @@
 #pragma once
 
-#include <vector>
+// #include <vector>
+#include <array>
+
 
 #include "reporter/strategy/comment_strategy_interface.h"
 #include "reporter/strategy/hook_strategy.h"
@@ -26,13 +28,11 @@ class ChainBuilder {
          * Retrieves the collection of strategies that have been built.
          * @return A constant reference to a vector of unique pointers to CommentStrategyInterface.
          */
-        const std::vector<std::unique_ptr<CommentStrategyInterface>>& GetStrategies() const { 
-            return m_Strategies; 
-        }
-
+        const std::array<std::unique_ptr<CommentStrategyInterface>, 9>& GetStrategies() const;
     private:
-        std::vector<std::unique_ptr<CommentStrategyInterface>> m_Strategies;
+
+        std::array<std::unique_ptr<CommentStrategyInterface>, 9> m_Strategies;
 
         void BuildChain();
-        void AddStrategy(std::unique_ptr<CommentStrategyInterface> strategy);
+
 };

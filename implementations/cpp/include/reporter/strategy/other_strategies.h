@@ -78,7 +78,7 @@ class DynamicStrategy : public CommentStrategyInterface {
         }
 };
 
-class LocalStorageStragy : public CommentStrategyInterface {
+class LocalStorageStrategy : public CommentStrategyInterface {
     public:
         std::string CommentText(const AnalysisReport &analysisReport, const std::string &javascriptTokenValue) const override {        
             

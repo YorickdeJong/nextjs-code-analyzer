@@ -30,20 +30,6 @@ class Reporter {
     private: 
         void PopulateTokensToComment(const std::vector<TokenInfo> &tokenInfos, std::unordered_set<std::string> &tokensToComment);
         
-        /**
-         * Adds comment tokens to the JSON object.
-         * @param j The JSON object being modified.
-         * @param tokensToComment A set containing the tokens that require comments.
-         */
-        void AddCommentTokens(nlohmann::json &j, const std::unordered_set<std::string> &tokensToComment); 
-        
-        /**
-         * Creates a comment in the JSON object for a specific token.
-         * @param jToken The JSON token to which the comment is added.
-         * @param commentText The text of the comment to add.
-         */
-        void CreateComment(nlohmann::json &jToken, const std::string &commentText);
-        
         AnalysisReport m_analysisReport; 
         std::vector<TokenInfo> m_tokenInfos;
 } ;
