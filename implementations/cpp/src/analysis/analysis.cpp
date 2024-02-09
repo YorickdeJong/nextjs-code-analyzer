@@ -29,6 +29,7 @@ void Analyzer::AnalyzeJson(const nlohmann::json &j) {
         AddTokenInfo(token, m_tokenInfos, value);
 
     }
+    
 }
 
 
@@ -41,18 +42,26 @@ void Analyzer::AnalyzeJson(const nlohmann::json &j) {
  * @param value The string value of the token.
  */
 void Analyzer::AddTokenInfo(const nlohmann::json &token, std::vector<TokenInfo> &tokenInfos,
-    const std::string &value
-) {
+                            const std::string &value) 
+{
     if (!token.contains("loc") || !token["loc"]["start"].contains("line")) {
         throw std::runtime_error("Invalid token structure: 'loc' or 'line' missing.");
     }
 
+    // retrieve key value from value
     auto keyOpt = m_analysisResult.FindKeyByDescription(value);
     
     if (!keyOpt.has_value()) {
         return;
     }
     
+    // Check if detected html element has type jsxName
+    if (keyOpt == CLIENT::HTML){
+        if (token["type"]["label"] != "jsxName") {
+            return;
+        }
+    }
+
     const std::string& key = keyOpt.value();
     m_analysisResult.SetDetectionFlag(key, true);
 

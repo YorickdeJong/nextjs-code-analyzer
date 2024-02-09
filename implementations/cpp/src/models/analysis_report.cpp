@@ -43,17 +43,24 @@ void AnalysisReport::InitializeReverseLookupTable() {
     }
 }
 
-std::optional<std::string> AnalysisReport::FindKeyByDescription(const std::string& description) const {
-    std::string newDescription = description;
+std::optional<std::string> AnalysisReport::FindKeyByDescription(const std::string& tokenValue) const {
+    std::string newDescription = tokenValue;
     std::regex re("use[A-Z]\\w*");
     std::smatch match;
         
-    if (std::regex_search(description, match, re)) {
+    if (std::regex_search(tokenValue, match, re)) {
         newDescription = "hook";
+    }
+
+    for (const std::string& htmlElement : HTML_ELEMENTS::HTML_ARRAY) {
+        if (tokenValue == htmlElement) {
+            newDescription = "html";
+        }
     }
 
     auto it = m_reverseLookupTable.find(newDescription);
     if (it != m_reverseLookupTable.end()) {
+        // Returns CLIENT namespaced variable 
         return it->second;
     } else {
         return std::nullopt;
@@ -74,4 +81,5 @@ void AnalysisReport::InitializeDetectionFlags() {
     m_DetectionFlags[CLIENT::ROUTER] = std::make_pair(false, CLIENT_DESCRIPTIONS::ROUTER_DESC);
     m_DetectionFlags[CLIENT::LOCAL] = std::make_pair(false, CLIENT_DESCRIPTIONS::LOCAL_DESC);
     m_DetectionFlags[CLIENT::DYNAMIC] = std::make_pair(false, CLIENT_DESCRIPTIONS::DYNAMIC_DESC);
+    m_DetectionFlags[CLIENT::HTML] = std::make_pair(false, CLIENT_DESCRIPTIONS::HTML_DESC);
 }

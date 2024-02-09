@@ -36,7 +36,7 @@ namespace CLIENT_DESCRIPTIONS {
     const std::string ROUTER_DESC = "router";
     const std::string LOCAL_DESC = "local";
     const std::string DYNAMIC_DESC = "dynamic";
-    const std::string HTML_DESC = "html"; //or jsxName?  --> obj.tokens[0].type.label == jsxName -->
+    const std::string HTML_DESC = "html"; 
  }
 
 namespace FILE_SPECS {
@@ -45,9 +45,22 @@ namespace FILE_SPECS {
 }
 
 namespace HTML_ELEMENTS {
-    const char p = 'p';
-    const char u = 'u';
-    const char a = 'a';
-    const char i = 'i';
-    const std::string h1 = "h1";
+
+    const std::array<std::string, 15> HTML_ARRAY = {
+        "p", 
+        "u", 
+        "h1", 
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "li",
+        "td",
+        "a",
+        "label",
+        "span",
+        "textarea",
+        "i",
+        "title"
+    };
 }

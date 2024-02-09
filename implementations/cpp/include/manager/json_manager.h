@@ -2,8 +2,9 @@
 
 #include <iostream>
 #include <napi.h>
-#include <nlohmann/json.hpp>
 
+#include <nlohmann/json.hpp>
+#include "utils/timer.h"
 /**
  * The JsonManager class is responsible for handling the conversion between JSON data and Napi values.
  * It allows for passing JSON data between TypeScript and C++ by converting string data to JSON and 
@@ -61,7 +62,7 @@ class JsonManager {
          * @param jsonString The JSON string to convert.
          */
         void ConvertStringToJson(const std::string& jsonString);
-        
+
         nlohmann::json m_json;
         Napi::Env m_env;
         Napi::Value m_returnData;

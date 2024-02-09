@@ -16,8 +16,9 @@ void ChainBuilder::BuildChain() {
     m_Strategies[6] = std::make_unique<RouterStrategy>();
     m_Strategies[7] = std::make_unique<EventStrategy>();
     m_Strategies[8] = std::make_unique<ButtonStrategy>();
+    m_Strategies[9] = std::make_unique<HtmlStrategy>();
 }
 
-const std::array<std::unique_ptr<CommentStrategyInterface>, 9>& ChainBuilder::GetStrategies() const { 
+const std::array<std::unique_ptr<CommentStrategyInterface>, 10>& ChainBuilder::GetStrategies() const { 
     return m_Strategies; 
 }

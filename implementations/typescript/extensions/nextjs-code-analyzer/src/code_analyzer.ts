@@ -5,6 +5,9 @@ const path = require('path');
 
 class CodeAnalyzer {
     
+    public constructor() {
+      this.addon = require(this.addonPath);
+    }
     public analyzeCode(code: string): vscode.Diagnostic[] {
         const ast = this.passSourceCode(code)
         
@@ -17,7 +20,7 @@ class CodeAnalyzer {
     }
 
     private passSourceCode(code: string) {
-        babelParser.parse(code, {
+        return babelParser.parse(code, {
             sourceType: "module",
             plugins: [
               "jsx",
@@ -53,7 +56,8 @@ class CodeAnalyzer {
         
         
     }
-    private addon = path.join(__dirname, '..', '..', '..', '..', '..', 'implementations', 'cpp', 'build', 'Release', 'NextJS_Analyser.node');
+    private addon: any
+    private addonPath = path.join(__dirname, '..', '..', '..', '..', '..', 'implementations', 'cpp', 'build', 'Release', 'NextJS_Analyser.node');
 }
 
 

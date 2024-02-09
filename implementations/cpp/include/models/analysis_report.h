@@ -52,7 +52,7 @@ class AnalysisReport {
          * @param description The description to search for.
          * @return An optional containing the key if found, std::nullopt otherwise.
          */
-        std::optional<std::string> FindKeyByDescription(const std::string& description) const;
+        std::optional<std::string> FindKeyByDescription(const std::string& tokenValue) const;
 
     private: 
 

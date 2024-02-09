@@ -12,8 +12,7 @@
     "@babel/core": "^7.23.9",
     "@babel/parser": "^7.23.9",
     "node-addon-api": "^7.1.0",
-    "sharp": "^0.33.2",
-    "vscode": "^1.1.37"
+    "sharp": "^0.33.2"
   },
   "devDependencies": {
     "@types/node": "^20.11.16",

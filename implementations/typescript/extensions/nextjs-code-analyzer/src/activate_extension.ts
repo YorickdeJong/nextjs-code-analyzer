@@ -8,24 +8,31 @@ export class ActivateExtension {
 
     constructor(context: vscode.ExtensionContext) {
         this.codeAnalyzer = new CodeAnalyzer();
+        console.log(this.codeAnalyzer)
         this.diagnosticManager = new DiagnosticManager();
 
         this.registerEvents(context);
     }
 
     private registerEvents(context: vscode.ExtensionContext) {
+
+        console.log('context', context)
         context.subscriptions.push(
             vscode.window.onDidChangeActiveTextEditor(editor => {
                 if (editor) {
                     this.runAnalysis(editor);
                 }
-            }),
-            vscode.workspace.onDidChangeTextDocument(event => {
+            })
+        );
+        
+        context.subscriptions.push(vscode.workspace.onDidChangeTextDocument(event => {
                 if (vscode.window.activeTextEditor && event.document === vscode.window.activeTextEditor.document) {
                     this.runAnalysis(vscode.window.activeTextEditor);
                 }
             }),
-            vscode.commands.registerCommand('nextjs-code-analyzer.nextjs', () => {
+        );
+        
+        context.subscriptions.push(vscode.commands.registerCommand('nextjs-code-analyzer.nextjs', () => {
                 const activeEditor = vscode.window.activeTextEditor;
                 if (activeEditor) {
                     this.runAnalysis(activeEditor);

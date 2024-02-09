@@ -5,4 +5,4 @@ export function activate(context: vscode.ExtensionContext) {
     new ActivateExtension(context);
 }
 
-export function deactivate() {}
+ 
