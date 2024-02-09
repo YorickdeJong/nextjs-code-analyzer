@@ -39,7 +39,7 @@ void JsonManager::ModifyJsonObject(size_t index, const std::string& commentText)
   */ 
 void JsonManager::JsonToNapiValue() {
 
-  if (m_json.length == 0) {
+  if (m_json.size() == 0) {
     throw std::runtime_error("Error: m_json is empty"); 
   }
 

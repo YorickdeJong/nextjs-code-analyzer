@@ -8,7 +8,7 @@
  * Throws a runtime_error if the expected 'tokens' structure is missing.
  * 
  * @param j The JSON object containing code token information to be analyzed.
- */
+ */ 
 void Analyzer::AnalyzeJson(const nlohmann::json &j) {
 
     if (!j.contains("tokens")) {
@@ -55,7 +55,7 @@ void Analyzer::AddTokenInfo(const nlohmann::json &token, std::vector<TokenInfo> 
         return;
     }
     
-    // Check if detected html element has type jsxName
+    // Check if detected html element has type jsxName.
     if (keyOpt == CLIENT::HTML){
         if (token["type"]["label"] != "jsxName") {
             return;

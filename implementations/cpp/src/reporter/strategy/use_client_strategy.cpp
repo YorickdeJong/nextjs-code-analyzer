@@ -21,6 +21,7 @@ std::string UseClientStrategy::CommentText(const AnalysisReport &analysisReport,
         returnText += "Consider removing use client from this file as no client side components have been detected \n";
 
     }
+
     return returnText;
 }
 
@@ -31,6 +32,7 @@ bool UseClientStrategy::ExecuteStrategy(const AnalysisReport &analysisReport,
     std::string &comments, const std::string &javascriptTokenValue) const  {
 
     const bool isUseClientPresent = analysisReport.GetDetectionFlag(CLIENT::USE_CLIENT);
+    
     if (isUseClientPresent && javascriptTokenValue == CLIENT_DESCRIPTIONS::USE_CLIENT_DESC) {
         comments = CommentText(analysisReport, javascriptTokenValue);
         return false;

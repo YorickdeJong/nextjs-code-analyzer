@@ -26,7 +26,7 @@ add_executable(html_strategy_test html_strategy_test.cpp)
 
 # Link against Google Test and any other libraries
 target_link_libraries(analysis_test gtest gtest_main analysis_report analysis)
-target_link_libraries(hook_strategy_test gtest gtest_main analysis_report reporter analysis)
+target_link_libraries(hook_strategy_test gtest gtest_main analysis_report reporter analysis )
 target_link_libraries(use_client_strategy_test gtest gtest_main analysis_report reporter analysis)
 target_link_libraries(hook_chain_builder_test gtest gtest_main analysis_report reporter analysis)
 target_link_libraries(use_client_chain_builder gtest gtest_main analysis_report reporter analysis)

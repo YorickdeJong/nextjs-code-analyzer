@@ -5,7 +5,6 @@
 #include "models/analysis_report.h"
 #include "analysis/analysis.h"
 #include "utils/constants.h"
-#include "reporter/reporter.h"
 #include "reporter/strategy/use_client_strategy.h"
 #include "reporter/strategy/comment_strategy_interface.h"
 

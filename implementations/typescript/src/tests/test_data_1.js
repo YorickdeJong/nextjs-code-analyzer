@@ -1,4 +1,5 @@
 // test.js
+'use client'
 import React from 'react'; 
 
 const MyComponent = () => {
@@ -11,6 +12,7 @@ const MyComponent = () => {
       console.log('Hello, world!');
     },[]
   );
+
   return (
     <>
       <div>Hello, world!</div>

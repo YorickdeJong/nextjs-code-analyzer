@@ -1,20 +1,22 @@
-name: C++ Build
+name: Build NextJS Analyzer
 
 on:
   push:
     paths:
-      - 'implementations/cpp/**'
+      - 'implementations/**'
     branches:
       - main
   pull_request:
     paths:
-      - 'implementations/cpp/**'
+      - 'implementations/**'
     branches:
       - main
 
 jobs:
-  build:
+  cpp_build:
     runs-on: ubuntu-latest
+    outputs:
+      cpp-artifact-path: ${{ steps.set_artifact_path.outputs.cpp-artifact-path }}
 
     steps:
     - name: Checkout repo
@@ -22,21 +24,76 @@ jobs:
       with:
         submodules: 'recursive'
 
+    - name: Setup Node.js environment
+      uses: actions/setup-node@v2
+      with:
+        node-version: '20'
+
     - name: Install dependencies
       run: |
         sudo apt-get update
         sudo apt-get install -y build-essential cmake libboost-all-dev libssl-dev
         npm install --save node-api-headers cmake-js
-        cd implementations/typescript
         npm install --save node-addon-api
-        npm install --save node-api-headers
 
-    - name: Build
-      run: npx cmake-js build -d 'implementations/cpp'
-        
+    - name: Build C++ Adpm
+      run: npx cmake-js build -j8 -d 'implementations/cpp'
+    
+    - name: Determine C++ Addon artifact path
+      id: set_artifact_path
+      run: echo "::set-output name=cpp-artifact-path::$(echo 'implementations/cpp/build/Release/NextJS_Analyser.node')"
       
-    - name: Tests
+    - name: C++ Tests
       run: |
         cd implementations/cpp/build
         ctest 
-        
+
+    - name: Upload C++ Addon artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: cpp-addon-artifact
+        path: ${{ steps.set_artifact_path.outputs.cpp-artifact-path }}
+  
+  typescript_build_and_test:
+    needs: cpp_build
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+
+    - name: Download C++ Addon artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: cpp-addon-artifact
+        path: implementations/cpp/build/Release
+  
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '20'
+
+    # Install dependencies for the whole TypeScript project
+    - name: Install dependencies root
+      run: npm install
+      working-directory: ./
+    
+    - name: Install dependencies /typescript
+      run: npm install
+      working-directory: ./implementations/typescript
+
+    # Build the main TypeScript project
+    - name: Build TypeScript project
+      run: npx tsc -p ./src
+      working-directory: ./implementations/typescript
+
+    - name: Test TypeScript project
+      run: npm run test:ts
+      working-directory: ./
+
+    # Build the VS Code extension
+    - name: Build VS Code Extension
+      run: |
+        npm install
+        npm run compile
+      working-directory: ./implementations/typescript/extensions/nextjs-code-analyzer

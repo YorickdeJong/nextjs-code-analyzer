@@ -21,12 +21,6 @@ class CodeAnalyzer {
 
     this.analysisResults = this.addon.CreateReport(astJson);
 
-    // console.log(this.analysisResults.tokens.map((result : any) => {
-    //   if (result.value === 'div') {
-    //     console.log(result.type, result.value)
-    //   }
-    // }));
-
     // Get analysis results
 
     this.analysisResults.tokens.forEach((token: any) => {

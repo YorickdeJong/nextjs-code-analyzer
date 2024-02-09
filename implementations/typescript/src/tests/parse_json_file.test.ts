@@ -3,8 +3,8 @@ import { CodeAnalyzer } from "../code_analyser";
 import * as path from "path";
 
 const basePath = process.cwd();
-const addonPath = path.join(basePath, '../../../cpp/build/Release/NextJS_Analyser.node');
-const filePath = path.join(basePath, './implementations/typescript/src/tests/test_data.js');
+const addonPath = path.join(basePath, './implementations/cpp/build/Release/NextJS_Analyser.node');
+const filePath = path.join(basePath, './implementations/typescript/src/tests/test_data_1.js');
 
 test('check if parsed data is correctly commented', () => { // Correct syntax for arrow function
     const analyzer = new CodeAnalyzer(addonPath); // Correct instantiation of the class
@@ -16,7 +16,7 @@ test('check if parsed data is correctly commented', () => { // Correct syntax fo
     })
 
     const expectations = [
-        ["Large file detected! Consider refactoring 'use client' into a smaller file \n", "use client"],
+        ["Large file detected! Consider refactoring 'use client' into a smaller file \n" + "Client side file detected with many words. Consider refactoring for better SEO score \n", "use client"],
         ["Consider refactoring useState Large file detected \n", "useState"], // Removed extraneous characters
         ["Consider refactoring useState Large file detected \n", "useState"],
         ['Consider refactoring useEffect Large file detected \n' +
