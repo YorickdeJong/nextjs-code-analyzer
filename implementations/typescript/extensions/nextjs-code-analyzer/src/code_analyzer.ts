@@ -35,7 +35,6 @@ class CodeAnalyzer {
     private analysisReport (analysisResults : any): vscode.Diagnostic[]{
         return analysisResults.tokens.map((token: any) => {
             if (token.comment) {
-              console.log('commnet', token.comment)
               const startLine = token.loc.start.line - 1;
               const startChar = token.loc.start.column;
               const endLine = token.loc.end.line - 1;
