@@ -32,11 +32,14 @@ bool UseClientStrategy::ExecuteStrategy(const AnalysisReport &analysisReport,
     std::string &comments, const std::string &javascriptTokenValue) const  {
 
     const bool isUseClientPresent = analysisReport.GetDetectionFlag(CLIENT::USE_CLIENT);
-    
+
     if (isUseClientPresent && javascriptTokenValue == CLIENT_DESCRIPTIONS::USE_CLIENT_DESC) {
+         // Generate and assign the comment for this token
         comments = CommentText(analysisReport, javascriptTokenValue);
-        return false;
+        return false; // Stop further processing as a comment has been assigned.
     }
+
+    // Go to the next strategy in the array
     return true;
 }
 

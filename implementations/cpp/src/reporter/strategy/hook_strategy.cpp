@@ -9,7 +9,7 @@ std::string HookStrategy::CommentText(const AnalysisReport &analysisReport, cons
     const std::string text2 = "No use client detected, consider refactoring " + 
         javascriptTokenValue + " or add 'use client' to make this file client side";
     
-    
+
     bool specificCondition = analysisReport.GetDetectionFlag(CLIENT::HOOK);
     std::string returnText = ReturnMessage(text1, text2, specificCondition, analysisReport);
     
@@ -40,9 +40,12 @@ bool HookStrategy::ExecuteStrategy(const AnalysisReport &analysisReport,
         if ( std::regex_search(javascriptTokenValue, match, re) && 
                 javascriptTokenValue != CLIENT_DESCRIPTIONS::USE_CLIENT_DESC
             ) {
+
+                // Generate and assign the comment for this token
                 comments = CommentText(analysisReport, javascriptTokenValue);
-                return false;
+                return false; // Stop further processing as a comment has been assigned.
         }
 
+        // Go to the next strategy in the array
         return true;
 }
