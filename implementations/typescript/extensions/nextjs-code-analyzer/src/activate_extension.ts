@@ -38,7 +38,8 @@ export class ActivateExtension {
         context.subscriptions.push(vscode.commands.registerCommand('nextjs-code-analyzer.nextjs', () => {
                 const activeEditor = vscode.window.activeTextEditor;
                 if (activeEditor) {
-                    this.runAnalysis(activeEditor);
+                    console.log('NextJs is active')    
+                    this.runAnalysis(activeEditor, true);
                 }
             })
         );
@@ -47,14 +48,28 @@ export class ActivateExtension {
           
     }
 
-    private runAnalysis(editor: vscode.TextEditor) {
+    private runAnalysis(editor: vscode.TextEditor, fromNextJsCommand = false) {
+        // // Temporarily override the ignoreWarnings setting for this analysis
         const diagnostics = this.codeAnalyzer.analyzeCode(editor.document.getText());
-        this.diagnosticManager.updateDiagnostics(editor.document, diagnostics);
+        this.diagnosticManager.updateDiagnostics(editor.document, diagnostics, fromNextJsCommand);
+    
+
     }
 
     private toggleIgnoreWarnings() {
         const config = vscode.workspace.getConfiguration();
-        const currentSetting = config.get('nextjsCodeAnalyzer.ignoreWarnings');
+        const currentSetting = config.get<boolean>('nextjsCodeAnalyzer.ignoreWarnings', false);
         config.update('nextjsCodeAnalyzer.ignoreWarnings', !currentSetting, vscode.ConfigurationTarget.Global);
+    
+        if (currentSetting) {
+            // Re-run analysis if we are turning warnings back on
+            const activeEditor = vscode.window.activeTextEditor;
+            if (activeEditor) {
+                this.runAnalysis(activeEditor);
+            }
+        } else {
+            // Clear diagnostics if we are turning warnings off
+            this.diagnosticManager.clearDiagnostics();
+        }
     }
 }

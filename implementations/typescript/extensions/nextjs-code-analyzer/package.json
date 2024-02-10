@@ -10,10 +10,8 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:nextjs-code-analyzer.nextjs",
-    "onCommand:nextjs-code-analyzer.toggleIgnoreWarnings"
   ],
-  "main": "./out/extension.js",
+  "main": "./out/index.js",
   "contributes": {
     "commands": [
       {
@@ -28,11 +26,11 @@
     "configuration": {
       "title": "NextJS Code Analyzer",
       "properties": {
-          "nextjsCodeAnalyzer.ignoreWarnings": {
-              "type": "boolean",
-              "default": false,
-              "description": "Ignore warnings from NextJS Code Analyzer."
-          }
+        "nextjsCodeAnalyzer.ignoreWarnings": {
+          "type": "boolean",
+          "default": false,
+          "description": "Ignore warnings from NextJS Code Analyzer."
+        }
       }
     }
   },
