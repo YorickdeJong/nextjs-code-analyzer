@@ -10,7 +10,7 @@ class CodeAnalyzer {
 
   public analysisFile(filePath: string): void {
     if (!filePath) {
-      throw new Error('File path must be provided');
+      throw new Error('File path must be provided!');
     }
     // Read the source file into an array of lines
     const sourceCode = this.readFile(filePath);

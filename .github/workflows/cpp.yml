@@ -15,8 +15,6 @@ on:
 jobs:
   cpp_build:
     runs-on: ubuntu-latest
-    outputs:
-      cpp-artifact-path: ${{ steps.set_artifact_path.outputs.cpp-artifact-path }}
 
     steps:
     - name: Checkout repo
@@ -37,59 +35,45 @@ jobs:
         npm install --save node-addon-api
 
     - name: Build C++ Adpm
-      run: npx cmake-js build -j8 -d 'implementations/cpp'
+      run: |
+        npx cmake-js build -j8 -d 'implementations/cpp'
+        cp implementations/cpp/build/Release/NextJS_Analyser.node implementations/typescript/nextjs-code-analyzer-extension/out/cpp_build/
     
-    - name: Determine C++ Addon artifact path
-      id: set_artifact_path
-      run: echo "::set-output name=cpp-artifact-path::$(echo 'implementations/cpp/build/Release/NextJS_Analyser.node')"
-      
     - name: C++ Tests
       run: |
         cd implementations/cpp/build
         ctest 
-
-    - name: Upload C++ Addon artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: cpp-addon-artifact
-        path: ${{ steps.set_artifact_path.outputs.cpp-artifact-path }}
   
-  typescript_build_and_test:
-    needs: cpp_build
-    runs-on: ubuntu-latest
+typescript_build_and_test:
+  needs: cpp_build
+  runs-on: ubuntu-latest
 
-    steps:
-    - name: Checkout repo
-      uses: actions/checkout@v2
+  steps:
+  - name: Checkout repo
+    uses: actions/checkout@v2
 
-    - name: Download C++ Addon artifact
-      uses: actions/download-artifact@v2
-      with:
-        name: cpp-addon-artifact
-        path: implementations/cpp/build/Release
+  - name: Setup Node.js
+    uses: actions/setup-node@v2
+    with:
+      node-version: '20'
+
+  # Install dependencies for the whole TypeScript project
+  - name: Install dependencies root
+    run: npm install
+    working-directory: ./
   
-    - name: Setup Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '20'
+  - name: Install dependencies /typescript
+    run: npm install
+    working-directory: ./implementations/typescript
 
-    # Install dependencies for the whole TypeScript project
-    - name: Install dependencies root
-      run: npm install
-      working-directory: ./
-    
-    - name: Install dependencies /typescript
-      run: npm install
-      working-directory: ./implementations/typescript
+  # Build the main TypeScript project
+  - name: Build TypeScript project
+    run: npx tsc -p ./src
+    working-directory: ./implementations/typescript
 
-    # Build the main TypeScript project
-    - name: Build TypeScript project
-      run: npx tsc -p ./src
-      working-directory: ./implementations/typescript
-
-    - name: Test TypeScript project
-      run: npm run test:ts
-      working-directory: ./
+  - name: Test TypeScript project
+    run: npm run test:ts
+    working-directory: ./
 
   publish_package:
     needs: [typescript_build_and_test]
