@@ -3,7 +3,7 @@
     "node_modules",
     "implementations/cpp",
     ".vscode-test",
-    "extensions"
+    "nextjs-code-analyzer-extension"
   ],
   "compilerOptions": {
     "module": "commonjs",

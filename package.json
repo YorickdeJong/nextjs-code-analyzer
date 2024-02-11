@@ -8,7 +8,8 @@
   "scripts": {
     "test:cpp": "cd implementations/cpp/build/tests && ctest",
     "test:ts": "jest",
-    "test": "npm run test:cpp && npm run test:ts",
+    "test:extension": "cd implementations/typescript/nextjs-code-analyzer-extension && npm run test",
+    "test": "npm run test:cpp && npm run test:ts && npm run test:extension",
     "parse-data": "cd implementations/typescript/src/out && node index.js",
     "install:ts": "npm install && cd implementations/typescript && npm install",
     "install:extension": "cd implementations/typescript/nextjs-code-analyzer-extension && npm install", 

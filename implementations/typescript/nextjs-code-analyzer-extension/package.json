@@ -49,8 +49,7 @@
   },
   "dependencies": {
     "@babel/core": "^7.23.9",
-    "@babel/parser": "^7.23.9",
-    "@types/vscode": "^1.86.0"
+    "@babel/parser": "^7.23.9"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",

@@ -34,7 +34,7 @@ jobs:
         npm install --save node-api-headers cmake-js
         npm install --save node-addon-api
 
-    - name: Build C++ Adpm
+    - name: Build C++ Addon
       run: |
         npx cmake-js build -j8 -d 'implementations/cpp'
         mkdir -p implementations/typescript/nextjs-code-analyzer-extension/out/cpp_build/
