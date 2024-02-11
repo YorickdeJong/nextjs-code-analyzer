@@ -119,6 +119,13 @@ jobs:
       run: vsce package
       working-directory: ./implementations/typescript/nextjs-code-analyzer-extension
 
+    - name: Bump package version
+      run: |
+        git config --global user.name 'Your Name'
+        git config --global user.email 'your-email@example.com'
+        npm version patch -m "Bump version to %s [skip ci]"
+      working-directory: ./implementations/typescript/nextjs-code-analyzer-extension
+
     - name: Publish to Visual Studio Marketplace
       run: vsce publish -p ${{ secrets.VSCE_PAT }}
       working-directory: ./implementations/typescript/nextjs-code-analyzer-extension
