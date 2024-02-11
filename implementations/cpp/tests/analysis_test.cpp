@@ -62,7 +62,7 @@ TEST(AnalysisTest, Hooks) {
 
     // Test Scenario: Analysis of JSON data representing code that uses hooks.
     // Expected Behavior: Analyzer should correctly identify and store information about the tokens related to hooks.
-    // Rationale: Confirms that the analyzer can isolate and detect hook usage from JSON tokens, independent of other functionalities.
+    // Rationale: Confirms that the analyzer can isolate and detect hook usage from JSON tokens, independent of other functionalities
 
     Analyzer analyzer;
     nlohmann::json inputJson = {

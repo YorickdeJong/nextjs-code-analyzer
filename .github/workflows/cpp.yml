@@ -106,7 +106,7 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: cpp-addon-artifact
-        path: implementations/cpp/build/Release
+        path: implementations/typescript/nextjs-code-analyzer-extension/out/cpp_build/
 
     - name: Build VS Code Extension
       run: |
