@@ -44,36 +44,36 @@ jobs:
         cd implementations/cpp/build
         ctest 
   
-typescript_build_and_test:
-  needs: cpp_build
-  runs-on: ubuntu-latest
+  typescript_build_and_test:
+    needs: cpp_build
+    runs-on: ubuntu-latest
 
-  steps:
-  - name: Checkout repo
-    uses: actions/checkout@v2
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
 
-  - name: Setup Node.js
-    uses: actions/setup-node@v2
-    with:
-      node-version: '20'
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '20'
 
-  # Install dependencies for the whole TypeScript project
-  - name: Install dependencies root
-    run: npm install
-    working-directory: ./
-  
-  - name: Install dependencies /typescript
-    run: npm install
-    working-directory: ./implementations/typescript
+    # Install dependencies for the whole TypeScript project
+    - name: Install dependencies root
+      run: npm install
+      working-directory: ./
+    
+    - name: Install dependencies /typescript
+      run: npm install
+      working-directory: ./implementations/typescript
 
-  # Build the main TypeScript project
-  - name: Build TypeScript project
-    run: npx tsc -p ./src
-    working-directory: ./implementations/typescript
+    # Build the main TypeScript project
+    - name: Build TypeScript project
+      run: npx tsc -p ./src
+      working-directory: ./implementations/typescript
 
-  - name: Test TypeScript project
-    run: npm run test:ts
-    working-directory: ./
+    - name: Test TypeScript project
+      run: npm run test:ts
+      working-directory: ./
 
   publish_package:
     needs: [typescript_build_and_test]
