@@ -1,5 +1,5 @@
 
-'use client'
+
 import { useState } from "react"
 
 
@@ -11,19 +11,6 @@ export function Test () {
     return (
         <div>
             <span> 
-                Hello Hello Hello Hello Hello Hello Hello Hello
-                Hello Hello Hello Hello Hello Hello Hello Hello
-                Hello Hello Hello Hello Hello Hello Hello Hello
-                Hello Hello Hello Hello Hello Hello Hello Hello
-                Hello Hello Hello Hello Hello Hello Hello Hello
-                Hello Hello Hello Hello Hello Hello Hello Hello
-                Hello Hello Hello Hello Hello Hello Hello Hello
-                Hello Hello Hello Hello Hello Hello Hello Hello
-                Hello Hello Hello Hello Hello Hello Hello Hello
-                Hello Hello Hello Hello Hello Hello Hello Hello
-                Hello Hello Hello Hello Hello Hello Hello Hello
-                Hello Hello Hello Hello Hello Hello Hello Hello
-                Hello Hello Hello Hello Hello Hello Hello Hello
                 Hello Hello Hello Hello Hello Hello Hello Hello
             </span>
         </div>

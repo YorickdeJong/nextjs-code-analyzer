@@ -115,6 +115,11 @@ jobs:
         npm install -g vsce
       working-directory: ./implementations/typescript/nextjs-code-analyzer-extension
 
+    - name: Test TypeScript project
+      run: npm run test
+      working-directory: ./implementations/typescript/nextjs-code-analyzer-extension
+
+
     - name: Package VS Code Extension
       run: vsce package
       working-directory: ./implementations/typescript/nextjs-code-analyzer-extension

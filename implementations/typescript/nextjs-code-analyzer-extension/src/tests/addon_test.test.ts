@@ -1,65 +1,65 @@
-jest.mock('vscode', () => ({
-    languages: {
-      createDiagnosticCollection: jest.fn(),
-    },
-}), { virtual: true });
-
-
-jest.mock('@babel/parser', () => ({
-    parse: jest.fn().mockImplementation(() => ({
-    type: 'File',
-    program: {
-      type: 'Program',
-      body: [],
-      sourceType: 'module'
-    }
-  })),
-  }), { virtual: true });
-
-
-import * as vscode from 'vscode';
-import * as babelParser from '@babel/parser';
 import * as path from 'path'
 
-const addonPath = path.join(__dirname, '..', 'cpp_build', 'NextJS_Analyser.node');
+const addonPath = path.join(__dirname, '..',  '..', 'out', 'cpp_build', 'NextJS_Analyser.node');
 
 describe('Addon Tests', () => {
     const addon = require(addonPath);
 
-
-    const code = `
-        export default function Checkout() {
-            const [loading, setLoading] = useState(false);
-            const [test, setTest] = useState(false)
-        
-            const random = useRef();
-            const [left, setState] = useState(false); 
-            const orderId = uuidv4();
-        }
-    `
-    function passSourceCode(code: string) {
-        return babelParser.parse(code, {
-            sourceType: "module",
-            plugins: [
-              "jsx",
-              "typescript", 
-            ],
-            errorRecovery: true,
-            ranges: true,
-            tokens: true
-        });
+    let code = `
+    {
+        "loc": {
+            "start": { "line": 0, "index": 0 },
+            "end": { "line": 1, "index": 10 }
+        },
+        "tokens": [  
+            {
+                "type": {
+                    "label": "name",
+                    "beforeExpr": false,
+                    "startsExpr": true,
+                    "rightAssociative": false,
+                    "isLoop": false,
+                    "isAssign": false,
+                    "prefix": false,
+                    "postfix": false,
+                    "binop": null,
+                    "updateContext": null
+                },
+                "value": "useState",
+                "start": 95,
+                "end": 103,
+                "loc": {
+                    "start": {
+                        "line": 9,
+                        "column": 30,
+                        "index": 95
+                    },
+                    "end": {
+                        "line": 9,
+                        "column": 38,
+                        "index": 103
+                    }
+                }
+            }
+        ]
     }
+    `
 
-    const ast = passSourceCode(code)
-        
-    const astJson = JSON.stringify(ast, null, 2);
-
+    code = code.toString()
     // Get analysis results from your addon
-    const analysisResults = addon.CreateReport(astJson);
+    const analysisResults = addon.CreateReport(code);
 
-    console.log(analysisResults.tokens)
+    console.log('Result', analysisResults.tokens[0].comment.value)
 
+    test('should cr', () => {
+        expect(analysisResults).toBeDefined();
+    });
+
+    test('comment', () => {
+        expect(analysisResults.tokens[0].comment.value).toBe(
+            "No use client detected, consider refactoring useState or add 'use client' to make this file client side \n")
+    });
 
 });
   
-  
+

@@ -1,5 +1,6 @@
 import * as babelParser from '@babel/parser';
-import * as fs from 'fs';
+const path = require('path');
+const fs = require('fs');
 
 class CodeAnalyzer {
 
@@ -19,6 +20,10 @@ class CodeAnalyzer {
     const ast = this.parseSourceCode(sourceCode)
     const astJson = JSON.stringify(ast, null, 2);
 
+    const outputPath = path.join(__dirname, 'log.txt');
+
+    // Write to the file synchronously
+    fs.writeFileSync(outputPath, astJson);    
     this.analysisResults = this.addon.CreateReport(astJson);
 
     // Get analysis results
