@@ -12,7 +12,7 @@ class CodeAnalyzer {
         this.addon = require(this.addonPath);
       }
       catch (err) {
-        console.log('err', err)
+        console.log('err: ', err)
       }
     }
     public analyzeCode(code: string): vscode.Diagnostic[] {
