@@ -117,8 +117,8 @@ jobs:
 
     - name: Package VS Code Extension
       run: vsce package
-      working-directory: ./implementations/typescript/nextjs-code-analyzer-extensions
+      working-directory: ./implementations/typescript/nextjs-code-analyzer-extension
 
     - name: Publish to Visual Studio Marketplace
       run: vsce publish -p ${{ secrets.VSCE_PAT }}
-      working-directory: ./implementations/typescript/nextjs-code-analyzer-extensions
+      working-directory: ./implementations/typescript/nextjs-code-analyzer-extension
