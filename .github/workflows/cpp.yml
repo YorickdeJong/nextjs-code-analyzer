@@ -28,13 +28,6 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: '20'
-        registry-url: 'https://marketplace.visualstudio.com/_apis/public/gallery/publishers/BlueWaterfall/vsextensions/nextjs_code_analyzer/0.0.1/vspackage'
-
-
-    - name: Setup Node.js environment
-      uses: actions/setup-node@v2
-      with:
-        node-version: '20'
 
     - name: Install dependencies
       run: |
@@ -98,7 +91,25 @@ jobs:
       run: npm run test:ts
       working-directory: ./
 
-    # Build the VS Code extension
+  publish_package:
+    needs: [typescript_build_and_test]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '20'
+
+    - name: Download C++ Addon artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: cpp-addon-artifact
+        path: implementations/cpp/build/Release
+
     - name: Build VS Code Extension
       run: |
         npm install
@@ -109,9 +120,7 @@ jobs:
     - name: Package VS Code Extension
       run: vsce package
       working-directory: ./implementations/typescript/nextjs-code-analyzer-extensions
-     
-     # Publish the extension only on push to main, not on pull requests
+
     - name: Publish to Visual Studio Marketplace
-      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       run: vsce publish -p ${{ secrets.VSCE_PAT }}
       working-directory: ./implementations/typescript/nextjs-code-analyzer-extensions
