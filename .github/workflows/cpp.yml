@@ -79,7 +79,7 @@ jobs:
         name: cpp-addon-artifact
         path: implementations/typescript/nextjs-code-analyzer-extension/out/cpp_build/
 
-        
+
     # Build the main TypeScript project
     - name: Build TypeScript project
       run: npx tsc -p ./src
@@ -113,7 +113,7 @@ jobs:
         npm install
         npm run compile
         npm install -g vsce
-      working-directory: ./implementations/typescript/nextjs-code-analyzer-extensions
+      working-directory: ./implementations/typescript/nextjs-code-analyzer-extension
 
     - name: Package VS Code Extension
       run: vsce package
