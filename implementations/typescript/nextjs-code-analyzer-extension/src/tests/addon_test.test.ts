@@ -57,7 +57,7 @@ describe('Addon Tests', () => {
 
     test('comment', () => {
         expect(analysisResults.tokens[0].comment.value).toBe(
-            "No use client detected, consider refactoring useState or add 'use client' to make this file client side \n")
+            "No 'use client' detected in 'useState'. If this file contains client-side specific code,consider adding 'use client' for clearer separation of client and server-sidecode, enhancing code organization and performance. \n")
     });
 
 });

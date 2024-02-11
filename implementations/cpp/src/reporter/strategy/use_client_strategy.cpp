@@ -6,7 +6,9 @@
 std::string UseClientStrategy::CommentText(const AnalysisReport &analysisReport, 
     const std::string &javascriptTokenValue) const  {
 
-    const std::string text1 = "Large file detected! Consider refactoring 'use client' into a smaller file";
+    const std::string text1 = "Large client-side file detected! Consider splitting the current 'use client' file" 
+        "into smaller modules. This can improve performance by reducing load times and optimizing resource usage."
+        "Review and refactor variables and instances where feasible.\n";
     const std::string text2 = "";
     const bool isUseClientPresent = analysisReport.GetDetectionFlag(CLIENT::USE_CLIENT);
     const bool isManyWordsPresent = analysisReport.GetDetectionFlag(CLIENT::MANY_WORDS);
@@ -14,11 +16,15 @@ std::string UseClientStrategy::CommentText(const AnalysisReport &analysisReport,
     std::string returnText = ReturnMessage(text1, text2, isUseClientPresent, analysisReport);
 
     if (isManyWordsPresent && isUseClientPresent) {
-        returnText += "Client side file detected with many words. Consider refactoring for better SEO score \n";
+        returnText += "Client-side file with a high word count detected. Large amounts of text"
+        "can negatively impact SEO and user experience. Consider breaking down the text into smaller," 
+        "more manageable components, or using server-side rendering for large text elements. \n";
     }
 
     if (isUseClientPresent && AllvaluesFalse(analysisReport)) { 
-        returnText += "Consider removing use client from this file as no client side components have been detected \n";
+        returnText += "Unnecessary use of 'use client' detected. No client-side components or dependencies`"
+        "are identified in this file. Removing 'use client' can streamline your"
+        "code and improve server-side rendering efficiency.\n";
 
     }
 

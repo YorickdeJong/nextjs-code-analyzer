@@ -7,9 +7,11 @@ std::string HtmlStrategy::CommentText(const AnalysisReport &analysisReport, cons
     bool manyWordsDetected = analysisReport.GetDetectionFlag(CLIENT::MANY_WORDS);
 
     if (htmlElementDetected && manyWordsDetected) {
-        return "Many Words in File detected in client side file. Consider refactoring <" + 
+        return "A high word count has been detected in the HTML element <" + 
                 javascriptTokenValue + 
-                "> into a different file for better SEO. ";
+                "> within a client-side file. This can impact SEO and page load times. Consider"
+                "refactoring this content into smaller, more manageable components. Utilize server-side"
+                "rendering for large text blocks or move them to a separate file to enhance performance and SEO effectiveness.";
     }
     return "";
 }

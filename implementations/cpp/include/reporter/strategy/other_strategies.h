@@ -11,9 +11,15 @@
 class WindowStrategy : public CommentStrategyInterface {
     public:   
         std::string CommentText(const AnalysisReport &analysisReport, const std::string &javascriptTokenValue) const override {        
-            const std::string text1 = "Consider refactoring " + javascriptTokenValue + " Large file detected";
-            const std::string text2 = "No use client detected, consider refactoring " + 
-                javascriptTokenValue + " or add 'use client' to make this file client side";
+            const std::string text1 = "Large file detected in '" + javascriptTokenValue + "'. Consider splitting this file into smaller,"
+                                        "modular components or utilizing lazy loading with dynamic imports. This approach" 
+                                        "can enhance performance, reduce initial load time, and improve maintainability.";
+
+            const std::string text2 = "No 'use client' directive detected in '" + 
+                javascriptTokenValue + "'. If this file includes client-side interactions" 
+                                    "or manipulates the DOM, consider adding 'use client' for explicit client-side rendering." 
+                                    "This can optimize server-side rendering and improve overall performance.";
+
             
             bool specificCondition = analysisReport.GetDetectionFlag(CLIENT::WINDOW);
             std::string returnText = ReturnMessage(text1, text2, specificCondition, analysisReport);
@@ -41,9 +47,14 @@ class WindowStrategy : public CommentStrategyInterface {
 class DocumentStrategy : public CommentStrategyInterface {
     public:   
         std::string CommentText(const AnalysisReport &analysisReport, const std::string &javascriptTokenValue) const override {        
-            const std::string text1 = "Consider refactoring " + javascriptTokenValue + " Large file detected";
-            const std::string text2 = "No use client detected, consider refactoring " + 
-                javascriptTokenValue + " or add 'use client' to make this file client side";
+            const std::string text1 = "Large file detected in '" + javascriptTokenValue + "'. Consider splitting this file into smaller,"
+                                        "modular components or utilizing lazy loading with dynamic imports. This approach" 
+                                        "can enhance performance, reduce initial load time, and improve maintainability.";
+
+            const std::string text2 = "No 'use client' directive detected in '" + 
+                javascriptTokenValue + "'. If this file includes client-side interactions" 
+                                    "or manipulates the DOM, consider adding 'use client' for explicit client-side rendering." 
+                                    "This can optimize server-side rendering and improve overall performance.";
             
             bool specificCondition = analysisReport.GetDetectionFlag(CLIENT::DOCUMENT);
             std::string returnText = ReturnMessage(text1, text2, specificCondition, analysisReport);
@@ -73,9 +84,14 @@ class DynamicStrategy : public CommentStrategyInterface {
     public:
         std::string CommentText(const AnalysisReport &analysisReport, const std::string &javascriptTokenValue) const override {   
      
-            const std::string text1 = "Consider refactoring " + javascriptTokenValue + " Large file detected";
-            const std::string text2 = "No use client detected, consider refactoring " + 
-                javascriptTokenValue + " or add 'use client' to make this file client side";
+             const std::string text1 = "Large file detected in '" + javascriptTokenValue + "'. Consider splitting this file into smaller,"
+                                        "modular components or utilizing lazy loading with dynamic imports. This approach" 
+                                        "can enhance performance, reduce initial load time, and improve maintainability.";
+
+            const std::string text2 = "No 'use client' directive detected in '" + 
+                javascriptTokenValue + "'. If this file includes client-side interactions" 
+                                    "or manipulates the DOM, consider adding 'use client' for explicit client-side rendering." 
+                                    "This can optimize server-side rendering and improve overall performance.";
             
             bool specificCondition = analysisReport.GetDetectionFlag(CLIENT::DYNAMIC); 
             std::string returnText = ReturnMessage(text1, text2, specificCondition, analysisReport);
@@ -104,9 +120,14 @@ class LocalStorageStrategy : public CommentStrategyInterface {
     public:
         std::string CommentText(const AnalysisReport &analysisReport, const std::string &javascriptTokenValue) const override {        
             
-            const std::string text1 = "Consider refactoring " + javascriptTokenValue + " Large file detected";
-            const std::string text2 = "No use client detected, consider refactoring " + 
-                javascriptTokenValue + " or add 'use client' to make this file client side";
+            const std::string text1 = "Large file detected in '" + javascriptTokenValue + "'. Consider splitting this file into smaller,"
+                                        "modular components or utilizing lazy loading with dynamic imports. This approach" 
+                                        "can enhance performance, reduce initial load time, and improve maintainability.";
+
+            const std::string text2 = "No 'use client' directive detected in '" + 
+                javascriptTokenValue + "'. If this file includes client-side interactions" 
+                                    "or manipulates the DOM, consider adding 'use client' for explicit client-side rendering." 
+                                    "This can optimize server-side rendering and improve overall performance.";
             
             bool specificCondition = analysisReport.GetDetectionFlag(CLIENT::LOCAL); 
             std::string returnText = ReturnMessage(text1, text2, specificCondition, analysisReport);
@@ -136,10 +157,15 @@ class LocalStorageStrategy : public CommentStrategyInterface {
 class RouterStrategy : public CommentStrategyInterface {
     public:
         std::string CommentText(const AnalysisReport &analysisReport, const std::string &javascriptTokenValue) const override {        
-            
-            const std::string text1 = "Consider refactoring " + javascriptTokenValue + " Large file detected";
-            const std::string text2 = "No use client detected, consider refactoring " + 
-                javascriptTokenValue + " or add 'use client' to make this file client side";
+        
+            const std::string text1 = "Large file detected in '" + javascriptTokenValue + "'. Consider splitting this file into smaller,"
+                                        "modular components or utilizing lazy loading with dynamic imports. This approach" 
+                                        "can enhance performance, reduce initial load time, and improve maintainability.";
+
+            const std::string text2 = "No 'use client' directive detected in '" + 
+                javascriptTokenValue + "'. If this file includes client-side interactions" 
+                                    "or manipulates the DOM, consider adding 'use client' for explicit client-side rendering." 
+                                    "This can optimize server-side rendering and improve overall performance.";
             
             bool specificCondition = analysisReport.GetDetectionFlag(CLIENT::ROUTER); 
             std::string returnText = ReturnMessage(text1, text2, specificCondition, analysisReport);
@@ -169,9 +195,14 @@ class EventStrategy : public CommentStrategyInterface {
     public:
         std::string CommentText(const AnalysisReport &analysisReport, const std::string &javascriptTokenValue) const override {        
             
-            const std::string text1 = "Consider refactoring " + javascriptTokenValue + " Large file detected";
-            const std::string text2 = "No use client detected, consider refactoring " + 
-                javascriptTokenValue + " or add 'use client' to make this file client side";
+            const std::string text1 = "Large file detected in '" + javascriptTokenValue + "'. Consider splitting this file into smaller,"
+                                        "modular components or utilizing lazy loading with dynamic imports. This approach" 
+                                        "can enhance performance, reduce initial load time, and improve maintainability.";
+
+            const std::string text2 = "No 'use client' directive detected in '" + 
+                javascriptTokenValue + "'. If this file includes client-side interactions" 
+                                    "or manipulates the DOM, consider adding 'use client' for explicit client-side rendering." 
+                                    "This can optimize server-side rendering and improve overall performance.";
             
             bool specificCondition = analysisReport.GetDetectionFlag(CLIENT::EVENT);
             std::string returnText = ReturnMessage(text1, text2, specificCondition, analysisReport);
@@ -202,9 +233,14 @@ class ButtonStrategy : public CommentStrategyInterface {
     public:
         std::string CommentText(const AnalysisReport &analysisReport, const std::string &javascriptTokenValue) const override {        
             
-            const std::string text1 = "Consider refactoring " + javascriptTokenValue + " Large file detected";
-            const std::string text2 = "No use client detected, consider refactoring " + 
-                javascriptTokenValue + " or add 'use client' to make this file client side";
+            const std::string text1 = "Large file detected in '" + javascriptTokenValue + "'. Consider splitting this file into smaller,"
+                                        "modular components or utilizing lazy loading with dynamic imports. This approach" 
+                                        "can enhance performance, reduce initial load time, and improve maintainability.";
+
+            const std::string text2 = "No 'use client' directive detected in '" + 
+                javascriptTokenValue + "'. If this file includes client-side interactions" 
+                                    "or manipulates the DOM, consider adding 'use client' for explicit client-side rendering." 
+                                    "This can optimize server-side rendering and improve overall performance.";
             
             bool specificCondition = analysisReport.GetDetectionFlag(CLIENT::BUTTON);
             std::string returnText = ReturnMessage(text1, text2, specificCondition, analysisReport);

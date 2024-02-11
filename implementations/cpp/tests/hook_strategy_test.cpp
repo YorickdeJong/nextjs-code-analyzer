@@ -23,23 +23,28 @@ protected:
     }
 
     std::string GetExpectedText1() {
-        return "Consider refactoring " + javascriptTokenValue + " Large file detected";
+        return "Large file detected in '" + javascriptTokenValue + "'. Consider breaking down" 
+                                "this file into smaller, more manageable components or using"
+                                "dynamic imports to optimize performance and code maintainability.";
     }
 
     std::string GetExpectedText2() {
-        return "No use client detected, consider refactoring " + 
-               javascriptTokenValue + " or add 'use client' to make this file client side";
+        return "No 'use client' detected in '" + 
+                javascriptTokenValue + "'. If this file contains client-side specific code," 
+                "consider adding 'use client' for clearer separation of client and server-side" 
+                "code, enhancing code organization and performance.";
     }
 
     std::string GetExpectedTextUseEffect() {
-        return "If you are using an async await fetch in your useEffect, "
-               "consider making this component server side and make this component async. Example: "
-               "async function Component() {"
-               "    const var = await fetchFunction();"
-               "    return ("
-               "        <div></div>"
-               "    );"
-               "}  \n";
+        return "Detected 'useEffect' with async operations. For optimal performance and better handling of asynchronous" 
+        "data fetching, consider moving this logic to a server-side function or using Next.js's async function <ComponentName>."
+        "This can improve data loading efficiency and reduce client-side rendering delays.\n\nExample of server-side async function:\n  "
+            "async function Component() {\n"
+            "    const data = await fetchFunction();\n"
+            "    return (\n"
+            "        <div>{data}</div>\n"
+            "    );\n"
+            "}\n";
     }
 };
 
@@ -57,23 +62,28 @@ protected:
     }
 
     std::string GetExpectedText1() {
-        return "Consider refactoring " + javascriptTokenValue + " Large file detected";
-    }
+        return  "Large file detected in '" + javascriptTokenValue + "'. Consider breaking down" 
+                "this file into smaller, more manageable components or using"
+                "dynamic imports to optimize performance and code maintainability.";
+}
 
     std::string GetExpectedText2() {
-        return "No use client detected, consider refactoring " + 
-               javascriptTokenValue + " or add 'use client' to make this file client side";
+        return  "No 'use client' detected in '" + 
+    javascriptTokenValue + "'. If this file contains client-side specific code," 
+    "consider adding 'use client' for clearer separation of client and server-side" 
+    "code, enhancing code organization and performance.";
     }
 
     std::string GetExpectedTextUseEffect() {
-        return "If you are using an async await fetch in your useEffect, "
-               "consider making this component server side and make this component async. Example: "
-               "async function Component() {"
-               "    const var = await fetchFunction();"
-               "    return ("
-               "        <div></div>"
-               "    );"
-               "}  \n";
+        return "Detected 'useEffect' with async operations. For optimal performance and better handling of asynchronous" 
+        "data fetching, consider moving this logic to a server-side function or using Next.js's async function <ComponentName>."
+        "This can improve data loading efficiency and reduce client-side rendering delays.\n\nExample of server-side async function:\n  "
+            "async function Component() {\n"
+            "    const data = await fetchFunction();\n"
+            "    return (\n"
+            "        <div>{data}</div>\n"
+            "    );\n"
+            "}\n";
     }
 };
 

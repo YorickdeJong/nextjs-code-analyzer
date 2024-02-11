@@ -18,11 +18,21 @@ test('check if parsed data is correctly commented', () => { // Correct syntax fo
     console.log('commentValue', commentValue)
 
     const expectations = [
-        ["Large file detected! Consider refactoring 'use client' into a smaller file \n" + "Client side file detected with many words. Consider refactoring for better SEO score \n", "use client"],
-        ["Consider refactoring useState Large file detected \n", "useState"], // Removed extraneous characters
-        ["Consider refactoring useState Large file detected \n", "useState"],
-        ['Consider refactoring useEffect Large file detected \n' +
-        'If you are using an async await fetch in your useEffect, consider making this component server side and make this component async. Example: async function Component() {    const var = await fetchFunction();    return (        <div></div>    );}  \n', "useEffect"
+        ["Large client-side file detected! Consider splitting the current 'use client' fileinto smaller modules. This can improve performance by reducing load times and optimizing resource usage.Review and refactor variables and instances where feasible.\n" +
+        ' \n' +
+        'Client-side file with a high word count detected. Large amounts of textcan negatively impact SEO and user experience. Consider breaking down the text into smaller,more manageable components, or using server-side rendering for large text elements. \n', "use client"],
+        ["Large file detected in 'useState'. Consider breaking downthis file into smaller, more manageable components or usingdynamic imports to optimize performance and code maintainability. \n", "useState"], // Removed extraneous characters
+        ["Large file detected in 'useState'. Consider breaking downthis file into smaller, more manageable components or usingdynamic imports to optimize performance and code maintainability. \n", "useState"],
+        ["Large file detected in 'useEffect'. Consider breaking downthis file into smaller, more manageable components or usingdynamic imports to optimize performance and code maintainability. \n" +
+        "Detected 'useEffect' with async operations. For optimal performance and better handling of asynchronousdata fetching, consider moving this logic to a server-side function or using Next.js's async function <ComponentName>.This can improve data loading efficiency and reduce client-side rendering delays.\n" +
+        '\n' +
+        'Example of server-side async function:\n' +
+        '  async function Component() {\n' +
+        '    const data = await fetchFunction();\n' +
+        '    return (\n' +
+        '        <div>{data}</div>\n' +
+        '    );\n' +
+        '}\n', "useEffect"
         ]
     ];
     

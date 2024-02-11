@@ -25,7 +25,9 @@ protected:
     }
 
     std::string LargeFileDetected() {
-        return "Large file detected! Consider refactoring 'use client' into a smaller file";
+        return "Large client-side file detected! Consider splitting the current 'use client' file" 
+        "into smaller modules. This can improve performance by reducing load times and optimizing resource usage."
+        "Review and refactor variables and instances where feasible.\n";
     }
 
     std::string EmptyText() {
@@ -33,11 +35,15 @@ protected:
     }
 
     std::string GetManyWords() {
-        return "Client side file detected with many words. Consider refactoring for better SEO score \n";
+        return "Client-side file with a high word count detected. Large amounts of text"
+        "can negatively impact SEO and user experience. Consider breaking down the text into smaller," 
+        "more manageable components, or using server-side rendering for large text elements. \n";
     }
 
     std::string RemoveClient() {
-        return "Consider removing use client from this file as no client side components have been detected \n";
+        return  "Unnecessary use of 'use client' detected. No client-side components or dependencies`"
+        "are identified in this file. Removing 'use client' can streamline your"
+        "code and improve server-side rendering efficiency.\n";
     }
 
 
