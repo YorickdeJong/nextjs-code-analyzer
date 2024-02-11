@@ -37,8 +37,15 @@ jobs:
     - name: Build C++ Adpm
       run: |
         npx cmake-js build -j8 -d 'implementations/cpp'
+        mkdir -p implementations/typescript/nextjs-code-analyzer-extension/out/cpp_build/
         cp implementations/cpp/build/Release/NextJS_Analyser.node implementations/typescript/nextjs-code-analyzer-extension/out/cpp_build/
     
+    - name: Upload C++ Addon artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: cpp-addon-artifact
+        path: implementations/typescript/nextjs-code-analyzer-extension/out/cpp_build/NextJS_Analyser.node
+
     - name: C++ Tests
       run: |
         cd implementations/cpp/build
@@ -66,6 +73,13 @@ jobs:
       run: npm install
       working-directory: ./implementations/typescript
 
+    - name: Download C++ Addon artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: cpp-addon-artifact
+        path: implementations/typescript/nextjs-code-analyzer-extension/out/cpp_build/
+
+        
     # Build the main TypeScript project
     - name: Build TypeScript project
       run: npx tsc -p ./src
