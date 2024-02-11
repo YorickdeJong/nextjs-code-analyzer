@@ -3,8 +3,8 @@ import { CodeAnalyzer } from "../code_analyser";
 import * as path from "path";
 
 const basePath = process.cwd();
-const addonPath = path.join(basePath, './implementations/cpp/build/Release/NextJS_Analyser.node');
-const filePath = path.join(basePath, './implementations/typescript/src/tests/test_data_1.js');
+const addonPath = path.join(basePath, 'implementations', 'typescript', 'nextjs-code-analyzer-extension', 'out', 'cpp_build', 'NextJS_Analyser.node');
+const filePath = path.join(basePath, 'implementations', 'typescript', 'src', 'test_data', 'test_data_1.js');
 
 test('check if parsed data is correctly commented', () => { // Correct syntax for arrow function
     const analyzer = new CodeAnalyzer(addonPath); // Correct instantiation of the class
@@ -13,7 +13,9 @@ test('check if parsed data is correctly commented', () => { // Correct syntax fo
     let commentValue: [string, string][] = [];
     analyzer.getTokens().map((token: any) => {
         commentValue.push([token.comment.value, token.value]); 
-    })
+    })  
+
+    console.log('commentValue', commentValue)
 
     const expectations = [
         ["Large file detected! Consider refactoring 'use client' into a smaller file \n" + "Client side file detected with many words. Consider refactoring for better SEO score \n", "use client"],

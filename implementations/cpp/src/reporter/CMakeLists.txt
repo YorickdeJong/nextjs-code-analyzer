@@ -8,6 +8,7 @@ add_library(reporter
     chain/comment_strategy_chain_builder.cpp
 
     strategy/hook_strategy.cpp
+    strategy/html_strategy.cpp
     strategy/use_client_strategy.cpp
 )
 

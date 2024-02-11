@@ -1,8 +1,9 @@
 {
   "name": "nextjs-code-analyzer",
-  "displayName": "nextjs-code-analyzer",
+  "displayName": "NextJS Code Analyzer",
   "description": "Code analyzer and optimizer for nextjs",
-  "version": "0.0.1",
+  "version": "0.0.2",
+  "publisher": "BlueWaterfall",
   "engines": {
     "vscode": "^1.72.0"
   },
@@ -10,17 +11,20 @@
     "Other"
   ],
   "activationEvents": [
+    "workspaceContains:next.config.js",
+    "onCommand:nextjsCodeAnalyzer.nextjs"
   ],
   "main": "./out/index.js",
+  "icon": "images/BlueWaterfall.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YorickdeJong/nextjs-code-analyzer"
+  },
   "contributes": {
     "commands": [
       {
-        "command": "nextjs-code-analyzer.nextjs",
+        "command": "nextjsCodeAnalyzer.nextjs",
         "title": "NEXTJS"
-      },
-      {
-        "command": "nextjs-code-analyzer.toggleIgnoreWarnings",
-        "title": "Toggle Ignore Warnings"
       }
     ],
     "configuration": {
@@ -36,18 +40,26 @@
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
+    "webpack": "webpack --mode none",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
     "test": "vscode-test"
   },
+  "dependencies": {
+    "@babel/core": "^7.23.9",
+    "@babel/parser": "^7.23.9"
+  },
   "devDependencies": {
     "@types/node": "18.x",
     "@typescript-eslint/eslint-plugin": "^6.19.1",
     "@typescript-eslint/parser": "^6.19.1",
     "eslint": "^8.56.0",
+    "ts-loader": "^9.5.1",
     "typescript": "^5.3.3",
-    "vscode": "^1.1.37"
+    "vscode": "^1.1.37",
+    "webpack": "^5.90.1",
+    "webpack-cli": "^5.1.4"
   }
 }

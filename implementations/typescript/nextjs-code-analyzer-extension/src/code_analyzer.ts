@@ -6,16 +6,23 @@ const path = require('path');
 class CodeAnalyzer {
     
     public constructor() {
-      this.addon = require(this.addonPath);
+      try {
+        console.log('dir_name', this.addonPath)
+
+        this.addon = require(this.addonPath);
+      }
+      catch (err) {
+        console.log('err', err)
+      }
     }
     public analyzeCode(code: string): vscode.Diagnostic[] {
         const ast = this.passSourceCode(code)
         
         const astJson = JSON.stringify(ast, null, 2);
-    
+      
         // Get analysis results from your addon
         const analysisResults = this.addon.CreateReport(astJson);
-    
+      
         return this.analysisReport(analysisResults)
     }
 
@@ -56,7 +63,7 @@ class CodeAnalyzer {
         
     }
     private addon: any
-    private addonPath = path.join(__dirname, '..', '..', '..', '..', '..', 'implementations', 'cpp', 'build', 'Release', 'NextJS_Analyser.node');
+    private addonPath = path.join(__dirname, 'cpp_build', 'NextJS_Analyser.node');
 }
 
 

@@ -1,10 +1,16 @@
 {
-  "name": "nextjs_code_analyzer",
-  "version": "1.0.0",
-  "description": "nextjs_code_analyzer",
-  "main": "index.js",
+  "name": "nextjs-code-analyzer",
+  "displayName": "NextJS Code Analyzer",
+  "description": "Code analyzer and optimizer for nextjs",
+  "version": "0.0.1",
+  "publisher": "BlueWaterfal",
+  "main": "./out/index.js",
   "scripts": {
     "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YorickdeJong/nextjs-code-analyzer"
   },
   "author": "Yorick de Jong",
   "license": "ISC",

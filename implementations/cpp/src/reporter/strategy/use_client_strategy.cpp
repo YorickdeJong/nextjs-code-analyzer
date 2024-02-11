@@ -34,7 +34,8 @@ bool UseClientStrategy::ExecuteStrategy(const AnalysisReport &analysisReport,
     const bool isUseClientPresent = analysisReport.GetDetectionFlag(CLIENT::USE_CLIENT);
 
     if (isUseClientPresent && javascriptTokenValue == CLIENT_DESCRIPTIONS::USE_CLIENT_DESC) {
-         // Generate and assign the comment for this token
+        
+        // Generate and assign the comment for this token
         comments = CommentText(analysisReport, javascriptTokenValue);
         return false; // Stop further processing as a comment has been assigned.
     }

@@ -1,20 +1,27 @@
 {
-  "name": "nextjs_code_analyzer",
-  "version": "1.0.0",
-  "description": "nextjs_code_analyzer",
+  "name": "nextjs-code-analyzer",
+  "displayName": "NextJS Code Analyzer",
+  "description": "Code analyzer and optimizer for nextjs",
+  "version": "0.0.1",
   "main": "index.js",
+  "publisher": "BlueWaterfal",
   "scripts": {
     "test:cpp": "cd implementations/cpp/build/tests && ctest",
     "test:ts": "jest",
     "test": "npm run test:cpp && npm run test:ts",
     "parse-data": "cd implementations/typescript/src/out && node index.js",
-    "install:ts": "npm install && cd implementations/typescript && cd extensions/nextjs-code-analyzer && npm install && npm install",
+    "install:ts": "npm install && cd implementations/typescript && cd nextjs-code-analyzer-extension && npm install && npm install",
     "install:cpp": "cmake-js install -d 'implementations/cpp'",
     "install-packages": "npm run install:ts && npm run install:cpp",
     "build:ts": "cd implementations/typescript/src && npx tsc",
-    "build:cpp": "cmake-js build -j8 -d 'implementations/cpp'",
-    "build": "npm run build:ts && npm run build:cpp",
+    "build:extension": "cd implementations/typescript/nextjs-code-analyzer-extension && npx tsc -p ./",
+    "build:cpp": "cmake-js build -j8 -d 'implementations/cpp' && cp implementations/cpp/build/Release/NextJS_Analyser.node implementations/typescript/nextjs-code-analyzer-extension/out/cpp_build/",
+    "build": "npm run build:ts && npm run build:cpp && npm run build:extension",
     "debug-build": "cmake-js build -g -d 'implementations/cpp' --debug"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YorickdeJong/nextjs-code-analyzer"
   },
   "author": "Yorick de Jong",
   "license": "ISC",

@@ -30,5 +30,5 @@ class HtmlStrategy : public CommentStrategyInterface {
          * @return False if a comment is generated (stopping further strategy processing), true otherwise.
          */
         bool ExecuteStrategy(const AnalysisReport &analysisReport, 
-            std::string &comments, const std::string &javascriptTokenValue) const;
+            std::string &comments, const std::string &javascriptTokenValue) const override;
 };
