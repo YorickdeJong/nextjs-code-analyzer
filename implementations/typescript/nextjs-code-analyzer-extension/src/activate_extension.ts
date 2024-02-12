@@ -7,13 +7,10 @@ import { existsSync } from 'fs';
 export class ActivateExtension {
     private codeAnalyzer: CodeAnalyzer;
     private diagnosticManager: DiagnosticManager;
-    private extensionEnabled: boolean;
-
 
     constructor(context: vscode.ExtensionContext) {
         this.codeAnalyzer = new CodeAnalyzer();
         this.diagnosticManager = new DiagnosticManager();
-        this.extensionEnabled = context.globalState.get('extensionEnabled', true);
 
         this.registerEvents(context);
     }

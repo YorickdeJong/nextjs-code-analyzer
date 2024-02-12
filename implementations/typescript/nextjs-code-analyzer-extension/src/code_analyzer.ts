@@ -64,7 +64,7 @@ class CodeAnalyzer {
         
     }
     private addon: any
-    private addonPath = path.join(__dirname, 'cpp_build', 'NextJS_Analyser.node');
+    private addonPath = path.join(__dirname, '..','out','cpp_build', 'NextJS_Analyser.node');
 }
 
 
