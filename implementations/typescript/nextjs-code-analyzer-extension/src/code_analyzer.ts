@@ -7,8 +7,8 @@ class CodeAnalyzer {
     
     public constructor() {
       try {
+        this.addonPath = path.join(__dirname, '..','out','cpp_build', 'NextJS_Analyser.node');
         console.log('dir_name', this.addonPath)
-
         this.addon = require(this.addonPath);
       }
       catch (err) {
@@ -64,7 +64,7 @@ class CodeAnalyzer {
         
     }
     private addon: any
-    private addonPath = path.join(__dirname, '..','out','cpp_build', 'NextJS_Analyser.node');
+    private addonPath: any
 }
 
 
