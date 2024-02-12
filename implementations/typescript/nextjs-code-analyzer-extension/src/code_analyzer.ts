@@ -16,13 +16,14 @@ class CodeAnalyzer {
       }
     }
     public analyzeCode(code: string): vscode.Diagnostic[] {
+        console.log('dir_name', this.addonPath)
         const ast = this.passSourceCode(code)
         
         const astJson = JSON.stringify(ast, null, 2);
       
         // Get analysis results from your addon
         const analysisResults = this.addon.CreateReport(astJson);
-      
+        console.log('analysisResults', analysisResults)
         return this.analysisReport(analysisResults)
     }
 

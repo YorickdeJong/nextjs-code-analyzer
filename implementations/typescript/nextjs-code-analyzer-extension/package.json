@@ -2,7 +2,7 @@
   "name": "nextjs-code-analyzer",
   "displayName": "NextJS Code Analyzer",
   "description": "Code analyzer and optimizer for nextjs",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "publisher": "BlueWaterfall",
   "engines": {
     "vscode": "^1.72.0"
@@ -11,8 +11,7 @@
     "Other"
   ],
   "activationEvents": [
-    "workspaceContains:next.config.js",
-    "onCommand:nextjsCodeAnalyzer.nextjs"
+    "workspaceContains:next.config.js"
   ],
   "main": "./out/index.js",
   "icon": "images/BlueWaterfall.png",

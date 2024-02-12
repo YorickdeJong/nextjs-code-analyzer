@@ -51,7 +51,7 @@ describe('Addon Tests', () => {
 
     console.log('Result', analysisResults.tokens[0].comment.value)
 
-    test('should cr', () => {
+    test('should be defined', () => {
         expect(analysisResults).toBeDefined();
     });
 
