@@ -40,5 +40,5 @@ jobs:
 
 
     - name: Build VS Code Extension
-      run: run compile
+      run: npm run compile
       working-directory: ./implementations/typescript/nextjs-code-analyzer-extension

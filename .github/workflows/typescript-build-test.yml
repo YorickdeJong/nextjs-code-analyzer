@@ -34,5 +34,5 @@ jobs:
       working-directory: ./implementations/typescript/src
 
     - name: Build TypeScript project
-      run: npm run compile
+      run: npm run build
       working-directory: ./implementations/typescript/src
