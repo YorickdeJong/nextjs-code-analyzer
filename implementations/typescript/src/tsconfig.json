@@ -7,6 +7,7 @@
   ],
   "compilerOptions": {
 		"module": "Node16",
+    "types": ["jest", "node", "@types/jest"],
 		"target": "ES2022",
     "outDir": "out",
 		"lib": [
