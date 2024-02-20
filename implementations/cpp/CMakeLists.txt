@@ -21,7 +21,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "" SUFFIX ".node")
 
 # Use `execute_process` to get the path to the Node.js N-API includes
 execute_process(COMMAND node -p "require('node-addon-api').include"
-                WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/../typescript
+                WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/../typescript/src
                 OUTPUT_VARIABLE NODE_ADDON_API_DIR)
 
 # if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
