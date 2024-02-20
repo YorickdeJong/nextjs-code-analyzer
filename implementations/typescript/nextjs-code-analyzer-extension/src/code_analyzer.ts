@@ -10,7 +10,7 @@ class CodeAnalyzer {
     
     public constructor() {
       try {
-          // Check if running in production environment.
+          // Check if running in production environment
           if (process.env.NODE_ENV === 'production') {
             // In production, select the binary based on OS
             switch(os.platform()) {

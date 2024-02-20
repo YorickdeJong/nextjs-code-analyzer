@@ -24,7 +24,7 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: '18'
-        
+
     - name: Install root dependencies
       run: npm install
       working-directory: ./
@@ -38,4 +38,10 @@ jobs:
 
     - name: Build VS Code Extension
       run: npm run compile
+      working-directory: ./implementations/typescript/nextjs-code-analyzer-extension
+    
+    - name: Build and Test VS Code Extension
+      run: npm run test
+      env:
+        NODE_ENV: production
       working-directory: ./implementations/typescript/nextjs-code-analyzer-extension
