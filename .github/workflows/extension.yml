@@ -24,10 +24,6 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: '18'
-
-    - name: Set NODE_ENV to production
-      run: echo "NODE_ENV=production" >> $GITHUB_ENV
-
     - name: Install root dependencies
       run: npm install
       working-directory: ./
