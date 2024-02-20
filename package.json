@@ -15,7 +15,7 @@
     "install:extension": "cd implementations/typescript/nextjs-code-analyzer-extension && npm install",
     "install:cpp": "cmake-js install -d 'implementations/cpp'",
     "install:all": "npm run install:ts && npm run install:cpp && npm run install:extension",
-    "build:ts": "cd implementations/typescript/src && ./node_modules/.bin/tsc -p ./",
+    "build:ts": "cd implementations/typescript/src && tsc -p ./",
     "build:extension": "cd implemen/private/var/folders/lg/q8nv3hnj355dw40g4rg9l4j40000gn/T/AppTranslocation/05BC0C45-96AC-49FA-882F-D6287C1B44E1/d/Visual Studio Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.htmltations/typescript/nextjs-code-analyzer-extension && npx tsc -p ./",
     "build:cpp": "cmake-js build -j8 -d 'implementations/cpp' && cp implementations/cpp/build/Release/NextJS_Analyser.node implementations/typescript/nextjs-code-analyzer-extension/out/cpp_build/",
     "build": "npm run build:ts && npm run build:extension && npm run build:cpp",
