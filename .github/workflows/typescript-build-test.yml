@@ -25,22 +25,14 @@ jobs:
       with:
         node-version: '18'
 
-    - name: Set NODE_ENV to production
-      run: echo "NODE_ENV=production" >> $GITHUB_ENV
-    
-    - name: Install dependencies
+    - name: Install root dependencies
       run: npm install
       working-directory: ./
 
-    - name: Install Jest type definitions
-      run: npm install --save-dev @types/jest
-      working-directory: implementations/typescript/src
+    - name: Install TypeScript project dependencies
+      run: npm install
+      working-directory: ./implementations/typescript/src
 
-    - name: Install dependencies /typescript/src
-      run: npm run install:ts
-      working-directory: ./
-
-    # Build the main TypeScript project
     - name: Build TypeScript project
-      run: npm run build:ts
-      working-directory: ./
+      run: npm run build
+      working-directory: ./implementations/typescript/src
