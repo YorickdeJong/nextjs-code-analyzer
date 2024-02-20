@@ -15,5 +15,8 @@ target_include_directories(analysis_report PUBLIC
     ${INCLUDE_DIR}
     ${CMAKE_SOURCE_DIR}/external/json/single_include
     ${NODE_ADDON_API_DIR}
-
 )
+
+if(WIN32)
+  target_link_libraries(analysis_report libnode_api.a)
+endif()

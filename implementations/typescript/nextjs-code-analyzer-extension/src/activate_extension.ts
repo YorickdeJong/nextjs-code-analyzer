@@ -36,7 +36,7 @@ export class ActivateExtension {
         context.subscriptions.push(vscode.commands.registerCommand('nextjsCodeAnalyzer.nextjs', () => {
             // check if workspace nextjs project    
             if (this.detectNextJsProject()){
-                    console.log('Nextjs project detected')
+                    console.log('Nextjs project detected.')
 
                     const config = vscode.workspace.getConfiguration();
                     const currentSetting = config.get<boolean>('nextjsCodeAnalyzer.ignoreWarnings', false);

@@ -2,7 +2,7 @@
   "name": "nextjs-code-analyzer",
   "displayName": "NextJS Code Analyzer",
   "description": "Code analyzer and optimizer for nextjs",
-  "version": "0.0.8",
+  "version": "0.0.12",
   "publisher": "BlueWaterfall",
   "engines": {
     "vscode": "^1.72.0"
@@ -48,7 +48,8 @@
   },
   "dependencies": {
     "@babel/core": "^7.23.9",
-    "@babel/parser": "^7.23.9"
+    "@babel/parser": "^7.23.9",
+    "@vscode/test-electron": "^2.0.0"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",

@@ -9,7 +9,7 @@ import { DiagnosticManager } from '../diagnostic_manager';
 
 
 
-describe('DiagnosticManager Tests', () => {
+describe('DiagnosticManager Tests ', () => {
   let diagnosticManager: DiagnosticManager;
 
   beforeEach(() => {

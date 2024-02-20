@@ -6,6 +6,7 @@
     "nextjs-code-analyzer-extension"
   ],
   "compilerOptions": {
+    "types": ["node", "jest"],
     "module": "commonjs",
     "target": "es6",
     "outDir": "out",
@@ -15,4 +16,5 @@
     "rootDir": "./",
     "strict": true
   },
+  "include": ["./**/*.ts"],
 }

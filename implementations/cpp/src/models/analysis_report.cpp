@@ -81,6 +81,5 @@ void AnalysisReport::InitializeDetectionFlags() {
     m_DetectionFlags[CLIENT::EVENT] = std::make_pair(false, CLIENT_DESCRIPTIONS::EVENT_DESC);
     m_DetectionFlags[CLIENT::ROUTER] = std::make_pair(false, CLIENT_DESCRIPTIONS::ROUTER_DESC);
     m_DetectionFlags[CLIENT::LOCAL] = std::make_pair(false, CLIENT_DESCRIPTIONS::LOCAL_DESC);
-    m_DetectionFlags[CLIENT::DYNAMIC] = std::make_pair(false, CLIENT_DESCRIPTIONS::DYNAMIC_DESC);
     m_DetectionFlags[CLIENT::HTML] = std::make_pair(false, CLIENT_DESCRIPTIONS::HTML_DESC);
 }

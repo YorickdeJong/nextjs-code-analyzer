@@ -11,8 +11,8 @@
     "test:extension": "cd implementations/typescript/nextjs-code-analyzer-extension && npm run test",
     "test": "npm run test:cpp && npm run test:ts && npm run test:extension",
     "parse-data": "cd implementations/typescript/src/out && node index.js",
-    "install:ts": "npm install && cd implementations/typescript && npm install",
-    "install:extension": "cd implementations/typescript/nextjs-code-analyzer-extension && npm install", 
+    "install:ts": "cd implementations/typescript/src && npm install",
+    "install:extension": "cd implementations/typescript/nextjs-code-analyzer-extension && npm install",
     "install:cpp": "cmake-js install -d 'implementations/cpp'",
     "install:all": "npm run install:ts && npm run install:cpp && npm run install:extension",
     "build:ts": "cd implementations/typescript/src && npx tsc -p ./",
@@ -29,6 +29,7 @@
   "license": "ISC",
   "devDependencies": {
     "@types/jest": "^29.5.12",
+    "@types/node": "^20.11.19",
     "cmake-js": "^7.3.0",
     "jest": "^29.7.0",
     "ts-jest": "^29.1.2",

@@ -1,11 +1,33 @@
 import * as babelParser from '@babel/parser';
-const path = require('path');
-const fs = require('fs');
+import * as path from 'path'
+import * as fs from 'fs'
+import * as os from 'os';
+
+const basePath = process.cwd();
 
 class CodeAnalyzer {
 
-  constructor(private addonPath: string) {
-    this.addon = require(addonPath)
+  constructor() {
+    if (process.env.NODE_ENV === 'production') {
+
+      switch(os.platform()) {
+          case 'win32':
+              this.addonPath = path.join(basePath, 'implementations', 'typescript', 'nextjs-code-analyzer-extension', 'out', 'cpp_build', 'NextJS_Analyser_windows.node');
+              break;
+          case 'darwin':
+              this.addonPath = path.join(basePath, 'implementations', 'typescript', 'nextjs-code-analyzer-extension', 'out', 'cpp_build', 'NextJS_Analyser_macOs.node');
+              break;
+          case 'linux':
+              this.addonPath = path.join(basePath, 'implementations', 'typescript', 'nextjs-code-analyzer-extension', 'out', 'cpp_build', 'NextJS_Analyser_ubuntu.node');
+              break;
+          default:
+              throw new Error('Unsupported platform');
+      }
+    } else {
+      // In development, use the generic path (assuming you're developing on one platform)
+      this.addonPath = path.join(basePath, 'implementations', 'typescript', 'nextjs-code-analyzer-extension', 'out', 'cpp_build', 'NextJS_Analyser');
+    }
+    this.addon = require(this.addonPath);
     this.tokens = []
   }
 
@@ -13,17 +35,13 @@ class CodeAnalyzer {
     if (!filePath) {
       throw new Error('File path must be provided!');
     }
-    // Read the source file into an array of lines
+    // Read the source file into an array of lines.
     const sourceCode = this.readFile(filePath);
   
     // Parse the file
     const ast = this.parseSourceCode(sourceCode)
     const astJson = JSON.stringify(ast, null, 2);
-
-    const outputPath = path.join(__dirname, 'log.txt');
-
-    // Write to the file synchronously
-    fs.writeFileSync(outputPath, astJson);    
+  
     this.analysisResults = this.addon.CreateReport(astJson);
 
     // Get analysis results
@@ -35,7 +53,7 @@ class CodeAnalyzer {
     });
 
   
-    // Write the modified lines back to a file (or to a new file)
+    // Write the modified lines back to a file (or to a new file.
     this.writeFile(filePath, sourceCode);
 
   }
@@ -46,6 +64,7 @@ class CodeAnalyzer {
 
 
   private addon: any
+  private addonPath: string
   private analysisResults: any
   private tokens: any[]
 

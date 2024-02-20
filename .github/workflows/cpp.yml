@@ -13,7 +13,7 @@ on:
       - main
 
 jobs:
-  cpp_build:
+  cpp_build_ubuntu:
     runs-on: ubuntu-latest
 
     steps:
@@ -25,7 +25,7 @@ jobs:
     - name: Setup Node.js environment
       uses: actions/setup-node@v2
       with:
-        node-version: '20'
+        node-version: '18'
 
     - name: Install dependencies
       run: |
@@ -38,21 +38,85 @@ jobs:
       run: |
         npx cmake-js build -j8 -d 'implementations/cpp'
         mkdir -p implementations/typescript/nextjs-code-analyzer-extension/out/cpp_build/
-        cp implementations/cpp/build/Release/NextJS_Analyser.node implementations/typescript/nextjs-code-analyzer-extension/out/cpp_build/
+        cp implementations/cpp/build/Release/NextJS_Analyser.node implementations/typescript/nextjs-code-analyzer-extension/out/cpp_build/NextJS_Analyser_ubuntu.node
     
     - name: Upload C++ Addon artifact
       uses: actions/upload-artifact@v2
       with:
-        name: cpp-addon-artifact
-        path: implementations/typescript/nextjs-code-analyzer-extension/out/cpp_build/NextJS_Analyser.node
+        name: cpp-addon-artifact-ubuntu
+        path: implementations/typescript/nextjs-code-analyzer-extension/out/cpp_build/NextJS_Analyser_ubuntu.node
 
     - name: C++ Tests
       run: |
         cd implementations/cpp/build
         ctest 
   
+  # cpp_build_windows:
+  #   runs-on: windows-latest
+  #   steps:
+  #   - name: Checkout repo
+  #     uses: actions/checkout@v2
+  #     with:
+  #       submodules: 'recursive'
+
+  #   - name: Setup Node.js environment
+  #     uses: actions/setup-node@v2
+  #     with:
+  #       node-version: '21.6.1'
+
+  #   - name: Install dependencies (Windows)
+  #     run: |
+  #       npm run install:all
+  #     shell: cmd
+
+  #   - name: Build C++ Addon (Windows)
+  #     run: |
+  #       npx cmake-js build -j8 -d implementations\cpp
+  #       mkdir implementations\typescript\nextjs-code-analyzer-extension\out\cpp_build\
+  #       copy implementations\cpp\build\Release\NextJS_Analyser.node implementations\typescript\nextjs-code-analyzer-extension\out\cpp_build\
+  #     shell: cmd
+
+  #   - name: Upload C++ Addon artifact (Windows)
+  #     uses: actions/upload-artifact@v2
+  #     with:
+  #       name: cpp-addon-artifact-windows
+  #       path: implementations\typescript\nextjs-code-analyzer-extension\out\cpp_build\NextJS_Analyser_windows.node
+    
+  cpp_build_macos:
+    runs-on: macos-latest
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+      with:
+        submodules: 'recursive'
+
+    - name: Setup Node.js environment
+      uses: actions/setup-node@v2
+      with:
+        node-version: '18'
+
+    - name: Install dependencies (macOS)
+      run: |
+        brew install cmake
+        brew install boost
+        npm install
+        npm install --save node-api-headers cmake-js
+        npm install --save node-addon-api
+
+    - name: Build C++ Addon (macOS)
+      run: |
+        npx cmake-js build -j8 -d 'implementations/cpp'
+        mkdir -p implementations/typescript/nextjs-code-analyzer-extension/out/cpp_build/
+        cp implementations/cpp/build/Release/NextJS_Analyser.node implementations/typescript/nextjs-code-analyzer-extension/out/cpp_build/NextJS_Analyser_macOs.node
+    
+    - name: Upload C++ Addon artifact (macOS)
+      uses: actions/upload-artifact@v2
+      with:
+        name: cpp-addon-artifact-macOs
+        path: implementations/typescript/nextjs-code-analyzer-extension/out/cpp_build/NextJS_Analyser_macOs.node
+
   typescript_build_and_test:
-    needs: cpp_build
+    needs: [cpp_build_macos, cpp_build_ubuntu] #
     runs-on: ubuntu-latest
 
     steps:
@@ -62,28 +126,36 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '20'
+        node-version: '18'
+
+    - name: Set NODE_ENV to production
+      run: echo "NODE_ENV=production" >> $GITHUB_ENV
 
     # Install dependencies for the whole TypeScript project
     - name: Install dependencies root
-      run: npm install
+      run: npm run install:all
       working-directory: ./
     
     - name: Install dependencies /typescript
-      run: npm install
-      working-directory: ./implementations/typescript
+      run: npm install:ts
+      working-directory: ./
 
-    - name: Download C++ Addon artifact
+    - name: Download C++ Addon artifact (Ubuntu)
       uses: actions/download-artifact@v2
       with:
-        name: cpp-addon-artifact
+        name: cpp-addon-artifact-ubuntu
         path: implementations/typescript/nextjs-code-analyzer-extension/out/cpp_build/
 
+    - name: Download C++ Addon artifact (macOS)
+      uses: actions/download-artifact@v2
+      with:
+        name: cpp-addon-artifact-macOs
+        path: implementations/typescript/nextjs-code-analyzer-extension/out/cpp_build/
 
     # Build the main TypeScript project
     - name: Build TypeScript project
-      run: npx tsc -p ./src
-      working-directory: ./implementations/typescript
+      run: npm run build:ts
+      working-directory: ./
 
     - name: Test TypeScript project
       run: npm run test:ts
@@ -100,13 +172,28 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '20'
+        node-version: '18'
+
+    - name: Set NODE_ENV to production
+      run: echo "NODE_ENV=production" >> $GITHUB_ENV
+
+    - name: Download C++ Addon artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: cpp-addon-artifact-macOs
+        path: implementations/typescript/nextjs-code-analyzer-extension/out/cpp_build/
 
     # - name: Download C++ Addon artifact
     #   uses: actions/download-artifact@v2
     #   with:
-    #     name: cpp-addon-artifact
+    #     name: cpp-addon-artifact-windows
     #     path: implementations/typescript/nextjs-code-analyzer-extension/out/cpp_build/
+
+    - name: Download C++ Addon artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: cpp-addon-artifact-ubuntu
+        path: implementations/typescript/nextjs-code-analyzer-extension/out/cpp_build/
 
     - name: Build VS Code Extension
       run: |

@@ -24,6 +24,24 @@ execute_process(COMMAND node -p "require('node-addon-api').include"
                 WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/../typescript
                 OUTPUT_VARIABLE NODE_ADDON_API_DIR)
 
+# if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+#     set(NODE_API_DEF_FILE "${PROJECT_SOURCE_DIR}/node_api.def")
+#     set(NODE_API_LIB_FILE "${PROJECT_SOURCE_DIR}/libnode_api.a")
+#     execute_process(
+#         COMMAND dlltool -d ${NODE_API_DEF_FILE} -l ${NODE_API_LIB_FILE}
+#         RESULT_VARIABLE DLLTOOL_RESULT
+#         OUTPUT_VARIABLE DLLTOOL_OUTPUT
+#         ERROR_VARIABLE DLLTOOL_ERROR
+#     )
+
+#     if(NOT DLLTOOL_RESULT EQUAL "0")
+#         message(FATAL_ERROR "dlltool failed: ${DLLTOOL_ERROR}")
+#     endif()
+#     link_directories(${CMAKE_SOURCE_DIR})
+#     target_link_libraries(${PROJECT_NAME} libnode_api.a)
+# endif()
+
+
 # /Users/yorickdejong/nextjs_code_analyzer/implementations/typescript/node_modules/node-addon-api/napi-inl.h
 message("projec dir ${PROJECT_SOURCE_DIR}")
 
@@ -36,7 +54,8 @@ endif()
 string(REPLACE "\n" "" NODE_ADDON_API_DIR ${NODE_ADDON_API_DIR})
 string(REPLACE "\"" "" NODE_ADDON_API_DIR ${NODE_ADDON_API_DIR})
 
-target_include_directories(${PROJECT_NAME} PRIVATE 
+
+target_include_directories(${PROJECT_NAME} PUBLIC 
     ${NODE_ADDON_API_DIR}
 )
 

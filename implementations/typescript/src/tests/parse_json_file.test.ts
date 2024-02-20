@@ -3,11 +3,11 @@ import { CodeAnalyzer } from "../code_analyser";
 import * as path from "path";
 
 const basePath = process.cwd();
-const addonPath = path.join(basePath, 'implementations', 'typescript', 'nextjs-code-analyzer-extension', 'out', 'cpp_build', 'NextJS_Analyser.node');
+
 const filePath = path.join(basePath, 'implementations', 'typescript', 'src', 'test_data', 'test_data_1.js');
 
 test('check if parsed data is correctly commented', () => { // Correct syntax for arrow function
-    const analyzer = new CodeAnalyzer(addonPath); // Correct instantiation of the class
+    const analyzer = new CodeAnalyzer(); // Correct instantiation of the class.
     analyzer.analysisFile(filePath);
 
     let commentValue: [string, string][] = [];

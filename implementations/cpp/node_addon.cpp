@@ -3,6 +3,7 @@
 #include "reporter/reporter.h"
 #include "utils/timer.h"
 
+
 Napi::Value CreateReport(const Napi::CallbackInfo& info) {
 
   {

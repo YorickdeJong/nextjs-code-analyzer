@@ -2,6 +2,8 @@
 
 #include <unordered_set>
 #include <string>
+#include <array>
+
 
 namespace CLIENT {
 
@@ -35,7 +37,6 @@ namespace CLIENT_DESCRIPTIONS {
     const std::string EVENT_DESC = "event";
     const std::string ROUTER_DESC = "router";
     const std::string LOCAL_DESC = "local";
-    const std::string DYNAMIC_DESC = "dynamic";
     const std::string HTML_DESC = "html"; 
  }
 

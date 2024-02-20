@@ -35,7 +35,7 @@ const std::string text2 = "No 'use client' detected in '" +
 
 /**
  * Executes the hook strategy by applying a regular expression to the JavaScript token value to identify hook usage.
- * If a hook is identified, it generates a comment and sets the comments parameter.
+ * If a hook is identified, it generates a comment and sets the comments parameter
  */
 bool HookStrategy::ExecuteStrategy(const AnalysisReport &analysisReport, 
     std::string &comments, const std::string &javascriptTokenValue) const  {

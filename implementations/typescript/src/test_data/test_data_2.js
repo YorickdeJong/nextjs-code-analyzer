@@ -62,7 +62,7 @@ export default function Checkout() {
 
     const handleChange = (e, index, field) => {
 
-      // Handle string values (for paymentMethod updates)
+      // Handle string values (for paymentMethod updates).
       if (typeof e === 'string') {
         setFormData((prevFormData) => ({ ...prevFormData, paymentMethod: e }));
         return;

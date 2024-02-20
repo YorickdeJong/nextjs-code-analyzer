@@ -60,13 +60,12 @@ bool UseClientStrategy::AllvaluesFalse(const AnalysisReport &analysisReport) con
     const bool isButtonPresent = analysisReport.GetDetectionFlag(CLIENT::BUTTON);
     const bool isRouterPresent = analysisReport.GetDetectionFlag(CLIENT::ROUTER);
     const bool isLocalPresent = analysisReport.GetDetectionFlag(CLIENT::LOCAL);
-    const bool isDynamicPresent = analysisReport.GetDetectionFlag(CLIENT::DYNAMIC);
     const bool isEventPresent = analysisReport.GetDetectionFlag(CLIENT::EVENT);
 
     return !(
         isHookPresent || isWindowPresent
         || isDocumentPresent || isButtonPresent 
         || isEventPresent || isRouterPresent 
-        || isLocalPresent || isDynamicPresent 
+        || isLocalPresent 
     );
 }

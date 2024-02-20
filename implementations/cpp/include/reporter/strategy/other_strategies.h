@@ -77,42 +77,6 @@ class DocumentStrategy : public CommentStrategyInterface {
 
 
 /**
- * DynamicStrategy provides commentary based on the analysis of 'dynamic' usage
- * in NextJS JavaScript code.
- */
-class DynamicStrategy : public CommentStrategyInterface {
-    public:
-        std::string CommentText(const AnalysisReport &analysisReport, const std::string &javascriptTokenValue) const override {   
-     
-             const std::string text1 = "Large file detected in '" + javascriptTokenValue + "'. Consider splitting this file into smaller,"
-                                        "modular components or utilizing lazy loading with dynamic imports. This approach" 
-                                        "can enhance performance, reduce initial load time, and improve maintainability.";
-
-            const std::string text2 = "No 'use client' directive detected in '" + 
-                javascriptTokenValue + "'. If this file includes client-side interactions" 
-                                    "or manipulates the DOM, consider adding 'use client' for explicit client-side rendering." 
-                                    "This can optimize server-side rendering and improve overall performance.";
-            
-            bool specificCondition = analysisReport.GetDetectionFlag(CLIENT::DYNAMIC); 
-            std::string returnText = ReturnMessage(text1, text2, specificCondition, analysisReport);
-            return returnText;
-        }
-
-        bool ExecuteStrategy(const AnalysisReport &analysisReport, 
-            std::string &comments, const std::string &javascriptTokenValue) const override {
-                if (javascriptTokenValue == CLIENT_DESCRIPTIONS::DYNAMIC_DESC) {
-
-                    // Generate and assign the comment for this token
-                    comments = CommentText(analysisReport, javascriptTokenValue);
-                    return false; // Stop further processing as a comment has been assigned.
-                }
-
-                // Continue to next strategy
-                return true;
-        }
-};
-
-/**
  * LocalStorageStrategy provides commentary based on the analysis of 'local' usage
  * in NextJS JavaScript code.
  */

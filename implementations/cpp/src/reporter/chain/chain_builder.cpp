@@ -11,14 +11,14 @@ void ChainBuilder::BuildChain() {
     m_Strategies[1] = std::make_unique<HookStrategy>();
     m_Strategies[2] = std::make_unique<WindowStrategy>();
     m_Strategies[3] = std::make_unique<DocumentStrategy>();
-    m_Strategies[4] = std::make_unique<DynamicStrategy>();
-    m_Strategies[5] = std::make_unique<LocalStorageStrategy>();
-    m_Strategies[6] = std::make_unique<RouterStrategy>();
-    m_Strategies[7] = std::make_unique<EventStrategy>();
-    m_Strategies[8] = std::make_unique<ButtonStrategy>();
-    m_Strategies[9] = std::make_unique<HtmlStrategy>();
+    // m_Strategies[4] = std::make_unique<DynamicStrategy>();
+    m_Strategies[4] = std::make_unique<LocalStorageStrategy>();
+    m_Strategies[5] = std::make_unique<RouterStrategy>();
+    m_Strategies[6] = std::make_unique<EventStrategy>();
+    m_Strategies[7] = std::make_unique<ButtonStrategy>();
+    m_Strategies[8] = std::make_unique<HtmlStrategy>();
 }
 
-const std::array<std::unique_ptr<CommentStrategyInterface>, 10>& ChainBuilder::GetStrategies() const { 
+const std::array<std::unique_ptr<CommentStrategyInterface>, 9>& ChainBuilder::GetStrategies() const { 
     return m_Strategies; 
 }
