@@ -38,4 +38,4 @@ Contributions are welcome! If you want to contribute, please follow the guidelin
 ## License
 The NextJS Code Analyzer Extension is released under the MIT License.
 
-Enjoy optimizing your Next.js projects!
+Enjoy optimizing your Next.js projects
