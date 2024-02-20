@@ -30,6 +30,7 @@ jobs:
     
     - name: Install dependencies /typescript root
       run: npm install
+      run: npm install typescript -g
       working-directory: ./
 
     - name: Install dependencies /typescript/src

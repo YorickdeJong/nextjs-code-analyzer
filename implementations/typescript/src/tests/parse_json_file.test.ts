@@ -15,7 +15,7 @@ test('check if parsed data is correctly commented.', () => { // Correct syntax f
         commentValue.push([token.comment.value, token.value]); 
     })  
 
-    console.log('commentValue: ', commentValue)
+    console.log('commentValue: .', commentValue)
 
     const expectations = [
         ["Large client-side file detected! Consider splitting the current 'use client' fileinto smaller modules. This can improve performance by reducing load times and optimizing resource usage.Review and refactor variables and instances where feasible.\n" +
