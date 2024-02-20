@@ -117,7 +117,7 @@ TEST_F(UseEffectStrategyTest, ExecuteChain_WithUseClientAndLargeFileFlags) {
     // Expected Behavior: Comments should remain empty as the useClient strategy does not
     // append any comments in this test setup.
     // Rationale: We expect no comments since the conditions for adding comments are not satisfied
-    // even though flags are set, demonstrating conditional comment generation.
+    // even though flags are set, demonstrating conditional comment generation
 
     analysisReport.SetDetectionFlag(CLIENT::USE_CLIENT, true);
     analysisReport.SetDetectionFlag(CLIENT::LARGE_FILE, false);
