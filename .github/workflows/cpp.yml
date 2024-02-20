@@ -25,7 +25,7 @@ jobs:
     - name: Setup Node.js environment
       uses: actions/setup-node@v2
       with:
-        node-version: '18'
+        node-version: '16'
 
     - name: Install dependencies
       run: |
@@ -93,7 +93,7 @@ jobs:
     - name: Setup Node.js environment
       uses: actions/setup-node@v2
       with:
-        node-version: '18'
+        node-version: '16'
 
     - name: Install dependencies (macOS)
       run: |
@@ -167,7 +167,7 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '18'
+        node-version: '16'
 
     - name: Set NODE_ENV to production
       run: echo "NODE_ENV=production" >> $GITHUB_ENV
