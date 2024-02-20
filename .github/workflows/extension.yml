@@ -28,10 +28,13 @@ jobs:
     - name: Set NODE_ENV to production
       run: echo "NODE_ENV=production" >> $GITHUB_ENV
 
+    - name: Install root dependencies
+      run: npm install
+      working-directory: ./
+      
     - name: Build VS Code Extension
       run: |
         npm install
-        npm run install:extension
         npm install -g vsce
         npm run compile
       working-directory: ./implementations/typescript/nextjs-code-analyzer-extension

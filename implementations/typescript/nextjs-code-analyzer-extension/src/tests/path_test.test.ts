@@ -6,7 +6,7 @@ import * as os from 'os';
 describe('Path Test', () => {
     let addonPath: any;
 
-    // In production, select the binary based on OS.
+    // In production, select the binary based on OS
     if (process.env.NODE_ENV === 'production') {
         switch(os.platform()) {
             case 'win32':
