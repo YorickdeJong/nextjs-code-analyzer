@@ -29,7 +29,7 @@ jobs:
       run: echo "NODE_ENV=production" >> $GITHUB_ENV
     
     - name: Install dependencies /typescript
-      run: npm install:ts
+      run: npm run install:ts
       working-directory: ./
 
     # Build the main TypeScript project
