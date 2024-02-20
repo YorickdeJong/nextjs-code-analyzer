@@ -4,7 +4,6 @@ jest.mock('vscode', () => ({
     },
   }), { virtual: true });
 
-import * as vscode from 'vscode';
 import { DiagnosticManager } from '../diagnostic_manager';
 
 

@@ -40,7 +40,7 @@ jobs:
       run: npm run compile
       working-directory: ./implementations/typescript/nextjs-code-analyzer-extension
     
-    - name: Build and Test VS Code Extension
+    - name: Test VS Code Extension
       run: npm run test
       env:
         NODE_ENV: production
