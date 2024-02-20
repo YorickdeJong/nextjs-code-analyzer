@@ -6,7 +6,7 @@ const basePath = process.cwd();
 
 const filePath = path.join(basePath, 'implementations', 'typescript', 'src', 'test_data', 'test_data_1.js');
 
-test('check if parsed data is correctly commented.', () => { // Correct syntax for arrow function
+test('check if parsed data is correctly commented', () => { // Correct syntax for arrow function
     const analyzer = new CodeAnalyzer(); // Correct instantiation of the class.
     analyzer.analysisFile(filePath);
 

@@ -82,82 +82,82 @@ jobs:
   #       name: cpp-addon-artifact-windows
   #       path: implementations\typescript\nextjs-code-analyzer-extension\out\cpp_build\NextJS_Analyser_windows.node
     
-  # cpp_build_macos:
-  #   runs-on: macos-latest
-  #   steps:
-  #   - name: Checkout repo
-  #     uses: actions/checkout@v2
-  #     with:
-  #       submodules: 'recursive'
-
-  #   - name: Setup Node.js environment
-  #     uses: actions/setup-node@v2
-  #     with:
-  #       node-version: '18'
-
-  #   - name: Install dependencies (macOS)
-  #     run: |
-  #       brew install cmake
-  #       brew install boost
-  #       npm install
-  #       npm install --save node-api-headers cmake-js
-  #       npm install --save node-addon-api
-
-  #   - name: Build C++ Addon (macOS)
-  #     run: |
-  #       npx cmake-js build -j8 -d 'implementations/cpp'
-  #       mkdir -p implementations/typescript/nextjs-code-analyzer-extension/out/cpp_build/
-  #       cp implementations/cpp/build/Release/NextJS_Analyser.node implementations/typescript/nextjs-code-analyzer-extension/out/cpp_build/NextJS_Analyser_macOs.node
-    
-  #   - name: Upload C++ Addon artifact (macOS)
-  #     uses: actions/upload-artifact@v2
-  #     with:
-  #       name: cpp-addon-artifact-macOs
-  #       path: implementations/typescript/nextjs-code-analyzer-extension/out/cpp_build/NextJS_Analyser_macOs.node
-
-  typescript_build_and_test:
-    needs: [cpp_build_ubuntu] #cpp_build_macos, 
-    runs-on: ubuntu-latest
-
+  cpp_build_macos:
+    runs-on: macos-latest
     steps:
     - name: Checkout repo
       uses: actions/checkout@v2
+      with:
+        submodules: 'recursive'
 
-    - name: Setup Node.js
+    - name: Setup Node.js environment
       uses: actions/setup-node@v2
       with:
         node-version: '18'
 
-    - name: Set NODE_ENV to production
-      run: echo "NODE_ENV=production" >> $GITHUB_ENV
+    - name: Install dependencies (macOS)
+      run: |
+        brew install cmake
+        brew install boost
+        npm install
+        npm install --save node-api-headers cmake-js
+        npm install --save node-addon-api
+
+    - name: Build C++ Addon (macOS)
+      run: |
+        npx cmake-js build -j8 -d 'implementations/cpp'
+        mkdir -p implementations/typescript/nextjs-code-analyzer-extension/out/cpp_build/
+        cp implementations/cpp/build/Release/NextJS_Analyser.node implementations/typescript/nextjs-code-analyzer-extension/out/cpp_build/NextJS_Analyser_macOs.node
     
-    - name: Install dependencies /typescript
-      run: npm install:ts
-      working-directory: ./
-
-    - name: Download C++ Addon artifact (Ubuntu)
-      uses: actions/download-artifact@v2
-      with:
-        name: cpp-addon-artifact-ubuntu
-        path: implementations/typescript/nextjs-code-analyzer-extension/out/cpp_build/
-
-    - name: Download C++ Addon artifact (macOS)
-      uses: actions/download-artifact@v2
+    - name: Upload C++ Addon artifact (macOS)
+      uses: actions/upload-artifact@v2
       with:
         name: cpp-addon-artifact-macOs
-        path: implementations/typescript/nextjs-code-analyzer-extension/out/cpp_build/
+        path: implementations/typescript/nextjs-code-analyzer-extension/out/cpp_build/NextJS_Analyser_macOs.node
 
-    # Build the main TypeScript project
-    - name: Build TypeScript project
-      run: npm run build:ts
-      working-directory: ./
+  # typescript_build_and_test:
+    # needs: [cpp_build_ubuntu] #cpp_build_macos, 
+  #   runs-on: ubuntu-latest
 
-    - name: Test TypeScript project
-      run: npm run test:ts
-      working-directory: ./
+  #   steps:
+  #   - name: Checkout repo
+  #     uses: actions/checkout@v2
+
+  #   - name: Setup Node.js
+  #     uses: actions/setup-node@v2
+  #     with:
+  #       node-version: '18'
+
+  #   - name: Set NODE_ENV to production
+  #     run: echo "NODE_ENV=production" >> $GITHUB_ENV
+    
+  #   - name: Install dependencies /typescript
+  #     run: npm install:ts
+  #     working-directory: ./
+
+  #   - name: Download C++ Addon artifact (Ubuntu)
+  #     uses: actions/download-artifact@v2
+  #     with:
+  #       name: cpp-addon-artifact-ubuntu
+  #       path: implementations/typescript/nextjs-code-analyzer-extension/out/cpp_build/
+
+  #   - name: Download C++ Addon artifact (macOS)
+  #     uses: actions/download-artifact@v2
+  #     with:
+  #       name: cpp-addon-artifact-macOs
+  #       path: implementations/typescript/nextjs-code-analyzer-extension/out/cpp_build/
+
+  #   # Build the main TypeScript project
+  #   - name: Build TypeScript project
+  #     run: npm run build:ts
+  #     working-directory: ./
+
+  #   - name: Test TypeScript project
+  #     run: npm run test:ts
+  #     working-directory: ./
 
   publish_package:
-    needs: [typescript_build_and_test]
+    needs: [cpp_build_ubuntu, cpp_build_macos]
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
@@ -172,11 +172,11 @@ jobs:
     - name: Set NODE_ENV to production
       run: echo "NODE_ENV=production" >> $GITHUB_ENV
 
-    # - name: Download C++ Addon artifact
-    #   uses: actions/download-artifact@v2
-    #   with:
-    #     name: cpp-addon-artifact-macOs
-    #     path: implementations/typescript/nextjs-code-analyzer-extension/out/cpp_build/
+    - name: Download C++ Addon artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: cpp-addon-artifact-macOs
+        path: implementations/typescript/nextjs-code-analyzer-extension/out/cpp_build/
 
     # - name: Download C++ Addon artifact
     #   uses: actions/download-artifact@v2
