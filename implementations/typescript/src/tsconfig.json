@@ -6,7 +6,6 @@
     "nextjs-code-analyzer-extension"
   ],
   "compilerOptions": {
-    "types": ["node", "jest"],
 		"module": "Node16",
 		"target": "ES2022",
     "outDir": "out",
