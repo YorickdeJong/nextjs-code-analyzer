@@ -13,18 +13,25 @@ class CodeAnalyzer {
 
           // In production, select the binary based on OS
           switch(os.platform()) {
-              case 'win32':
-                  this.addonPath = path.join(__dirname, 'cpp_build', 'NextJS_Analyser_windows.node');
-                  break;
-              case 'darwin':
-                  this.addonPath = path.join(__dirname, 'cpp_build', 'NextJS_Analyser_macOs.node');
-                  break;
-              case 'linux':
-                  this.addonPath = path.join(__dirname, 'cpp_build', 'NextJS_Analyser_ubuntu.node');
-                  break;
-              default:
-                  throw new Error('Unsupported platform');
-          }
+            case 'win32':
+                this.addonPath = path.join(__dirname, '..',  '..', 'out', 'cpp_build', 'NextJS_Analyser_windows.node');
+                break;
+            case 'darwin':
+                // Check architecture
+                if (process.arch === 'arm64') {
+                    // Path for Apple Silicon (M1/M2)
+                    this.addonPath = path.join(__dirname, '..',  '..', 'out', 'cpp_build', 'NextJS_Analyser_macOs_arm64.node');
+                } else {
+                    // Path for Intel-based Mac
+                    this.addonPath = path.join(__dirname, '..',  '..', 'out', 'cpp_build', 'NextJS_Analyser_macOs_x86_64.node');
+                }
+                break;
+            case 'linux':
+              this.addonPath = path.join(__dirname, '..',  '..', 'out', 'cpp_build', 'NextJS_Analyser_ubuntu.node');
+                break;
+            default:
+                throw new Error('Unsupported platform');
+        }
           
 
           this.addon = require(this.addonPath);

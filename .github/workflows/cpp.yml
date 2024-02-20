@@ -81,8 +81,8 @@ jobs:
   #     with:
   #       name: cpp-addon-artifact-windows
   #       path: implementations\typescript\nextjs-code-analyzer-extension\out\cpp_build\NextJS_Analyser_windows.node
-    
-  cpp_build_macos:
+  
+  cpp_build-x86_64:
     runs-on: macos-latest
     steps:
     - name: Checkout repo
@@ -107,16 +107,50 @@ jobs:
       run: |
         npx cmake-js build -j8 -d 'implementations/cpp'
         mkdir -p implementations/typescript/nextjs-code-analyzer-extension/out/cpp_build/
-        cp implementations/cpp/build/Release/NextJS_Analyser.node implementations/typescript/nextjs-code-analyzer-extension/out/cpp_build/NextJS_Analyser_macOs.node
+        cp implementations/cpp/build/Release/NextJS_Analyser.node implementations/typescript/nextjs-code-analyzer-extension/out/cpp_build/NextJS_Analyser_macOs_x86_64.node
     
     - name: Upload C++ Addon artifact (macOS)
       uses: actions/upload-artifact@v2
       with:
-        name: cpp-addon-artifact-macOs
-        path: implementations/typescript/nextjs-code-analyzer-extension/out/cpp_build/NextJS_Analyser_macOs.node
+        name: cpp-addon-artifact-macOs_x86_64
+        path: implementations/typescript/nextjs-code-analyzer-extension/out/cpp_build/NextJS_Analyser_macOs_x86_64.node
+
+
+  cpp_build_arm64:
+    runs-on: macos-latest
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+      with:
+        submodules: 'recursive'
+
+    - name: Setup Node.js environment
+      uses: actions/setup-node@v2
+      with:
+        node-version: '18'
+
+    - name: Install dependencies (macOS)
+      run: |
+        brew install cmake
+        brew install boost
+        npm install
+        npm install --save node-api-headers cmake-js
+        npm install --save node-addon-api
+
+    - name: Build C++ Addon (macOS)
+      run: |
+        npx cmake-js build -j8 --arch=arm64 -d 'implementations/cpp'
+        mkdir -p implementations/typescript/nextjs-code-analyzer-extension/out/cpp_build/
+        cp implementations/cpp/build/Release/NextJS_Analyser.node implementations/typescript/nextjs-code-analyzer-extension/out/cpp_build/NextJS_Analyser_macOs_arm64.node
+    
+    - name: Upload C++ Addon artifact (macOS)
+      uses: actions/upload-artifact@v2
+      with:
+        name: cpp-addon-artifact-macOs_arm64
+        path: implementations/typescript/nextjs-code-analyzer-extension/out/cpp_build/NextJS_Analyser_macOs_arm64.node
 
   publish_package:
-    needs: [cpp_build_ubuntu, cpp_build_macos]
+    needs: [cpp_build_ubuntu, cpp_build-x86_64, cpp_build_arm64]
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
@@ -131,7 +165,13 @@ jobs:
     - name: Download C++ Addon artifact
       uses: actions/download-artifact@v2
       with:
-        name: cpp-addon-artifact-macOs
+        name: cpp-addon-artifact-macOs_x86_64
+        path: implementations/typescript/nextjs-code-analyzer-extension/out/cpp_build/
+
+    - name: Download C++ Addon artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: cpp-addon-artifact-macOs_arm64
         path: implementations/typescript/nextjs-code-analyzer-extension/out/cpp_build/
 
     # - name: Download C++ Addon artifact

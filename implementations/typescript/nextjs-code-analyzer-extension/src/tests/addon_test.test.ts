@@ -9,7 +9,14 @@ describe('Addon Tests', () => {
             addonPath = path.join(__dirname, '..',  '..', 'out', 'cpp_build', 'NextJS_Analyser_windows.node');
             break;
         case 'darwin':
-            addonPath = path.join(__dirname, '..',  '..', 'out', 'cpp_build', 'NextJS_Analyser_macOs.node');
+            // Check architecture
+            if (process.arch === 'arm64') {
+                // Path for Apple Silicon (M1/M2)
+                addonPath = path.join(__dirname, '..',  '..', 'out', 'cpp_build', 'NextJS_Analyser_macOs_arm64.node');
+            } else {
+                // Path for Intel-based Mac
+                addonPath = path.join(__dirname, '..',  '..', 'out', 'cpp_build', 'NextJS_Analyser_macOs_x86_64.node');
+            }
             break;
         case 'linux':
             addonPath = path.join(__dirname, '..',  '..', 'out', 'cpp_build', 'NextJS_Analyser_ubuntu.node');
