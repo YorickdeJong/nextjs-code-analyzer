@@ -1,0 +1,38 @@
+name: Build NextJS Analyzer
+
+on:
+  push:
+    paths:
+      - 'implementations/**'
+    branches:
+      - main
+  pull_request:
+    paths:
+      - 'implementations/**'
+    branches:
+      - main
+
+jobs:
+  typescript_build_and_test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '18'
+
+    - name: Set NODE_ENV to production
+      run: echo "NODE_ENV=production" >> $GITHUB_ENV
+    
+    - name: Install dependencies /typescript
+      run: npm install:ts
+      working-directory: ./
+
+    # Build the main TypeScript project
+    - name: Build TypeScript project
+      run: npm run build:ts
+      working-directory: ./
