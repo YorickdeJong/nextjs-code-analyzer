@@ -1,7 +1,6 @@
 
 import { CodeAnalyzer } from "../code_analyser";
 import * as path from "path";
-import '@types/jest';
 
 
 
