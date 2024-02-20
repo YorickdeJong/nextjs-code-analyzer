@@ -10,27 +10,23 @@ class CodeAnalyzer {
     
     public constructor() {
       try {
-          // Check if running in production environment
-          if (process.env.NODE_ENV === 'production') {
-            // In production, select the binary based on OS
-            switch(os.platform()) {
-                case 'win32':
-                    this.addonPath = path.join(__dirname, 'cpp_build', 'NextJS_Analyser_windows.node');
-                    break;
-                case 'darwin':
-                    this.addonPath = path.join(__dirname, 'cpp_build', 'NextJS_Analyser_macOs.node');
-                    break;
-                case 'linux':
-                    this.addonPath = path.join(__dirname, 'cpp_build', 'NextJS_Analyser_ubuntu.node');
-                    break;
-                default:
-                    throw new Error('Unsupported platform');
-            }
-          } else {
-            // In development, use the generic path (assuming you're developing on one platform)
-            this.addonPath = path.join(__dirname, 'cpp_build', 'NextJS_Analyser.node');
+
+          // In production, select the binary based on OS
+          switch(os.platform()) {
+              case 'win32':
+                  this.addonPath = path.join(__dirname, 'cpp_build', 'NextJS_Analyser_windows.node');
+                  break;
+              case 'darwin':
+                  this.addonPath = path.join(__dirname, 'cpp_build', 'NextJS_Analyser_macOs.node');
+                  break;
+              case 'linux':
+                  this.addonPath = path.join(__dirname, 'cpp_build', 'NextJS_Analyser_ubuntu.node');
+                  break;
+              default:
+                  throw new Error('Unsupported platform');
           }
-    
+          
+
           this.addon = require(this.addonPath);
       }
       catch (err) {
