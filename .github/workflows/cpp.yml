@@ -51,37 +51,6 @@ jobs:
         cd implementations/cpp/build
         ctest 
   
-  # cpp_build_windows:
-  #   runs-on: windows-latest
-  #   steps:
-  #   - name: Checkout repo
-  #     uses: actions/checkout@v2
-  #     with:
-  #       submodules: 'recursive'
-
-  #   - name: Setup Node.js environment
-  #     uses: actions/setup-node@v2
-  #     with:
-  #       node-version: '21.6.1'
-
-  #   - name: Install dependencies (Windows)
-  #     run: |
-  #       npm run install:all
-  #     shell: cmd
-
-  #   - name: Build C++ Addon (Windows)
-  #     run: |
-  #       npx cmake-js build -j8 -d implementations\cpp
-  #       mkdir implementations\typescript\nextjs-code-analyzer-extension\out\cpp_build\
-  #       copy implementations\cpp\build\Release\NextJS_Analyser.node implementations\typescript\nextjs-code-analyzer-extension\out\cpp_build\
-  #     shell: cmd
-
-  #   - name: Upload C++ Addon artifact (Windows)
-  #     uses: actions/upload-artifact@v2
-  #     with:
-  #       name: cpp-addon-artifact-windows
-  #       path: implementations\typescript\nextjs-code-analyzer-extension\out\cpp_build\NextJS_Analyser_windows.node
-  
   cpp_build-x86_64:
     runs-on: macos-latest
     steps:
@@ -173,12 +142,6 @@ jobs:
       with:
         name: cpp-addon-artifact-macOs_arm64
         path: implementations/typescript/nextjs-code-analyzer-extension/out/cpp_build/
-
-    # - name: Download C++ Addon artifact
-    #   uses: actions/download-artifact@v2
-    #   with:
-    #     name: cpp-addon-artifact-windows
-    #     path: implementations/typescript/nextjs-code-analyzer-extension/out/cpp_build/
 
     - name: Download C++ Addon artifact
       uses: actions/download-artifact@v2
