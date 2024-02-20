@@ -23,11 +23,15 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '16'
+        node-version: '18'
 
     - name: Set NODE_ENV to production
       run: echo "NODE_ENV=production" >> $GITHUB_ENV
     
+    - name: Install Jest type definitions
+      run: npm install --save-dev @types/jest
+      working-directory: implementations/typescript/src
+
     - name: Install dependencies /typescript/src
       run: npm run install:ts
       working-directory: ./
