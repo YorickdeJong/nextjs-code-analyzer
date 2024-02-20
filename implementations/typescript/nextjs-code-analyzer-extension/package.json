@@ -2,7 +2,7 @@
   "name": "nextjs-code-analyzer",
   "displayName": "NextJS Code Analyzer",
   "description": "Code analyzer and optimizer for nextjs",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "publisher": "BlueWaterfall",
   "engines": {
     "vscode": "^1.72.0"
