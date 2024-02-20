@@ -31,10 +31,14 @@ jobs:
     - name: Install root dependencies
       run: npm install
       working-directory: ./
-      
-    - name: Build VS Code Extension
+
+    - name: Install VS Code Extension
       run: |
         npm install
         npm install -g vsce
-        npm run compile
+      working-directory: ./implementations/typescript/nextjs-code-analyzer-extension
+
+
+    - name: Build VS Code Extension
+      run: run compile
       working-directory: ./implementations/typescript/nextjs-code-analyzer-extension
