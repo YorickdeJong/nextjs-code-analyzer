@@ -47,6 +47,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "jest": "^29.7.0",
     "@babel/core": "^7.23.9",
     "@babel/parser": "^7.23.9",
     "@vscode/test-electron": "^2.0.0"

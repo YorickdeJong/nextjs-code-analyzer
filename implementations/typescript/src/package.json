@@ -14,7 +14,7 @@
     "url": "https://github.com/YorickdeJong/nextjs-code-analyzer"
   },
   "author": "Yorick de Jong",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "@babel/core": "^7.23.9",
     "@babel/parser": "^7.23.9",
