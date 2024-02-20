@@ -18,6 +18,7 @@
     "build:ts": "tsc -p implementations/typescript/src/tsconfig.json",
     "build:extension": "tsc -p implementations/typescript/nextjs-code-analyzer-extension/tsconfig.json",
     "build:cpp": "cmake-js build -j8 -d 'implementations/cpp' && cp implementations/cpp/build/Release/NextJS_Analyser.node implementations/typescript/nextjs-code-analyzer-extension/out/cpp_build/",
+    "build:cpp:arm64": "cmake-js build -j8 -d 'implementations/cpp' --arch arm64 && cp implementations/cpp/build/Release/NextJS_Analyser.node implementations/typescript/nextjs-code-analyzer-extension/out/cpp_build/",
     "build": "npm run build:ts && npm run build:extension && npm run build:cpp",
     "debug-build": "cmake-js build -g -d 'implementations/cpp' --debug"
   },

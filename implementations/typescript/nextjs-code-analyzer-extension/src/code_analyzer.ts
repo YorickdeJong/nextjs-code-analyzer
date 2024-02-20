@@ -19,7 +19,7 @@ class CodeAnalyzer {
                   if (process.arch === 'arm64') {
                       // Path for Apple Silicon (M1/M2)
                       this.addonPath = path.join(__dirname, 'cpp_build', 'NextJS_Analyser_macOs_arm64.node');
-                  } else {
+                  } else {4
                       // Path for Intel-based Mac
                       this.addonPath = path.join(__dirname, 'cpp_build', 'NextJS_Analyser_macOs_x86_64.node');
                   }
@@ -33,6 +33,10 @@ class CodeAnalyzer {
           
 
           this.addon = require(this.addonPath);
+
+          if (!this.addon.CreateReport) {
+              throw new Error('CreateReport not found');
+          }
       }
       catch (err) {
         console.log('err: ', err)

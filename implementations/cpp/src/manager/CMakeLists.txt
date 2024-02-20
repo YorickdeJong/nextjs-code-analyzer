@@ -1,6 +1,6 @@
 set(INCLUDE_DIR "${PROJECT_SOURCE_DIR}/include")
 
-add_library(json_manager SHARED json_manager.cpp)
+add_library(json_manager json_manager.cpp)
 
 
 # Specify include directories for the reader target

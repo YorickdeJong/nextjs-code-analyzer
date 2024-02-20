@@ -2,10 +2,10 @@
   "name": "nextjs-code-analyzer",
   "displayName": "NextJS Code Analyzer",
   "description": "Code analyzer and optimizer for nextjs",
-  "version": "0.0.16",
+  "version": "0.0.18",
   "publisher": "BlueWaterfall",
   "engines": {
-    "vscode": "^1.72.0"
+    "vscode": "^1.86.0"
   },
   "categories": [
     "Other"
@@ -52,14 +52,13 @@
     "jest": "^29.7.0"
   },
   "devDependencies": {
+    "@types/vscode": "^1.86.0",
     "@typescript-eslint/eslint-plugin": "^6.19.1",
     "@typescript-eslint/parser": "^6.19.1",
     "eslint": "^8.56.0",
     "ts-jest": "^29.1.2",
     "ts-loader": "^9.5.1",
     "typescript": "^5.3.3",
-    "vscode": "^1.1.37",
-    "vscode-test": "^1.6.1",
     "webpack": "^5.90.1",
     "webpack-cli": "^5.1.4"
   }
