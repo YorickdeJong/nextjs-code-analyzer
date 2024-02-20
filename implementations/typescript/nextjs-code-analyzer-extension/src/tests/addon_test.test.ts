@@ -46,7 +46,7 @@ describe('Addon Tests', () => {
     `
 
     code = code.toString()
-    // Get analysis results from your addon
+    // Get analysis results from your addon.
     const analysisResults = addon.CreateReport(code);
 
     console.log('Result', analysisResults.tokens[0].comment.value)
