@@ -33,7 +33,7 @@ jobs:
       working-directory: ./
     
     - name: Install dependencies /typescript root
-      run: npm install typescript -g
+      run: npm install typescript -g && npm i --save-dev @types/jest
       working-directory: ./
 
     - name: Install dependencies /typescript/src
