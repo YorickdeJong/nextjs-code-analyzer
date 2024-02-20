@@ -28,7 +28,11 @@ jobs:
     - name: Set NODE_ENV to production
       run: echo "NODE_ENV=production" >> $GITHUB_ENV
     
-    - name: Install dependencies /typescript
+    - name: Install dependencies /typescript root
+      run: npm install
+      working-directory: ./
+
+    - name: Install dependencies /typescript/src
       run: npm run install:ts
       working-directory: ./
 
