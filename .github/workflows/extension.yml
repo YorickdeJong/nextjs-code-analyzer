@@ -35,9 +35,9 @@ jobs:
     - name: Install VS Code Extension
       run: |
         npm install
+        npm i --save-dev @types/jest
         npm install -g vsce
       working-directory: ./implementations/typescript/nextjs-code-analyzer-extension
-
 
     - name: Build VS Code Extension
       run: npm run compile
