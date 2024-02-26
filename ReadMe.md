@@ -102,3 +102,11 @@ We welcome contributions to the NextJS Code Analyzer! If you're interested in co
 Issue Reporting: For bug reports or feature requests, use the issue tracker with clear, concise, and complete information.
 License
 - NextJS Code Analyzer is released under MIT, which allows free usage of this library.
+
+
+Created by Blue Waterfall:
+- www.bluewaterfall.nl/en
+- www.bluewaterfall.nl/nl
+- www.bluewaterfall.nl/fr
+- www.bluewaterfall.nl/du
+
